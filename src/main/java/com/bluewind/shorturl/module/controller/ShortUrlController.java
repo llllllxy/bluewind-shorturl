@@ -49,7 +49,7 @@ public class ShortUrlController {
     @ResponseBody
     public Result generateShortURL(@RequestParam String originalUrl) throws UnknownHostException {
         if (UrlUtils.checkURL(originalUrl)) {
-            String shortURL = shortUrlServiceImpl.saveUrlMap(HashUtils.hashToBase62(originalUrl), originalUrl, originalUrl);
+            String shortURL = shortUrlServiceImpl.saveUrlMap(originalUrl);
             String host = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"
                     + env.getProperty("server.port")
                     + "/";
