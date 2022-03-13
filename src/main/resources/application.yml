@@ -43,5 +43,5 @@ spring:
 
 logging:
   level:
-    com.bluewind.easytask: info
+    com.bluewind.shorturl: info
     org.springframework: warn
