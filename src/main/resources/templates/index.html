@@ -82,8 +82,7 @@
             },
             generateShortURL: function() {
                 if (this.originalUrl) {
-                    let reg = /^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/;
-                    if(!reg.test(this.originalUrl)){
+                    if(!this.originalUrl.startsWith("http://") && !this.originalUrl.startsWith("https://")){
                         this.$message.error('请输入正确的网址链接，注意以http://或https://开头');
                         return;
                     }
