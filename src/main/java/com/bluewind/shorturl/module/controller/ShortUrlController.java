@@ -2,9 +2,12 @@ package com.bluewind.shorturl.module.controller;
 
 import com.bluewind.shorturl.common.annotation.AccessLimit;
 import com.bluewind.shorturl.common.base.Result;
+import com.bluewind.shorturl.common.util.DateTool;
 import com.bluewind.shorturl.common.util.UrlUtils;
 import com.bluewind.shorturl.module.service.ShortUrlServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Map;
 
 
 /**
@@ -24,6 +28,8 @@ import java.net.UnknownHostException;
  **/
 @Controller
 public class ShortUrlController {
+    final static Logger log = LoggerFactory.getLogger(ShortUrlController.class);
+
 
     @Autowired
     private ShortUrlServiceImpl shortUrlServiceImpl;
@@ -43,12 +49,37 @@ public class ShortUrlController {
     }
 
 
-    @AccessLimit(seconds = 10, maxCount = 2, msg = "10秒内只能生成两次短链接")
+    @GetMapping("/expirePage")
+    public String expirePage() {
+        return "expire_page";
+    }
+
+
+    @AccessLimit(seconds = 10, maxCount = 100, msg = "10秒内只能生成两次短链接")
     @PostMapping("/generate")
     @ResponseBody
-    public Result generateShortURL(@RequestParam String originalUrl) throws UnknownHostException {
+    public Result generateShortURL(@RequestParam String originalUrl,
+                                   @RequestParam(required = false, defaultValue = "sevenday", value = "validityPeriod") String validityPeriod) throws UnknownHostException {
         if (UrlUtils.checkURL(originalUrl)) {
-            String shortURL = shortUrlServiceImpl.saveUrlMap(originalUrl);
+            String expireDate = "";
+            String currentTime = DateTool.getCurrentTime("HHmmss");
+            if ("sevenday".equals(validityPeriod)) {
+                expireDate = DateTool.nextWeek() + currentTime;
+            }
+            if ("threemonth".equals(validityPeriod)) {
+                expireDate = DateTool.plusMonth(3) + currentTime;
+            }
+            if ("halfyear".equals(validityPeriod)) {
+                expireDate = DateTool.plusMonth(6) + currentTime;
+            }
+            if ("forever".equals(validityPeriod)) {
+                expireDate = "20991231235959";
+            }
+            if (log.isInfoEnabled()) {
+                log.info("ShortUrlController -- generateShortURL -- expireDate = {}", expireDate);
+            }
+
+            String shortURL = shortUrlServiceImpl.saveUrlMap(originalUrl, expireDate);
             String host = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"
                     + env.getProperty("server.port")
                     + "/";
@@ -61,14 +92,30 @@ public class ShortUrlController {
     @GetMapping("/{shortURL}")
     public String redirect(@PathVariable String shortURL) {
         // 根据断链，获取原始url
-        String originalUrl = shortUrlServiceImpl.getOriginalUrlByShortUrl(shortURL);
-        if (StringUtils.isNotBlank(originalUrl)) {
-            shortUrlServiceImpl.updateUrlViews(shortURL);
-            // 查询到对应的原始链接，302重定向
-            return "redirect:" + originalUrl;
+        Map<String, String> urlDataMap = shortUrlServiceImpl.getOriginalUrlByShortUrl(shortURL);
+        if (urlDataMap != null && !urlDataMap.isEmpty()) {
+            String originalURL = urlDataMap.get("originalURL") == null ? "" : urlDataMap.get("originalURL");
+            String expireDate = urlDataMap.get("expireDate") == null ? "" : urlDataMap.get("expireDate");
+            String nowTime = DateTool.getCurrentTime("yyyyMMddHHmmss");
+
+            if (StringUtils.isNotBlank(expireDate)) {
+                // 有效期小于今天，说明过期了，拉倒了，不让访问
+                if (expireDate.compareTo(nowTime) < 0) {
+                    // 短链过期了，则直接返回过期页面
+                    return "redirect:/expirePage";
+                } else {
+                    shortUrlServiceImpl.updateUrlViews(shortURL);
+                    // 查询到对应的原始链接，302重定向
+                    return "redirect:" + originalURL;
+                }
+            } else {
+                // 取不到时间，也算短链过期了，则直接返回过期页面
+                return "redirect:/expirePage";
+            }
+        } else {
+            // 没有对应的原始链接，则直接返回404页
+            return "redirect:/notFound";
         }
-        // 没有对应的原始链接，则直接返回首页
-        return "redirect:/notFound";
     }
 
 }

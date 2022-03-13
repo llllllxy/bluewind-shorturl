@@ -1,9 +1,8 @@
 package com.bluewind.shorturl.module.service;
 
 import com.bluewind.shorturl.common.util.HashUtils;
+import com.bluewind.shorturl.common.util.JacksonUtils;
 import com.bluewind.shorturl.module.dao.ShortUrlDaoImpl;
-import com.google.common.hash.BloomFilter;
-import com.google.common.hash.Funnels;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -39,15 +38,6 @@ public class ShortUrlServiceImpl {
     // 最近使用的短链接缓存过期时间(分钟)
     private static final long TIMEOUT = 10;
 
-    // 布隆过滤器预计要插入多少数据
-    private static final int SIZE = 1000000;
-
-    // 布隆过滤器期望的误判率
-    private static final double FPP = 0.01;
-
-    // guava提供的jvm级别的布隆过滤器
-    private static final BloomFilter<String> BLOOM_FILTER = BloomFilter.create(Funnels.stringFunnel(StandardCharsets.UTF_8), SIZE, FPP);
-
 
     /**
      * 根据短链获取原始链接
@@ -55,25 +45,35 @@ public class ShortUrlServiceImpl {
      * @param shortURL 短链
      * @return
      */
-    public String getOriginalUrlByShortUrl(String shortURL) {
+    public Map<String, String> getOriginalUrlByShortUrl(String shortURL) {
         // 查找Redis中是否有缓存
-        String originalUrl = redisTemplate.opsForValue().get(shortURL);
-        if (originalUrl != null) {
+        Map<String, String> urlDataMap = redisGet(shortURL);
+
+        if (urlDataMap != null && !urlDataMap.isEmpty()) {
             // Redis中有缓存，则刷新缓存时间
             redisTemplate.expire(shortURL, TIMEOUT, TimeUnit.MINUTES);
-            return originalUrl;
+            return urlDataMap;
         }
         // Redis没有缓存，则从数据库查找
         List<Map<String, Object>> result = shortUrlDao.queryListByshortURL(shortURL);
+        String originalURL = "";
+        String expireDate = "";
         if (result != null && !result.isEmpty()) {
-            originalUrl = result.get(0).get("lurl") == null ? null : (String) result.get(0).get("lurl");
-        }
+            originalURL = result.get(0).get("lurl") == null ? null : (String) result.get(0).get("lurl");
+            expireDate = result.get(0).get("expire_time") == null ? null : (String) result.get(0).get("expire_time");
 
-        if (originalUrl != null) {
-            // 数据库有此短链接，添加缓存
-            redisTemplate.opsForValue().set(shortURL, originalUrl, TIMEOUT, TimeUnit.MINUTES);
+            // 数据库有此短链接，则添加缓存
+            redisSave(shortURL, originalURL, expireDate);
+
+            urlDataMap = new HashMap<>();
+            urlDataMap.put("shortURL", shortURL);
+            urlDataMap.put("originalURL", originalURL);
+            urlDataMap.put("expireDate", expireDate);
+
+            return urlDataMap;
+        } else {
+            return null;
         }
-        return originalUrl;
     }
 
 
@@ -81,18 +81,15 @@ public class ShortUrlServiceImpl {
      * 保存短链
      *
      * @param originalURL
+     * @param expireDate
      * @return
      */
-    public String saveUrlMap(String originalURL) {
+    public String saveUrlMap(String originalURL, String expireDate) {
         if (log.isInfoEnabled()) {
             log.info("ShortUrlServiceImpl -- saveUrlMap -- originalURL = {}", originalURL);
         }
         String tempURL = originalURL;
         String shortURL = HashUtils.hashToBase62(tempURL);
-
-        if (log.isInfoEnabled()) {
-            log.info("ShortUrlServiceImpl -- saveUrlMap -- shortURL = {}", shortURL);
-        }
 
         // 保留长度为1的短链接（不允许长度为1，长度为1的强行再hash一次）
         while (shortURL.length() == 1) {
@@ -100,64 +97,59 @@ public class ShortUrlServiceImpl {
             shortURL = HashUtils.hashToBase62(tempURL);
         }
 
-        // 在布隆过滤器中查找是否存在
-        if (BLOOM_FILTER.mightContain(shortURL)) {
-            // 存在，从Redis中查找是否有缓存
-            String redisLongURL = redisTemplate.opsForValue().get(shortURL);
-            if (redisLongURL != null && originalURL.equals(redisLongURL)) {
-                // Redis有相同缓存，那刷新过期时间，直接返回即可
-                redisTemplate.expire(shortURL, TIMEOUT, TimeUnit.MINUTES);
-                return shortURL;
-            }
-
-            // Redis中不存在或者过期的话，就去主动去插入数据库，如果触发异常的话，说明违反了 surl 的唯一性索引，那说明数据库中已经存在此shortURL了
-            // 则拼接上DUPLICATE，继续hash，直到不再冲突
-            boolean ifContinue = true;
-            while (ifContinue) {
-                try {
-                    // 直到数据库中不存在此shortURL，那则可以进行数据库插入了
-                    shortUrlDao.insertOne(shortURL, originalURL);
-                    // 放入到布隆过滤器中去
-                    BLOOM_FILTER.put(shortURL);
-                    // 同时添加redis缓存
-                    redisTemplate.opsForValue().set(shortURL, originalURL, TIMEOUT, TimeUnit.MINUTES);
-                    ifContinue = false;
-                } catch (Exception e) {
-                    if (e instanceof DuplicateKeyException) {
-                        tempURL += DUPLICATE;
-                        shortURL = HashUtils.hashToBase62(tempURL);
-                    } else {
-                        throw e;
-                    }
-                }
-            }
-        } else {
-            // 布隆过滤器中不存在的话，那就直接存入数据库，如果触发异常的话，说明违反了 surl 的唯一性索引，那说明数据库中已经存在此shortURL了
-            // 则拼接上DUPLICATE，继续hash，直到不再冲突
-            boolean ifContinue = true;
-            while (ifContinue) {
-                try {
-                    // 直到数据库中不存在此shortURL，那则可以进行数据库插入了
-                    shortUrlDao.insertOne(shortURL, originalURL);
-                    // 放入到布隆过滤器中去
-                    BLOOM_FILTER.put(shortURL);
-                    // 同时添加redis缓存
-                    redisTemplate.opsForValue().set(shortURL, originalURL, TIMEOUT, TimeUnit.MINUTES);
-                    ifContinue = false;
-                } catch (Exception e) {
-                    if (e instanceof DuplicateKeyException) {
-                        tempURL += DUPLICATE;
-                        shortURL = HashUtils.hashToBase62(tempURL);
-                    } else {
-                        throw e;
-                    }
+        // 直接存入数据库，如果触发异常的话，说明违反了 surl 的唯一性索引，那说明数据库中已经存在此shortURL了
+        // 则拼接上DUPLICATE，继续hash，直到不再冲突
+        boolean ifContinue = true;
+        while (ifContinue) {
+            try {
+                // 直到数据库中不存在此shortURL，那则可以进行数据库插入了
+                shortUrlDao.insertOne(shortURL, originalURL, expireDate);
+                // 同时添加redis缓存
+                redisSave(shortURL, originalURL, expireDate);
+                ifContinue = false;
+            } catch (Exception e) {
+                if (e instanceof DuplicateKeyException) {
+                    tempURL += DUPLICATE;
+                    shortURL = HashUtils.hashToBase62(tempURL);
+                } else {
+                    throw e;
                 }
             }
         }
 
+
         return shortURL;
     }
 
+    /**
+     * 存入redis
+     *
+     * @param shortURL
+     * @param originalURL
+     * @param expireDate
+     */
+    public void redisSave(String shortURL, String originalURL, String expireDate) {
+        Map<String, String> map = new HashMap<>();
+        map.put("shortURL", shortURL);
+        map.put("originalURL", originalURL);
+        map.put("expireDate", expireDate);
+        redisTemplate.opsForValue().set(shortURL, JacksonUtils.writeValueAsString(map), TIMEOUT, TimeUnit.MINUTES);
+    }
+
+
+    /**
+     * 取出缓存的数据
+     * @param shortURL
+     * @return
+     */
+    public Map<String, String> redisGet(String shortURL) {
+        String mapString = redisTemplate.opsForValue().get(shortURL);
+        if (mapString != null) {
+            return (Map<String,String>) JacksonUtils.readValue(mapString, Map.class);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * 更新访问次数
