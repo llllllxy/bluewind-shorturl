@@ -59,13 +59,13 @@ public class HashUtils {
      * @return hash值的Base62编码
      */
     public static String hashToBase62(String str) {
-        int i = Hashing.murmur3_32_fixed ().hashString(str, StandardCharsets.UTF_8).asInt();
-        long num = i < 0 ? Integer.MAX_VALUE - i : i;
+        int i = Hashing.murmur3_32_fixed().hashString(str, StandardCharsets.UTF_8).asInt();
+        long num = i < 0 ? Integer.MAX_VALUE - (long) i : i;
         return toBase62(num);
     }
 
     public static void main(String[] args) {
-        System.out.println(hashToBase62("https://www.codercto.com/a/127711.html"));
+        System.out.println(hashToBase62("https://juejin.cn/post/6844904090602848270?share_token=4ba00e67-783a-496a-9b49-fe5cb9b1a4c9"));
     }
 
 }
