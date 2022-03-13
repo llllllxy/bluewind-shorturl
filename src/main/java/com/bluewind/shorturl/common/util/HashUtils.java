@@ -1,12 +1,14 @@
 package com.bluewind.shorturl.common.util;
 
-import cn.hutool.core.lang.hash.MurmurHash;
+import com.google.common.hash.Hashing;
+
+import java.nio.charset.StandardCharsets;
 
 
 /**
  * @author liuxingyu01
  * @date 2022-03-11-16:42
- * @description URL hash并转换base62
+ * @description URL hash并转换base62编码
  **/
 public class HashUtils {
 
@@ -18,7 +20,13 @@ public class HashUtils {
 
     private static final int SIZE = CHARS.length;
 
-    private static String convertDecToBase62(long num) {
+    /**
+     * 10进制数字转Base62编码
+     *
+     * @param num
+     * @return
+     */
+    private static String toBase62(long num) {
         StringBuilder sb = new StringBuilder();
         while (num > 0) {
             int i = (int) (num % SIZE);
@@ -28,12 +36,36 @@ public class HashUtils {
         return sb.reverse().toString();
     }
 
+    /**
+     * Base62编码转十进制数字
+     * @param str
+     * @return
+     */
+    public static long toBase10(String str) {
+        long result = 0;
+        for (int i = 0; i < str.length(); i++) {
+            result = result * SIZE + new String(CHARS).indexOf(str.charAt(i));
+        }
+        return result;
+    }
+
+    /**
+     * 使用MurmurHash对url进行hash
+     * @param str
+     * @description 这里使用 Google 出品的 MurmurHash 算法。
+     *              MurmurHash 是一种非加密型哈希函数，适用于一般的哈希检索操作。
+     *              与其它流行的哈希函数相比，对于规律性较强的 key，MurmurHash 的随机分布特征表现更良好。
+     *              非加密意味着着相比 MD5，SHA 这些函数它的性能肯定更高（实际上性能是 MD5 等加密算法的十倍以上）
+     * @return hash值的Base62编码
+     */
     public static String hashToBase62(String str) {
-        int i = MurmurHash.hash32(str);
-        long num = i < 0 ? Integer.MAX_VALUE - (long) i : i;
-        return convertDecToBase62(num);
+        int i = Hashing.murmur3_32_fixed ().hashString(str, StandardCharsets.UTF_8).asInt();
+        long num = i < 0 ? Integer.MAX_VALUE - i : i;
+        return toBase62(num);
     }
 
     public static void main(String[] args) {
+        System.out.println(hashToBase62("https://www.codercto.com/a/127711.html"));
     }
+
 }
