@@ -2,7 +2,6 @@ package com.bluewind.shorturl.module.controller;
 
 import com.bluewind.shorturl.common.annotation.AccessLimit;
 import com.bluewind.shorturl.common.base.Result;
-import com.bluewind.shorturl.common.util.HashUtils;
 import com.bluewind.shorturl.common.util.UrlUtils;
 import com.bluewind.shorturl.module.service.ShortUrlServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +43,7 @@ public class ShortUrlController {
     }
 
 
-    @AccessLimit(seconds = 10, maxCount = 1, msg = "10秒内只能生成一次短链接")
+    @AccessLimit(seconds = 10, maxCount = 2, msg = "10秒内只能生成两次短链接")
     @PostMapping("/generate")
     @ResponseBody
     public Result generateShortURL(@RequestParam String originalUrl) throws UnknownHostException {
