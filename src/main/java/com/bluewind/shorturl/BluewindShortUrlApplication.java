@@ -23,11 +23,18 @@ public class BluewindShortUrlApplication {
         String ip = InetAddress.getLocalHost().getHostAddress();
         String port = env.getProperty("server.port");
         String path = env.getProperty("server.servlet.context-path");
+
+        logger.info("bluewind-shorturl 启动成功！\n" +
+                "┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬\n" +
+                "└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │\n" +
+                "└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o\n" +
+                "-------------------------------------------------------------------------"
+        );
+
         logger.info("\n----------------------------------------------------------\n\t" +
-                "BluewindShortUrlApplication started successfully! Access URLs:\n\t" +
+                "Access URLs:\n\t" +
                 "Local: \t\thttp://localhost:" + port + "/\n\t" +
                 "External: \thttp://" + ip + ":" + port + "/\n\t" +
-                "Swagger-UI: \thttp://" + ip + ":" + port + "/doc.html\n\t" +
                 "----------------------------------------------------------");
     }
 
