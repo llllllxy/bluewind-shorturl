@@ -3,6 +3,9 @@ server:
   servlet:
     session:
       timeout: 1800s
+  jetty:
+    max-threads: 200
+    min-threads: 8
 
 spring:
   #设置编码
