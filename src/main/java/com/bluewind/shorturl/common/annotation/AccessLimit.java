@@ -28,8 +28,4 @@ public @interface AccessLimit {
      */
     String msg() default "操作频率过高！";
 
-    /**
-     * 触发限制时的惩罚时间(秒)
-     */
-    int waits() default 300;
 }
