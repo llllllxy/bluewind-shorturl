@@ -1,5 +1,8 @@
 # bluewind-shorturl
-# 短链接生成器
+# 在线短链接生成器
+
+<a href='https://gitee.com/leisureLXY/bluewind-shorturl/stargazers'><img src='https://gitee.com/leisureLXY/bluewind-shorturl/badge/star.svg?theme=dark' alt='star'></img></a>
+<a href='https://gitee.com/leisureLXY/bluewind-shorturl/members'><img src='https://gitee.com/leisureLXY/bluewind-shorturl/badge/fork.svg?theme=dark' alt='fork'></img></a>
 
 ## 已实现功能
 1、将长链接转换成短链接，访问短链接时， 302重定向至原始长链接
