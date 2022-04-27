@@ -1,26 +1,29 @@
 # bluewind-shorturl
 # 短链接生成器
 
-## 实现功能
+## 已实现功能
 1、将长链接转换成短链接，访问短链接时， 302重定向至原始长链接
 
 2、支持设置短链有效期
 
 3、支持记录访问次数
 
+## 待实现功能
+1、使用布隆过滤器优化短链冲突问题，提高超大数据量下的性能表现
 
-![首页](src/main/resources/static/images/example_main.png)
-![404页](src/main/resources/static/images/example_404.png)
-![失效页](src/main/resources/static/images/example_expire.png)
+## 界面展示
+![首页](src/main/resources/static/images/readme/example_main.png)
+![404页](src/main/resources/static/images/readme/example_404.png)
+![失效页](src/main/resources/static/images/readme/example_expire.png)
 
+## 技术选型
 | 依赖        | 说明                  |
 | ----------- | ---------------------|
-| Spring Boot | MVC 框架             |
-| thymeleaf   | 模板引擎              |
-| JdbcTemplate| 持久层 框架           |
-| Redis       | 缓存                  |
-| guava       | Hash 算法、布隆过滤器 |
-
+| SpringBoot | 基础框架             |
+| Thymeleaf   | 模板引擎             |
+| JdbcTemplate| 持久层框架           |
+| Redis       | 缓存                |
+| guava       | Hash算法、布隆过滤器  |
 
 ## 实现逻辑
 1、使用 MurmurHash 算法将原始长链接 hash 为 32 位散列值，将散列值转为 BASE62编码 ，即为短链接。
