@@ -2,7 +2,7 @@ package com.bluewind.shorturl.module.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Map;
  * @author liuxingyu01
  * @date 2022-03-13-9:47
  **/
-@Component
+@Repository
 public class ShortUrlDaoImpl {
 
     @Autowired
@@ -35,7 +35,11 @@ public class ShortUrlDaoImpl {
         }
     }
 
-
+    /**
+     * 更新shortUrl的访问次数
+     * @param shortURL
+     * @return
+     */
     public int updateUrlViews(String shortURL) {
         String sql = "update url_map set views = views + 1 where surl = ?";
         return jdbcTemplate.update(sql, shortURL);
