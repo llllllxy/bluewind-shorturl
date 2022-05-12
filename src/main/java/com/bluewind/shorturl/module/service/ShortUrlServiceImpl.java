@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 public class ShortUrlServiceImpl {
     final static Logger log = LoggerFactory.getLogger(ShortUrlServiceImpl.class);
 
-
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -37,7 +36,6 @@ public class ShortUrlServiceImpl {
 
     // 最近使用的短链接缓存过期时间(分钟)
     private static final long TIMEOUT = 10;
-
 
     /**
      * 根据短链获取原始链接
@@ -80,9 +78,9 @@ public class ShortUrlServiceImpl {
     /**
      * 保存短链
      *
-     * @param originalURL
-     * @param expireDate
-     * @return
+     * @param originalURL 原始链接
+     * @param expireDate 过期时间
+     * @return 生成的短链
      */
     public String saveUrlMap(String originalURL, String expireDate) {
         if (log.isInfoEnabled()) {
@@ -112,11 +110,11 @@ public class ShortUrlServiceImpl {
                     tempURL += DUPLICATE;
                     shortURL = HashUtils.hashToBase62(tempURL);
                 } else {
+                    log.info("ShortUrlServiceImpl -- saveUrlMap -- Exception = {e}", e);
                     throw e;
                 }
             }
         }
-
 
         return shortURL;
     }
@@ -124,9 +122,9 @@ public class ShortUrlServiceImpl {
     /**
      * 存入redis
      *
-     * @param shortURL
-     * @param originalURL
-     * @param expireDate
+     * @param shortURL 短链
+     * @param originalURL 原始链接
+     * @param expireDate 过期时间
      */
     public void redisSave(String shortURL, String originalURL, String expireDate) {
         Map<String, String> map = new HashMap<>();
@@ -139,7 +137,7 @@ public class ShortUrlServiceImpl {
 
     /**
      * 取出缓存的数据
-     * @param shortURL
+     * @param shortURL 短链
      * @return
      */
     public Map<String, String> redisGet(String shortURL) {
@@ -154,7 +152,7 @@ public class ShortUrlServiceImpl {
     /**
      * 更新访问次数
      *
-     * @param shortURL
+     * @param shortURL 短链
      */
     public void updateUrlViews(String shortURL) {
         shortUrlDao.updateUrlViews(shortURL);
