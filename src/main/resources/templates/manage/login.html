@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/theme-chalk/index.min.css">
+
+    <style>
+        .login-container {
+            width: 100%;
+            height: 100vh;
+            background-color: #2d3a4b;
+            overflow: hidden;
+        }
+        .login-container el-input {
+            display: inline-block;
+            height: 47px;
+            width: 85%;
+        }
+        .login-container el-input input {
+            background: transparent;
+            border: 0;
+            -webkit-appearance: none;
+            border-radius: 0;
+            padding: 12px 5px 12px 15px;
+            color: #283443;
+            height: 47px;
+        }
+        .login-container el-input input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 1000px #283443 inset !important;
+            -webkit-text-fill-color: #fff !important;
+        }
+        .login-container .login-form {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            left: 50%;
+            top: 50%;
+            margin-left: -200px;
+            margin-top: -150px;
+            overflow: hidden;
+        }
+        .login-container .login-form .title {
+            text-align: center;
+            margin: 10px;
+        }
+        .login-container .login-form .btn {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="login-container">
+        <el-form class="login-form" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
+            <h1 class="title">测试后台管理</h1>
+            <div class="title">账号：admin|密码：123</div>
+            <el-form-item prop="username">
+                <el-input prefix-icon="el-icon-user" v-model="loginForm.username" placeholder="username" />
+            </el-form-item>
+            <el-form-item prop="password">
+                <el-input prefix-icon="el-icon-lock" v-model="loginForm.password" placeholder="password" show-password></el-input>
+            </el-form-item>
+            <el-form-item class="btn">
+                <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
+                    登录
+                </el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</div>
+
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/vue/2.6.12/vue.min.js" type="application/javascript"></script>
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/index.min.js"></script>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/axios/0.26.0/axios.min.js"></script>
+<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/qs/6.10.3/qs.min.js" type="application/javascript"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                // 登录loading
+                loading: false,
+                // 登录表单数据
+                loginForm: {
+                    username: '',
+                    password: ''
+                },
+                // el登录验证
+                loginRules: {
+                    username: [
+                        { required: true, message: '请输入用户名', trigger: 'blur' },
+                    ],
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                    ]
+                },
+            }
+        },
+        methods: {
+            handleLogin() {
+                if (this.loginForm.username == 'admin' && this.loginForm.password == '123') {
+                    window.location.href = '/manage/index'
+                }
+            }
+        },
+        mounted: function () {
+
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>短链平台管理首页</title>
+    <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/theme-chalk/index.min.css">
+
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+
+        .el-header {
+            background-color: #b3c0d1;
+            color: #333;
+            text-align: center;
+            height: 60px;
+            line-height: 60px;
+        }
+
+        .el-main {
+            background-color: #e9eef3;
+            height: calc(100vh - 60px);
+            padding: 0;
+        }
+
+        .el-menu-item {
+            font-size: 14px;
+            color: #303133;
+            padding: 0 40px;
+            cursor: pointer;
+            -webkit-transition: border-color .3s, background-color .3s, color .3s;
+            transition: border-color .3s, background-color .3s, color .3s;
+            box-sizing: border-box;
+        }
+
+        /* 路由的简单过渡动画效果 */
+        .v-enter {
+            opacity: 0;
+        }
+
+        .v-enter-to {
+            opacity: 1;
+        }
+
+        .v-enter-active {
+            transition: 0.3s;
+        }
+
+        .v-leave {
+            opacity: 1;
+        }
+
+        .v-leave-to {
+            opacity: 0;
+        }
+
+        .v-leave-active {
+            transition: 0.3s;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div>
+        <el-container style="height: 100%;">
+            <!-- 头部开始 -->
+            <el-header style="padding: 0;">
+
+                <el-row style="background-color:#00162A; height: 60px">
+                    <el-col :span="4">
+                        <i class="el-icon-s-operation" style="color: white;font-size: 24px;line-height: 60px;"
+                           @click="collapseChange"></i>
+                    </el-col>
+
+                    <el-col :span="16">
+						<span style="color: white;font-size: 30px;font-weight: bold;line-height: 60px;margin-left: 20px;cursor: pointer"
+                              @click="freshWeb">
+							<i class="el-icon-platform-eleme"></i>&nbsp;短链平台管理
+						</span>
+                    </el-col>
+
+                    <el-col :span="4" style="padding-top: 10px">
+                        <el-dropdown @command="handleDropdown">
+                            <div>
+                                <i class="el-icon-caret-bottom"
+                                   style="color: white;float: right;margin-top: 15px;cursor: pointer"></i>
+                                <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                                           style="float: right;margin-right: 1px;cursor: pointer">
+                                </el-avatar>
+                            </div>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="userinfo">个人信息</el-dropdown-item>
+                                <el-dropdown-item command="exit">退出登录</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </el-col>
+                </el-row>
+            </el-header>
+            <!-- 头部结束 -->
+
+            <!-- 主开始束 -->
+            <el-container>
+                <el-menu class="el-menu-vertical-demo" :collapse="isCollapse">
+                    <el-menu-item index="1" @click="menuItemClick({name:'homePage'})">
+                        <i class="el-icon-menu"></i>
+                        <span slot="title">首页</span>
+                    </el-menu-item>
+                    <el-menu-item index="3" @click="menuItemClick('pageOne')">
+                        <i class="el-icon-menu"></i>
+                        <span slot="title">测试页面1</span>
+                    </el-menu-item>
+                    <el-menu-item index="4" @click="menuItemClick('pageTwo')">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">测试页面2</span>
+                    </el-menu-item>
+                    <el-menu-item index="5" @click="menuItemClick('pageThree')">
+                        <i class="el-icon-setting"></i>
+                        <span slot="title">测试页面3</span>
+                    </el-menu-item>
+                </el-menu>
+
+                <el-main class="el-main">
+                    <transition mode="out-in">
+                        <iframe width="100%" height="99%" frameborder="no" border="0" marginwidth="0" marginheight="0"
+                                :src="optionsHref">
+                        </iframe>
+                    </transition>
+                </el-main>
+            </el-container>
+
+            <!-- 主开结束 -->
+        </el-container>
+    </div>
+</div>
+
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/vue/2.6.12/vue.min.js"></script>
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/index.min.js"></script>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/axios/0.26.0/axios.min.js"></script>
+<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/qs/6.10.3/qs.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                message: 'Hello Vue.js!',
+                isCollapse: false,
+                nowFunc: 'resource',
+                optionsHref: 'https://www.runoob.com/manual/git-guide/'
+            }
+        },
+        methods: {
+            freshWeb: function () {
+                window.location.reload();
+            },
+            collapseChange() {
+                this.isCollapse = !this.isCollapse
+            },
+            menuItemClick(name) {
+                switch (name) {
+                    case 'homePage':
+                        this.optionsHref = 'https://www.runoob.com/manual/git-guide/'
+                        break;
+                    case 'pageOne':
+                        this.optionsHref = 'https://www.w3school.com.cn/js/js_switch.asp'
+                        break;
+                    case 'pageTwo':
+                        this.optionsHref = 'https://www.w3school.com.cn/index.html'
+                        break;
+                    case 'pageThree':
+                        this.optionsHref = 'https://juejin.cn/post/7096285804049203208'
+                        break;
+                    default:
+                        this.optionsHref = 'https://www.runoob.com/manual/git-guide/'
+                }
+            },
+            handleDropdown(command) {
+
+            }
+        },
+        mounted: function () {
+
+        }
+    });
+</script>
+
+</body>
+</html>
