@@ -4,11 +4,12 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author liuxingyu01
- * @date 2022-05-10 8:32
- * @description 分页查询适配器-MySQL
+ * @date 2022-05-14 16:23
+ * @description 分页查询适配器-DB2
  **/
 @Component
-public class MysqlPageHandleImpl implements IPageHandle {
+public class DB2PageHandleImpl implements IPageHandle {
+
 
     /**
      * 分页查询适配
@@ -19,16 +20,13 @@ public class MysqlPageHandleImpl implements IPageHandle {
      */
     @Override
     public String handlerPagingSQL(String oldSQL, int pageNo, int pageSize) {
-        StringBuilder sql = new StringBuilder(oldSQL);
+        StringBuilder sql = new StringBuilder("SELECT * FROM ( SELECT B.*, ROWNUMBER() OVER() AS RN FROM ( ");
         if (pageSize > 0) {
-            int offset = (pageNo - 1) * pageSize;
-            int limit = pageSize;
-            if (offset <= 0) {
-                sql.append(" limit ").append(limit);
-            } else {
-                sql.append(" limit ").append(offset).append(",")
-                        .append(limit);
-            }
+            sql.append(oldSQL);
+            int pageStart = (pageNo - 1) * pageSize + 1;
+            int pageEnd = pageStart + pageSize;
+            sql.append(" ) AS B ) AS A WHERE A.RN BETWEEN ").append(pageStart).append(" AND ")
+                    .append(pageEnd);
         }
         return sql.toString();
     }
@@ -37,10 +35,9 @@ public class MysqlPageHandleImpl implements IPageHandle {
     @Override
     public String handlerCountSQL(String oldSQL) {
         StringBuilder newSql = new StringBuilder();
-        newSql.append("select count(0) from ( ");
+        newSql.append("SELECT COUNT(0) FROM ( ");
         newSql.append(oldSQL);
-        newSql.append(" ) temp");
+        newSql.append(" ) TEMP");
         return newSql.toString();
     }
-
 }
