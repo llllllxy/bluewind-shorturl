@@ -39,7 +39,7 @@ public class MysqlPageHandleImpl implements IPageHandle {
     @Override
     public String handlerCountSQL(String oldSQL) {
         StringBuilder newSql = new StringBuilder();
-        newSql.append("select count(0) from ( ");
+        newSql.append("select count(*) from ( ");
         newSql.append(oldSQL);
         newSql.append(" ) temp");
         return newSql.toString();

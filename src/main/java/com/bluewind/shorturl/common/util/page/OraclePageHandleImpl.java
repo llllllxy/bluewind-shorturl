@@ -36,7 +36,7 @@ public class OraclePageHandleImpl implements IPageHandle {
     @Override
     public String handlerCountSQL(String oldSQL) {
         StringBuilder newSql = new StringBuilder();
-        newSql.append("SELECT COUNT(0) FROM ( ");
+        newSql.append("SELECT COUNT(*) FROM ( ");
         newSql.append(oldSQL);
         newSql.append(" ) TEMP");
         return newSql.toString();
