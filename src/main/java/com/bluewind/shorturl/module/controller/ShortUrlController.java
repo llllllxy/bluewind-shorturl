@@ -5,6 +5,9 @@ import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.util.DateTool;
 import com.bluewind.shorturl.common.util.UrlUtils;
 import com.bluewind.shorturl.module.service.ShortUrlServiceImpl;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.activerecord.SqlPara;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -42,6 +47,7 @@ public class ShortUrlController {
     public String index() {
         return "index";
     }
+
 
     @GetMapping("/notFound")
     public String notFound() {
@@ -116,6 +122,24 @@ public class ShortUrlController {
             // 没有对应的原始链接，则直接返回404页
             return "redirect:/notFound";
         }
+    }
+
+
+    @GetMapping("/activeRecordTest")
+    @ResponseBody
+    public Object activeRecordTest() {
+        List<Record> applyList = Db.find("select * from s_url_map");
+        if (log.isInfoEnabled()) {
+            log.info("ShortUrlController -- generateShortURL -- applyList = {}", applyList);
+        }
+
+        SqlPara sqlPara = Db.getSqlPara("user.getAllList", new HashMap());
+        List<Record> applyList2 = Db.find(sqlPara);
+        if (log.isInfoEnabled()) {
+            log.info("ShortUrlController -- generateShortURL -- applyList2 = {}", applyList2);
+        }
+
+        return  Result.ok("测试成功", applyList2);
     }
 
 }
