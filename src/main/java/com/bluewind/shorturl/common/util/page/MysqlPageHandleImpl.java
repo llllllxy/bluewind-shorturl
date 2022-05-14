@@ -1,5 +1,6 @@
 package com.bluewind.shorturl.common.util.page;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
  * @description 分页查询适配器-MySQL
  **/
 @Component
+@ConditionalOnProperty(prefix = "bluewind", name = "db-type", havingValue = "mysql")
 public class MysqlPageHandleImpl implements IPageHandle {
 
     /**

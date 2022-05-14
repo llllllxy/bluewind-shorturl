@@ -1,3 +1,12 @@
+# 项目相关配置
+bluewind:
+  # 名称
+  name: bluewind-boot
+  # 版本
+  version: 1.0.0
+  # 数据库类型
+  db-type: mysql
+
 server:
   port: 8076
   servlet:

@@ -5,13 +5,12 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author liuxingyu01
- * @date 2022-05-14 16:23
- * @description 分页查询适配器-DB2
+ * @date 2022-05-14 21:54
+ * @description 分页查询适配器-ORACLE
  **/
 @Component
-@ConditionalOnProperty(prefix = "bluewind", name = "db-type", havingValue = "db2")
-public class DB2PageHandleImpl implements IPageHandle {
-
+@ConditionalOnProperty(prefix = "bluewind", name = "db-type", havingValue = "oracle")
+public class OraclePageHandleImpl implements IPageHandle {
 
     /**
      * 分页查询适配
@@ -22,13 +21,13 @@ public class DB2PageHandleImpl implements IPageHandle {
      */
     @Override
     public String handlerPagingSQL(String oldSQL, int pageNo, int pageSize) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM ( SELECT B.*, ROWNUMBER() OVER() AS RN FROM ( ");
+        StringBuilder sql = new StringBuilder("SELECT * FROM ( SELECT TMP_TB.*, ROWNUM ROW_ID FROM ( ");
         if (pageSize > 0) {
             sql.append(oldSQL);
             int pageStart = (pageNo - 1) * pageSize + 1;
-            int pageEnd = pageStart + pageSize;
-            sql.append(" ) AS B ) AS A WHERE A.RN BETWEEN ").append(pageStart).append(" AND ")
-                    .append(pageEnd);
+            int pageEnd = pageNo * pageSize;
+            sql.append(" ) TMP_TB WHERE ROWNUM <=  ").append(pageEnd).append(" ) WHERE ROW_ID >= ")
+                    .append(pageStart);
         }
         return sql.toString();
     }
