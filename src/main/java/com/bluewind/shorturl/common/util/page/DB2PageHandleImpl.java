@@ -32,7 +32,7 @@ public class DB2PageHandleImpl implements IPageHandle {
         if (pageSize > 0) {
             sql.append(oldSQL);
             int pageStart = (pageNo - 1) * pageSize + 1;
-            int pageEnd = pageStart + pageSize;
+            int pageEnd = pageStart + pageSize -1;
             sql.append(" ) AS B ) AS A WHERE A.RN BETWEEN ").append(pageStart).append(" AND ")
                     .append(pageEnd);
         }
