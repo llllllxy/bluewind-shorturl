@@ -25,6 +25,7 @@ public class ActiveRecordConfiguration {
     public ActiveRecordPlugin activeRecordPlugin(){
         ActiveRecordPlugin activeRecordPlugin = new ActiveRecordPlugin(this.datasource);
         activeRecordPlugin.setShowSql(true);
+        // 配置Mysql方言
         activeRecordPlugin.setDialect(new MysqlDialect());
         activeRecordPlugin.getEngine().setSourceFactory(new ClassPathSourceFactory());
         activeRecordPlugin.addSqlTemplate("sql/all_sqls.sql");

@@ -2,6 +2,7 @@ package com.bluewind.shorturl.common.util.page;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuxingyu01
@@ -19,7 +20,17 @@ public class Page implements Serializable {
 
     private Integer pages;
 
-    private List<Object> records;
+    private List<Map<String, Object>> records;
+
+    public Page() {
+
+    }
+
+    public Page(Integer pageNum, Integer pageSize) {
+        this.pageSize = pageSize;
+        this.pageNum = pageNum;
+    }
+
 
     public Integer getPageNum() {
         return pageNum;
@@ -45,18 +56,12 @@ public class Page implements Serializable {
         this.pages = pages;
     }
 
-    public List<Object> getRecords() {
+    public List<Map<String, Object>> getRecords() {
         return records;
     }
 
-    public void setRecords(List<Object> records) {
+    public void setRecords(List<Map<String, Object>> records) {
         this.records = records;
-    }
-
-
-    public Page(Integer pageNum, Integer pageSize) {
-        this.pageSize = pageSize;
-        this.pageNum = pageNum;
     }
 
     public Integer getTotal() {

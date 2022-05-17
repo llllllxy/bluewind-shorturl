@@ -1,7 +1,12 @@
 package com.bluewind.shorturl.common.util.page;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuxingyu01
@@ -11,6 +16,9 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(prefix = "bluewind", name = "db-type", havingValue = "mysql")
 public class MysqlPageHandleImpl implements IPageHandle {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 分页查询适配
@@ -43,6 +51,26 @@ public class MysqlPageHandleImpl implements IPageHandle {
         newSql.append(oldSQL);
         newSql.append(" ) temp");
         return newSql.toString();
+    }
+
+
+    @Override
+    public Page getPage(String oldSQL, int pageNo, int pageSize) {
+        if (pageNo <= 0) {
+            throw new RuntimeException("当前页数必须大于1");
+        }
+        if (pageSize <= 0) {
+            throw new RuntimeException("每页大小必须大于1");
+        }
+        // 数据列表
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(this.handlerPagingSQL(oldSQL, pageNo, pageSize));
+        // 总共数量
+        int totalSize = jdbcTemplate.queryForObject(handlerCountSQL(oldSQL), Integer.class);
+
+        Page bean = new Page(pageNo, pageSize);
+        bean.setRecords(list);
+        bean.setTotal(totalSize);
+        return bean;
     }
 
 }
