@@ -255,6 +255,7 @@ public class HttpUtils {
         // 将返回的输入流转换成字符串
         try {
             inputStream = connection.getInputStream();
+            // 这里使用UTF-8时，请求百度IP定位接口时，返回中文乱码，所以改成了GBK
             inputStreamReader = new InputStreamReader(inputStream, "GBK");
             bufferedReader = new BufferedReader(inputStreamReader);
             String str = null;
