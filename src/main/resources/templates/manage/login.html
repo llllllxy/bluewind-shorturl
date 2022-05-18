@@ -10,6 +10,12 @@
     <link rel="icon" th:href="@{/images/favicon.ico}">
     <title>登陆</title>
     <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/theme-chalk/index.min.css">
+    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/vue/2.6.12/vue.min.js"></script>
+    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/index.min.js"></script>
+    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/axios/0.26.0/axios.min.js"></script>
+    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/qs/6.10.3/qs.min.js"></script>
+    <script th:src="@{/js/md5.js}"></script>
+    <script th:src="@{/js/public.js}"></script>
 
     <style>
         body {
@@ -77,16 +83,7 @@
     </div>
 </div>
 
-<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/vue/2.6.12/vue.min.js"></script>
-<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/index.min.js"></script>
-<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/axios/0.26.0/axios.min.js"></script>
-<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/qs/6.10.3/qs.min.js"></script>
-<script th:src="@{/js/md5.js}"></script>
-<script th:src="@{/js/public.js}"></script>
-
 <script type="text/javascript" th:inline="javascript">
-    Util.ctx = /*[[@{/}]]*/'';
-
     // 登录过期的时候，跳出ifram框架
     if (top.location != self.location) {
         top.location = self.location;
@@ -119,7 +116,7 @@
                         }
                         $axios({
                             method: 'post',
-                            url: Util.ctx + "manage/doLogin",
+                            url: "/manage/doLogin",
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                             },

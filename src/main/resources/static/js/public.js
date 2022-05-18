@@ -1,7 +1,3 @@
-// 创建公共Util.ctx上下文
-const Util = {
-    ctx: /*[[@{/}]]*/''
-}
 
 
 // 创建一个axios实例

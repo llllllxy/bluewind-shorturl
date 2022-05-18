@@ -84,3 +84,7 @@ async:
       max_pool_size: 10 #配置最大线程数
       name_prefix: async-service- #配置线程池中的线程的名称前缀
       queue_capacity: 100 #配置队列大小
+
+# 用户密码加密的盐
+hash:
+  salt: ymp8R3Vg7Kv5$y5fM3*xl&ins7SZcTEY
