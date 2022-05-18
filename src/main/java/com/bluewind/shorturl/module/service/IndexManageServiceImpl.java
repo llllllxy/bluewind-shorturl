@@ -1,6 +1,10 @@
 package com.bluewind.shorturl.module.service;
 
+import com.bluewind.shorturl.module.dao.IndexManageDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @author liuxingyu01
@@ -9,4 +13,11 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class IndexManageServiceImpl {
+
+    @Autowired
+    private IndexManageDaoImpl indexManageDao;
+
+    public Map<String, Object> getUserInfo(String account) {
+        return indexManageDao.getUserInfo(account);
+    }
 }

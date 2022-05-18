@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author liuxingyu01
  * @date 2022-03-13-13:48
+ * @description 限流拦截器
  **/
 @Component
 public class AccessLimitInterceptor implements HandlerInterceptor {

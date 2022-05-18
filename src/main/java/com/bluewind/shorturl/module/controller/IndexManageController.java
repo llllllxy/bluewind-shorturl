@@ -1,13 +1,18 @@
 package com.bluewind.shorturl.module.controller;
 
 import com.bluewind.shorturl.common.base.Result;
+import com.bluewind.shorturl.common.consts.SystemConst;
+import com.bluewind.shorturl.common.util.SHA256Utils;
+import com.bluewind.shorturl.module.service.IndexManageServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * @author liuxingyu01
@@ -15,9 +20,12 @@ import javax.servlet.http.HttpSession;
  * @description
  **/
 @Controller
-@RequestMapping("/manage")
+@RequestMapping("/index")
 public class IndexManageController {
+    final static Logger logger = LoggerFactory.getLogger(IndexManageController.class);
 
+    @Autowired
+    private IndexManageServiceImpl indexManageService;
 
 
     /**
@@ -36,6 +44,40 @@ public class IndexManageController {
     @GetMapping("/index")
     public String index() {
         return "manage/index";
+    }
+
+
+    @PostMapping("/doLogin")
+    @ResponseBody
+    public Result doLogin(@RequestParam String username,
+                          @RequestParam String password,
+                          HttpSession session) {
+        logger.info("LoginController doLogin username = {}, password = {}", username, password);
+
+        // 根据用户名查找到用户信息
+        Map<String, Object> userInfo = indexManageService.getUserInfo(username);
+
+        // 没找到帐号(用户不存在)
+        if (userInfo == null || userInfo.isEmpty()) {
+            return Result.error("账户不存在！");
+        }
+
+        // 校验用户状态(用户已失效)
+        if ("1".equals(userInfo.get("status").toString())) {
+            return Result.error("该账户已被冻结！");
+        }
+
+        String localPassword = userInfo.get("password").toString();
+        password = SHA256Utils.SHA256Encode(salt + password);
+
+        if (localPassword.equals(password)) {
+            logger.info("IndexManageController - doLogin - {}登陆成功！", username);
+            // 数据写入session
+            session.setAttribute(SystemConst.SYSTEM_USER_KEY, userInfo);
+            return Result.ok("登录成功，欢迎回来！",null);
+        } else {
+            return Result.error("密码错误，请重新输入！");
+        }
     }
 
 
