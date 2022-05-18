@@ -74,3 +74,13 @@ logging:
   level:
     com.bluewind.shorturl: info
     org.springframework: warn
+
+# springboot异步线程配置
+async:
+  executor:
+    thread:
+      core_pool_size: 5 #配置核心线程数
+      keep_alive_seconds: 60 #设置线程活跃时间（秒）
+      max_pool_size: 10 #配置最大线程数
+      name_prefix: async-service- #配置线程池中的线程的名称前缀
+      queue_capacity: 100 #配置队列大小

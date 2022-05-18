@@ -1,15 +1,16 @@
 package com.bluewind.shorturl.module.service;
 
-import com.bluewind.shorturl.common.util.HashUtils;
-import com.bluewind.shorturl.common.util.JacksonUtils;
+import com.bluewind.shorturl.common.util.*;
 import com.bluewind.shorturl.module.dao.ShortUrlDaoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,11 +151,19 @@ public class ShortUrlServiceImpl {
     }
 
     /**
-     * 更新访问次数
+     * 更新访问次数，插入访问日志
      *
      * @param shortURL 短链
      */
-    public void updateUrlViews(String shortURL) {
+    @Async("asyncServiceExecutor") // 耗时操作放进线程池去操作,注意：异步方法使用注解@Async的返回值只能为void或者Future
+    public void updateUrlViews(HttpServletRequest request, String shortURL) {
+        // 首先更新s_url_map表里的views字段
         shortUrlDao.updateUrlViews(shortURL);
+        // 然后插入访问日志表
+        String accessIp = IpAddressUtils.getIpAddress(request);
+        String accessTime = DateTool.getCurrentTime();
+        String accessUserAgent = JacksonUtils.writeValueAsString(UserAgentUtils.getUserAgent(request));
+
+        shortUrlDao.insertAccessLogs(shortURL, accessIp, accessTime, accessUserAgent);
     }
 }

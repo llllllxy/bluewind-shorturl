@@ -1,6 +1,7 @@
 package com.bluewind.shorturl.module.controller;
 
 import com.bluewind.shorturl.common.annotation.AccessLimit;
+import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.util.DateTool;
 import com.bluewind.shorturl.common.util.UrlUtils;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -43,24 +45,28 @@ public class ShortUrlController {
     private Environment env;
 
 
+    @LogAround("首页")
     @GetMapping("/")
     public String index() {
         return "index";
     }
 
 
+    @LogAround("404页")
     @GetMapping("/notFound")
     public String notFound() {
         return "not_found";
     }
 
 
+    @LogAround("短链过期页")
     @GetMapping("/expirePage")
     public String expirePage() {
         return "expire_page";
     }
 
 
+    @LogAround("短链生成")
     @AccessLimit(seconds = 10, maxCount = 100, msg = "10秒内只能生成两次短链接")
     @PostMapping("/generate")
     @ResponseBody
@@ -95,8 +101,9 @@ public class ShortUrlController {
     }
 
 
+    @LogAround("短链转发核心控制器")
     @GetMapping("/{shortURL}")
-    public String redirect(@PathVariable String shortURL) {
+    public String redirect(@PathVariable String shortURL, HttpServletRequest request) {
         // 根据断链，获取原始url
         Map<String, String> urlDataMap = shortUrlServiceImpl.getOriginalUrlByShortUrl(shortURL);
         if (urlDataMap != null && !urlDataMap.isEmpty()) {
@@ -110,7 +117,7 @@ public class ShortUrlController {
                     // 短链过期了，则直接返回过期页面
                     return "redirect:/expirePage";
                 } else {
-                    shortUrlServiceImpl.updateUrlViews(shortURL);
+                    shortUrlServiceImpl.updateUrlViews(request, shortURL);
                     // 查询到对应的原始链接，302重定向
                     return "redirect:" + originalURL;
                 }
@@ -125,6 +132,7 @@ public class ShortUrlController {
     }
 
 
+    @LogAround("Jfinal-activeRecord测试")
     @GetMapping("/activeRecordTest")
     @ResponseBody
     public Object activeRecordTest() {
