@@ -51,7 +51,7 @@ public class HashUtils {
 
     /**
      * 使用MurmurHash对url进行hash
-     * @param str
+     * @param str 需要hash的字符串
      * @description 这里使用 Google 出品的 MurmurHash 算法。
      *              MurmurHash 是一种非加密型哈希函数，适用于一般的哈希检索操作。
      *              与其它流行的哈希函数相比，对于规律性较强的 key，MurmurHash 的随机分布特征表现更良好。
@@ -64,6 +64,11 @@ public class HashUtils {
         return toBase62(num);
     }
 
+
+    /**
+     * 测试类
+     * @param args
+     */
     public static void main(String[] args) {
         System.out.println(hashToBase62("https://juejin.cn/post/6844904090602848270?share_token=4ba00e67-783a-496a-9b49-fe5cb9b1a4c9"));
     }
