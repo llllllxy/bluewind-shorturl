@@ -132,7 +132,7 @@ public class ShortUrlServiceImpl {
         map.put("shortURL", shortURL);
         map.put("originalURL", originalURL);
         map.put("expireDate", expireDate);
-        redisTemplate.opsForValue().set(shortURL, JacksonUtils.writeValueAsString(map), TIMEOUT, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(shortURL, JsonUtils.writeValueAsString(map), TIMEOUT, TimeUnit.MINUTES);
     }
 
 
@@ -144,7 +144,7 @@ public class ShortUrlServiceImpl {
     public Map<String, String> redisGet(String shortURL) {
         String mapString = redisTemplate.opsForValue().get(shortURL);
         if (mapString != null) {
-            return (Map<String,String>) JacksonUtils.readValue(mapString, Map.class);
+            return (Map<String,String>) JsonUtils.readValue(mapString, Map.class);
         } else {
             return null;
         }
@@ -162,7 +162,7 @@ public class ShortUrlServiceImpl {
         // 然后插入访问日志表
         String accessIp = IpAddressUtils.getIpAddress(request);
         String accessTime = DateTool.getCurrentTime();
-        String accessUserAgent = JacksonUtils.writeValueAsString(UserAgentUtils.getUserAgent(request));
+        String accessUserAgent = JsonUtils.writeValueAsString(UserAgentUtils.getUserAgent(request));
 
         shortUrlDao.insertAccessLogs(shortURL, accessIp, accessTime, accessUserAgent);
     }

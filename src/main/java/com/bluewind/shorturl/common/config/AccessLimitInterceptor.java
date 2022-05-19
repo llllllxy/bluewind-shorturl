@@ -3,7 +3,7 @@ package com.bluewind.shorturl.common.config;
 import com.bluewind.shorturl.common.annotation.AccessLimit;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.util.IpAddressUtils;
-import com.bluewind.shorturl.common.util.JacksonUtils;
+import com.bluewind.shorturl.common.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpMethod;
@@ -52,7 +52,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
             String redisKey = ip + ":" + method + ":" + requestURI;
             Object redisResult = redisTemplate.opsForValue().get(redisKey);
             // 获取当前访问次数
-            Integer count = JacksonUtils.convertValue(redisResult, Integer.class);
+            Integer count = JsonUtils.convertValue(redisResult, Integer.class);
             if (count == null) {
                 // 在规定周期内第一次访问，存入redis，次数+1
                 redisTemplate.opsForValue().increment(redisKey, 1);
@@ -63,7 +63,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
                     response.setContentType("application/json;charset=utf-8");
                     PrintWriter out = response.getWriter();
                     Result result = Result.create(403, accessLimit.msg());
-                    out.write(JacksonUtils.writeValueAsString(result));
+                    out.write(JsonUtils.writeValueAsString(result));
                     out.flush();
                     out.close();
                     return false;

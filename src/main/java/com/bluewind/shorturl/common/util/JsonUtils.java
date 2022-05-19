@@ -11,7 +11,7 @@ import java.io.InputStream;
  * @author liuxingyu01
  * @date 2022-03-11-16:47
  **/
-public class JacksonUtils {
+public class JsonUtils {
 
     public static String writeValueAsString(Object value) {
         ObjectMapper objectMapper = new ObjectMapper();

@@ -2,7 +2,7 @@ package com.bluewind.shorturl.common.config;
 
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.consts.SystemConst;
-import com.bluewind.shorturl.common.util.JacksonUtils;
+import com.bluewind.shorturl.common.util.JsonUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class AuthenticeInterceptor implements HandlerInterceptor {
 
                 response.setContentType("application/json");
                 PrintWriter out = response.getWriter();
-                out.write(JacksonUtils.writeValueAsString(result));
+                out.write(JsonUtils.writeValueAsString(result));
                 out.close();
             } else {
                 // 拦截后跳转至登录页
