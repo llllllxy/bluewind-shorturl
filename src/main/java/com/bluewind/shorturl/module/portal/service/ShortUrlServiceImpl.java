@@ -88,7 +88,7 @@ public class ShortUrlServiceImpl {
      */
     public String generateUrlMap(String originalURL, String expireDate, String tenantId) {
         if (log.isInfoEnabled()) {
-            log.info("ShortUrlServiceImpl -- saveUrlMap -- originalURL = {}", originalURL);
+            log.info("ShortUrlServiceImpl -- generateUrlMap -- originalURL = {}", originalURL);
         }
         String tempURL = originalURL;
         String shortURL = HashUtils.hashToBase62(tempURL);
@@ -114,7 +114,7 @@ public class ShortUrlServiceImpl {
                     tempURL += DUPLICATE;
                     shortURL = HashUtils.hashToBase62(tempURL);
                 } else {
-                    log.info("ShortUrlServiceImpl -- saveUrlMap -- Exception = {e}", e);
+                    log.error("ShortUrlServiceImpl -- generateUrlMap -- Exception = {e}", e);
                     throw e;
                 }
             }
