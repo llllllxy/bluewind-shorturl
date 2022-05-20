@@ -1,4 +1,4 @@
-package com.bluewind.shorturl.module.dao;
+package com.bluewind.shorturl.module.manage.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

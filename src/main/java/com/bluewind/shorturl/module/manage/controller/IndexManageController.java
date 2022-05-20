@@ -1,10 +1,10 @@
-package com.bluewind.shorturl.module.controller;
+package com.bluewind.shorturl.module.manage.controller;
 
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.consts.SystemConst;
 import com.bluewind.shorturl.common.util.SHA256Utils;
-import com.bluewind.shorturl.module.service.IndexManageServiceImpl;
+import com.bluewind.shorturl.module.manage.service.IndexManageServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

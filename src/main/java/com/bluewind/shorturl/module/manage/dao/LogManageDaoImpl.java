@@ -1,4 +1,4 @@
-package com.bluewind.shorturl.module.dao;
+package com.bluewind.shorturl.module.manage.dao;
 
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
  * @description
  **/
 @Repository
-public class UrlManageDaoImpl {
+public class LogManageDaoImpl {
+
 }

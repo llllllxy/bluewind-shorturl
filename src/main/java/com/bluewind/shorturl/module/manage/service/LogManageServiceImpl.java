@@ -1,4 +1,4 @@
-package com.bluewind.shorturl.module.service;
+package com.bluewind.shorturl.module.manage.service;
 
 import org.springframework.stereotype.Service;
 

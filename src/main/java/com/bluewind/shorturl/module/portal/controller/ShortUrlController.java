@@ -1,11 +1,11 @@
-package com.bluewind.shorturl.module.controller;
+package com.bluewind.shorturl.module.portal.controller;
 
 import com.bluewind.shorturl.common.annotation.AccessLimit;
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.util.DateTool;
 import com.bluewind.shorturl.common.util.UrlUtils;
-import com.bluewind.shorturl.module.service.ShortUrlServiceImpl;
+import com.bluewind.shorturl.module.portal.service.ShortUrlServiceImpl;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.SqlPara;
