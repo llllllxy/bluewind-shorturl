@@ -57,17 +57,20 @@ public class ShortUrlServiceImpl {
         List<Map<String, Object>> result = shortUrlDao.queryListByshortURL(shortURL);
         String originalURL = "";
         String expireDate = "";
+        String tenantId = "";
         if (result != null && !result.isEmpty()) {
             originalURL = result.get(0).get("lurl") == null ? null : (String) result.get(0).get("lurl");
             expireDate = result.get(0).get("expire_time") == null ? null : (String) result.get(0).get("expire_time");
+            tenantId = result.get(0).get("tenant_id") == null ? null : (String) result.get(0).get("tenant_id");
 
             // 数据库有此短链接，则添加缓存
-            redisSave(shortURL, originalURL, expireDate);
+            redisSave(shortURL, originalURL, expireDate, tenantId);
 
             urlDataMap = new HashMap<>();
             urlDataMap.put("shortURL", shortURL);
             urlDataMap.put("originalURL", originalURL);
             urlDataMap.put("expireDate", expireDate);
+            urlDataMap.put("tenantId", tenantId);
 
             return urlDataMap;
         } else {
@@ -83,7 +86,7 @@ public class ShortUrlServiceImpl {
      * @param expireDate 过期时间
      * @return 生成的短链
      */
-    public String saveUrlMap(String originalURL, String expireDate) {
+    public String generateUrlMap(String originalURL, String expireDate, String tenantId) {
         if (log.isInfoEnabled()) {
             log.info("ShortUrlServiceImpl -- saveUrlMap -- originalURL = {}", originalURL);
         }
@@ -104,7 +107,7 @@ public class ShortUrlServiceImpl {
                 // 直到数据库中不存在此shortURL，那则可以进行数据库插入了
                 shortUrlDao.insertOne(shortURL, originalURL, expireDate);
                 // 同时添加redis缓存
-                redisSave(shortURL, originalURL, expireDate);
+                redisSave(shortURL, originalURL, expireDate, tenantId);
                 ifContinue = false;
             } catch (Exception e) {
                 if (e instanceof DuplicateKeyException) {
@@ -127,11 +130,12 @@ public class ShortUrlServiceImpl {
      * @param originalURL 原始链接
      * @param expireDate 过期时间
      */
-    public void redisSave(String shortURL, String originalURL, String expireDate) {
+    public void redisSave(String shortURL, String originalURL, String expireDate, String tenantId) {
         Map<String, String> map = new HashMap<>();
         map.put("shortURL", shortURL);
         map.put("originalURL", originalURL);
         map.put("expireDate", expireDate);
+        map.put("tenantId", tenantId);
         redisTemplate.opsForValue().set(shortURL, JsonUtils.writeValueAsString(map), TIMEOUT, TimeUnit.MINUTES);
     }
 
@@ -156,7 +160,7 @@ public class ShortUrlServiceImpl {
      * @param shortURL 短链
      */
     @Async("asyncServiceExecutor") // 耗时操作放进线程池去操作,注意：异步方法使用注解@Async的返回值只能为void或者Future
-    public void updateUrlViews(HttpServletRequest request, String shortURL) {
+    public void updateUrlViews(HttpServletRequest request, String shortURL, String tenantId) {
         // 首先更新s_url_map表里的views字段
         shortUrlDao.updateUrlViews(shortURL);
         // 然后插入访问日志表
@@ -164,6 +168,6 @@ public class ShortUrlServiceImpl {
         String accessTime = DateTool.getCurrentTime();
         String accessUserAgent = JsonUtils.writeValueAsString(UserAgentUtils.getUserAgent(request));
 
-        shortUrlDao.insertAccessLogs(shortURL, accessIp, accessTime, accessUserAgent);
+        shortUrlDao.insertAccessLogs(shortURL, accessIp, accessTime, accessUserAgent, tenantId);
     }
 }

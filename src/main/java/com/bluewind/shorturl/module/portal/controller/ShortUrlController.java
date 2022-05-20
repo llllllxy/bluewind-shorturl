@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * @author liuxingyu01
  * @date 2022-03-11-16:54
- * @description 短链主页平台控制器
+ * @description 短链主页门户平台控制器
  **/
 @Controller
 public class ShortUrlController {
@@ -72,7 +72,12 @@ public class ShortUrlController {
     @PostMapping("/generate")
     @ResponseBody
     public Result generateShortURL(@RequestParam String originalUrl,
+                                   @RequestParam(required = false, defaultValue = "", value = "tenantId") String tenantId,
                                    @RequestParam(required = false, defaultValue = "sevenday", value = "validityPeriod") String validityPeriod) throws UnknownHostException {
+        if (StringUtils.isEmpty(tenantId)) {
+            return Result.error("租户ID不能为空，请检查请求参数");
+        }
+
         if (UrlUtils.checkURL(originalUrl)) {
             String expireDate = "";
             String currentTime = DateTool.getCurrentTime("HHmmss");
@@ -92,7 +97,7 @@ public class ShortUrlController {
                 log.info("ShortUrlController -- generateShortURL -- expireDate = {}", expireDate);
             }
 
-            String shortURL = shortUrlServiceImpl.saveUrlMap(originalUrl, expireDate);
+            String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId);
             String host = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"
                     + env.getProperty("server.port")
                     + "/";
@@ -110,6 +115,8 @@ public class ShortUrlController {
         if (urlDataMap != null && !urlDataMap.isEmpty()) {
             String originalURL = urlDataMap.get("originalURL") == null ? "" : urlDataMap.get("originalURL");
             String expireDate = urlDataMap.get("expireDate") == null ? "" : urlDataMap.get("expireDate");
+            String tenantId = urlDataMap.get("tenantId") == null ? "" : urlDataMap.get("tenantId");
+
             String nowTime = DateTool.getCurrentTime("yyyyMMddHHmmss");
 
             if (StringUtils.isNotBlank(expireDate)) {
@@ -118,7 +125,7 @@ public class ShortUrlController {
                     // 短链过期了，则直接返回过期页面
                     return "redirect:/expirePage";
                 } else {
-                    shortUrlServiceImpl.updateUrlViews(request, shortURL);
+                    shortUrlServiceImpl.updateUrlViews(request, shortURL, tenantId);
                     // 查询到对应的原始链接，302重定向
                     return "redirect:" + originalURL;
                 }
@@ -148,7 +155,7 @@ public class ShortUrlController {
             log.info("ShortUrlController -- generateShortURL -- applyList2 = {}", applyList2);
         }
 
-        return  Result.ok("测试成功", applyList2);
+        return Result.ok("测试成功", applyList2);
     }
 
 }

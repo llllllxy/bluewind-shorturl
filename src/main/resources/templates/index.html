@@ -98,7 +98,8 @@
                         },
                         data: Qs.stringify({
                             originalUrl: this.originalUrl,
-                            validityPeriod: this.validityPeriod
+                            validityPeriod: this.validityPeriod,
+                            tenantId: 'common'
                         })
                     }).then((res) => {
                         if (res.data.code == 200) {

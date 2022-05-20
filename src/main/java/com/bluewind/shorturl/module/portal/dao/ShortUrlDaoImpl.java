@@ -24,7 +24,7 @@ public class ShortUrlDaoImpl {
      * @return
      */
     public List<Map<String, Object>> queryListByshortURL(String shortURL) {
-        String sql = "select lurl, expire_time from s_url_map where surl = ?";
+        String sql = "select lurl, tenant_id, expire_time from s_url_map where surl = ?";
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql, shortURL);
         return result;
     }
@@ -64,9 +64,9 @@ public class ShortUrlDaoImpl {
      * @param accessUserAgent
      * @return
      */
-    public int insertAccessLogs(String shortURL, String accessIp, String accessTime, String accessUserAgent) {
-        String sql = "insert into s_access_log (surl, access_time, access_ip, access_user_agent) values (?,?,?,?)";
-        return jdbcTemplate.update(sql, shortURL, accessTime, accessIp, accessUserAgent);
+    public int insertAccessLogs(String shortURL, String accessIp, String accessTime, String accessUserAgent, String tenantId) {
+        String sql = "insert into s_access_log (surl, access_time, access_ip, access_user_agent, tenant_id) values (?,?,?,?,?)";
+        return jdbcTemplate.update(sql, shortURL, accessTime, accessIp, accessUserAgent, tenantId);
     }
 
     /**
