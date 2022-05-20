@@ -1,5 +1,6 @@
 package com.bluewind.shorturl.module.controller;
 
+import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.consts.SystemConst;
 import com.bluewind.shorturl.common.util.SHA256Utils;
@@ -35,18 +36,21 @@ public class IndexManageController {
     private String salt;
 
 
+    @LogAround("跳转到后台管理登陆页")
     @GetMapping("/login")
     public String login() {
         return "manage/login";
     }
 
 
+    @LogAround("跳转到后台管理首页")
     @GetMapping("/index")
     public String index() {
         return "manage/index";
     }
 
 
+    @LogAround("执行后台管理登陆操作")
     @PostMapping("/doLogin")
     @ResponseBody
     public Result doLogin(@RequestParam String username,
@@ -81,6 +85,7 @@ public class IndexManageController {
     }
 
 
+    @LogAround("执行后台管理退出登陆操作")
     @GetMapping("/logout")
     @ResponseBody
     public Result logout(HttpSession session) {

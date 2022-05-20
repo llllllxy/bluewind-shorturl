@@ -32,6 +32,7 @@ import java.util.Map;
 /**
  * @author liuxingyu01
  * @date 2022-03-11-16:54
+ * @description 短链主页平台控制器
  **/
 @Controller
 public class ShortUrlController {
@@ -101,7 +102,7 @@ public class ShortUrlController {
     }
 
 
-    @LogAround("短链转发核心控制器")
+    @LogAround("短链解析转发")
     @GetMapping("/{shortURL}")
     public String redirect(@PathVariable String shortURL, HttpServletRequest request) {
         // 根据断链，获取原始url
