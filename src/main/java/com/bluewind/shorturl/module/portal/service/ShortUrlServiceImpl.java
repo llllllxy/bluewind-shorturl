@@ -80,7 +80,7 @@ public class ShortUrlServiceImpl {
 
 
     /**
-     * 保存短链
+     * 生成并保存短链
      *
      * @param originalURL 原始链接
      * @param expireDate 过期时间
