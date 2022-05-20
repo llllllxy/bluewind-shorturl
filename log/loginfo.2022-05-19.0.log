@@ -1,0 +1,30 @@
+2022-05-19 11:40:40.843 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-19 11:40:40.910 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 107360 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-19 11:40:40.911 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-19 11:40:43.111 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @4489ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-19 11:40:43.237 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-19 11:40:43.265 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-19 11:40:43.860 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-19 11:40:43.860 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-19 11:40:43.862 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 600000ms
+2022-05-19 11:40:43.873 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@1b1c538d{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.2481411676332754387/],AVAILABLE}
+2022-05-19 11:40:43.874 [main] INFO  org.eclipse.jetty.server.Server:415- Started @5252ms
+2022-05-19 11:40:44.021 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-19 11:40:44.498 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-19 11:40:44.744 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-19 11:40:45.434 [main] INFO  io.lettuce.core.EpollProvider:68- Starting without optional epoll library
+2022-05-19 11:40:45.436 [main] INFO  io.lettuce.core.KqueueProvider:70- Starting without optional kqueue library
+2022-05-19 11:40:46.700 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-19 11:40:46.722 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@58f07f02{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-19 11:40:46.728 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 6.848 seconds (JVM running for 8.106)
+2022-05-19 11:40:46.730 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-19 11:40:46.731 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://10.49.12.120:8076/
+	----------------------------------------------------------

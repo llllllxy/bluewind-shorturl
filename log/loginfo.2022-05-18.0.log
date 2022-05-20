@@ -1,0 +1,371 @@
+2022-05-18 11:19:04.480 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-18 11:19:04.504 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 25512 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-18 11:19:04.505 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-18 11:19:06.263 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @4292ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-18 11:19:06.364 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-18 11:19:06.388 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-18 11:19:06.489 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-18 11:19:06.489 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-18 11:19:06.491 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 660000ms
+2022-05-18 11:19:06.501 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@783115d9{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.88554871062883336/],AVAILABLE}
+2022-05-18 11:19:06.501 [main] INFO  org.eclipse.jetty.server.Server:415- Started @4530ms
+2022-05-18 11:19:06.912 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-18 11:19:07.360 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-18 11:19:07.521 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-18 11:19:08.250 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-18 11:19:08.292 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@6f7e336b{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-18 11:19:08.298 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 4.463 seconds (JVM running for 6.327)
+2022-05-18 11:19:08.301 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-18 11:19:08.301 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://10.49.12.120:8076/
+	----------------------------------------------------------
+2022-05-18 11:20:53.114 [qtp1788432625-26] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：首页----index
+2022-05-18 11:20:53.121 [qtp1788432625-26] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：首页----index,用时：7毫秒
+2022-05-18 11:21:28.100 [qtp1788432625-27] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 11:21:28.359 [qtp1788432625-27] INFO  io.lettuce.core.EpollProvider:68- Starting without optional epoll library
+2022-05-18 11:21:28.361 [qtp1788432625-27] INFO  io.lettuce.core.KqueueProvider:70- Starting without optional kqueue library
+2022-05-18 11:21:29.109 [qtp1788432625-27] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 141743
+2022-05-18 11:21:29.110 [qtp1788432625-27] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 141760
+2022-05-18 11:21:29.112 [qtp1788432625-27] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 141765
+2022-05-18 11:21:29.113 [qtp1788432625-27] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 141771
+2022-05-18 11:21:29.114 [qtp1788432625-27] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 141780
+2022-05-18 11:21:29.556 [qtp1788432625-27] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：1455毫秒
+2022-05-18 11:21:29.572 [qtp1788432625-26] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链过期页----expirePage
+2022-05-18 11:21:29.573 [qtp1788432625-26] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链过期页----expirePage,用时：1毫秒
+2022-05-18 11:21:36.936 [qtp1788432625-30] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：首页----index
+2022-05-18 11:21:36.937 [qtp1788432625-30] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：首页----index,用时：0毫秒
+2022-05-18 11:22:33.966 [qtp1788432625-31] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 11:22:34.094 [qtp1788432625-31] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：127毫秒
+2022-05-18 11:22:34.100 [qtp1788432625-26] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链过期页----expirePage
+2022-05-18 11:22:34.101 [qtp1788432625-26] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链过期页----expirePage,用时：0毫秒
+2022-05-18 11:22:40.529 [qtp1788432625-31] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：首页----index
+2022-05-18 11:22:40.530 [qtp1788432625-31] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：首页----index,用时：0毫秒
+2022-05-18 11:24:01.806 [qtp1788432625-50] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 11:24:01.810 [qtp1788432625-50] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 152385
+2022-05-18 11:24:01.825 [qtp1788432625-50] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：18毫秒
+2022-05-18 11:24:49.837 [qtp1788432625-25] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 11:24:49.845 [qtp1788432625-25] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：6毫秒
+2022-05-18 15:28:57.141 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-18 15:28:57.168 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 55740 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-18 15:28:57.170 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-18 15:28:59.506 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @4954ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-18 15:28:59.625 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-18 15:28:59.648 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-18 15:28:59.737 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-18 15:28:59.738 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-18 15:28:59.739 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 600000ms
+2022-05-18 15:28:59.749 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@7ee3d262{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.4214933975681552748/],AVAILABLE}
+2022-05-18 15:28:59.749 [main] INFO  org.eclipse.jetty.server.Server:415- Started @5197ms
+2022-05-18 15:29:00.238 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-18 15:29:00.703 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-18 15:29:00.931 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-18 15:29:01.532 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-18 15:29:01.573 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@4a68135e{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-18 15:29:01.579 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 5.42 seconds (JVM running for 7.026)
+2022-05-18 15:29:01.581 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-18 15:29:01.581 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://10.94.6.55:8076/
+	----------------------------------------------------------
+2022-05-18 15:29:05.500 [qtp1034584766-33] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：首页----index
+2022-05-18 15:29:05.506 [qtp1034584766-33] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：首页----index,用时：5毫秒
+2022-05-18 15:30:30.469 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-18 15:30:30.513 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 51504 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-18 15:30:30.515 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-18 15:30:32.267 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @4362ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-18 15:30:32.364 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-18 15:30:32.388 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-18 15:30:32.468 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-18 15:30:32.468 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-18 15:30:32.470 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 600000ms
+2022-05-18 15:30:32.482 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@e48bf9a{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.569320224681441104/],AVAILABLE}
+2022-05-18 15:30:32.483 [main] INFO  org.eclipse.jetty.server.Server:415- Started @4578ms
+2022-05-18 15:30:32.790 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-18 15:30:33.087 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-18 15:30:33.264 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-18 15:30:33.965 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-18 15:30:34.004 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@50f40653{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-18 15:30:34.010 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 4.566 seconds (JVM running for 6.106)
+2022-05-18 15:30:34.013 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-18 15:30:34.013 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://10.94.6.55:8076/
+	----------------------------------------------------------
+2022-05-18 15:33:28.625 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-18 15:33:28.662 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 50956 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-18 15:33:28.663 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-18 15:33:30.708 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @4224ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-18 15:33:30.809 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-18 15:33:30.835 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-18 15:33:30.917 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-18 15:33:30.917 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-18 15:33:30.918 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 660000ms
+2022-05-18 15:33:30.933 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@e48bf9a{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.92993072503856809/],AVAILABLE}
+2022-05-18 15:33:30.934 [main] INFO  org.eclipse.jetty.server.Server:415- Started @4451ms
+2022-05-18 15:33:31.239 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-18 15:33:31.548 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-18 15:33:31.757 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-18 15:33:32.501 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-18 15:33:32.550 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@50f40653{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-18 15:33:32.558 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 4.683 seconds (JVM running for 6.074)
+2022-05-18 15:33:32.561 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-18 15:33:32.562 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://10.94.6.55:8076/
+	----------------------------------------------------------
+2022-05-18 15:34:43.067 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-18 15:34:43.091 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 55736 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-18 15:34:43.092 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-18 15:34:44.869 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @6804ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-18 15:34:44.979 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-18 15:34:45.006 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-18 15:34:45.098 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-18 15:34:45.098 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-18 15:34:45.100 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 600000ms
+2022-05-18 15:34:45.111 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@5acc9fdf{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.3856278512890142060/],AVAILABLE}
+2022-05-18 15:34:45.112 [main] INFO  org.eclipse.jetty.server.Server:415- Started @7048ms
+2022-05-18 15:34:45.482 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-18 15:34:45.847 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-18 15:34:46.074 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-18 15:34:46.728 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-18 15:34:46.793 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@2063c53e{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-18 15:34:46.800 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 4.41 seconds (JVM running for 8.735)
+2022-05-18 15:34:46.804 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-18 15:34:46.804 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://10.94.6.55:8076/
+	----------------------------------------------------------
+2022-05-18 15:35:27.066 [qtp1742900195-31] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 15:35:27.332 [qtp1742900195-31] INFO  io.lettuce.core.EpollProvider:68- Starting without optional epoll library
+2022-05-18 15:35:27.334 [qtp1742900195-31] INFO  io.lettuce.core.KqueueProvider:70- Starting without optional kqueue library
+2022-05-18 15:35:28.543 [qtp1742900195-31] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：1476毫秒
+2022-05-18 15:35:28.561 [qtp1742900195-32] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 15:35:28.562 [qtp1742900195-32] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:43:03.868 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-18 18:43:03.959 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 67088 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-18 18:43:03.960 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-18 18:43:05.754 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @3949ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-18 18:43:05.870 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-18 18:43:05.900 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-18 18:43:06.426 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-18 18:43:06.427 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-18 18:43:06.428 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 660000ms
+2022-05-18 18:43:06.441 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@2a869a16{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.5299089799376931192/],AVAILABLE}
+2022-05-18 18:43:06.442 [main] INFO  org.eclipse.jetty.server.Server:415- Started @4636ms
+2022-05-18 18:43:06.535 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-18 18:43:06.873 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-18 18:43:07.061 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-18 18:43:07.762 [main] INFO  io.lettuce.core.EpollProvider:68- Starting without optional epoll library
+2022-05-18 18:43:07.764 [main] INFO  io.lettuce.core.KqueueProvider:70- Starting without optional kqueue library
+2022-05-18 18:43:09.186 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-18 18:43:09.203 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@12b5454f{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-18 18:43:09.208 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 6.193 seconds (JVM running for 7.402)
+2022-05-18 18:43:09.210 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-18 18:43:09.211 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://192.168.16.64:8076/
+	----------------------------------------------------------
+2022-05-18 18:43:25.632 [qtp1677840544-30] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：首页----index
+2022-05-18 18:43:25.637 [qtp1677840544-30] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：首页----index,用时：4毫秒
+2022-05-18 18:43:28.668 [qtp1677840544-31] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：首页----index
+2022-05-18 18:43:28.669 [qtp1677840544-31] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：首页----index,用时：0毫秒
+2022-05-18 18:43:41.676 [qtp1677840544-29] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:43:42.167 [qtp1677840544-29] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：491毫秒
+2022-05-18 18:44:01.794 [qtp1677840544-30] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:44:01.797 [qtp1677840544-30] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：2毫秒
+2022-05-18 18:44:01.803 [qtp1677840544-31] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:44:01.804 [qtp1677840544-31] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:44:44.106 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-18 18:44:44.133 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 72940 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-18 18:44:44.134 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-18 18:44:46.131 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @3937ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-18 18:44:46.234 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-18 18:44:46.261 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-18 18:44:46.654 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-18 18:44:46.655 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-18 18:44:46.656 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 660000ms
+2022-05-18 18:44:46.669 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@75181b50{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.5027315046023931877/],AVAILABLE}
+2022-05-18 18:44:46.670 [main] INFO  org.eclipse.jetty.server.Server:415- Started @4477ms
+2022-05-18 18:44:46.762 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-18 18:44:47.065 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-18 18:44:47.236 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-18 18:44:47.855 [main] INFO  io.lettuce.core.EpollProvider:68- Starting without optional epoll library
+2022-05-18 18:44:47.857 [main] INFO  io.lettuce.core.KqueueProvider:70- Starting without optional kqueue library
+2022-05-18 18:44:49.156 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-18 18:44:49.175 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@4dbad37{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-18 18:44:49.179 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 5.699 seconds (JVM running for 6.986)
+2022-05-18 18:44:49.182 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-18 18:44:49.182 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://192.168.16.64:8076/
+	----------------------------------------------------------
+2022-05-18 18:44:55.306 [qtp45019084-26] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:44:55.545 [qtp45019084-26] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：239毫秒
+2022-05-18 18:44:55.559 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:44:55.560 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：1毫秒
+2022-05-18 18:44:56.775 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:44:56.779 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：4毫秒
+2022-05-18 18:44:56.786 [qtp45019084-29] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:44:56.787 [qtp45019084-29] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:45:01.951 [qtp45019084-29] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:45:01.954 [qtp45019084-29] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：2毫秒
+2022-05-18 18:45:01.964 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:45:01.965 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:45:06.531 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:45:06.535 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：2毫秒
+2022-05-18 18:45:06.544 [qtp45019084-29] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:45:06.544 [qtp45019084-29] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:45:43.667 [qtp45019084-65] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:45:43.670 [qtp45019084-65] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：2毫秒
+2022-05-18 18:45:43.690 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:45:43.691 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:45:52.746 [qtp45019084-65] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:45:52.748 [qtp45019084-65] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：2毫秒
+2022-05-18 18:45:52.753 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:45:52.753 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:46:55.118 [qtp45019084-31] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:46:55.172 [qtp45019084-31] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 62373
+2022-05-18 18:46:55.173 [qtp45019084-31] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 128117
+2022-05-18 18:46:55.174 [qtp45019084-31] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 128123
+2022-05-18 18:46:55.176 [qtp45019084-31] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 128128
+2022-05-18 18:46:55.178 [qtp45019084-31] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：59毫秒
+2022-05-18 18:46:55.183 [qtp45019084-25] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:46:55.183 [qtp45019084-25] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:48:31.724 [qtp45019084-26] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:48:31.727 [qtp45019084-26] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 96548
+2022-05-18 18:48:31.728 [qtp45019084-26] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 224691
+2022-05-18 18:48:31.735 [qtp45019084-26] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：10毫秒
+2022-05-18 18:48:31.743 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:48:31.744 [qtp45019084-32] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:49:09.021 [qtp45019084-26] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:49:09.024 [qtp45019084-26] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：2毫秒
+2022-05-18 18:49:09.032 [qtp45019084-65] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:49:09.033 [qtp45019084-65] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:49:40.250 [qtp45019084-31] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:49:40.257 [qtp45019084-31] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：6毫秒
+2022-05-18 18:49:40.264 [qtp45019084-26] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:49:40.265 [qtp45019084-26] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:51:18.178 [qtp45019084-31] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:51:18.183 [qtp45019084-31] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 97927
+2022-05-18 18:51:18.201 [qtp45019084-31] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：22毫秒
+2022-05-18 18:51:18.214 [qtp45019084-27] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：404页----notFound
+2022-05-18 18:51:18.216 [qtp45019084-27] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：404页----notFound,用时：0毫秒
+2022-05-18 18:52:02.029 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-18 18:52:02.054 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 17996 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-18 18:52:02.055 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-18 18:52:03.449 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @3453ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-18 18:52:03.543 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-18 18:52:03.568 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-18 18:52:03.958 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-18 18:52:03.958 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-18 18:52:03.959 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 600000ms
+2022-05-18 18:52:03.970 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@1b1c538d{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.3077576161666674207/],AVAILABLE}
+2022-05-18 18:52:03.971 [main] INFO  org.eclipse.jetty.server.Server:415- Started @3976ms
+2022-05-18 18:52:04.061 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-18 18:52:04.391 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-18 18:52:04.610 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-18 18:52:05.395 [main] INFO  io.lettuce.core.EpollProvider:68- Starting without optional epoll library
+2022-05-18 18:52:05.400 [main] INFO  io.lettuce.core.KqueueProvider:70- Starting without optional kqueue library
+2022-05-18 18:52:06.753 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-18 18:52:06.770 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@58f07f02{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-18 18:52:06.775 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 5.519 seconds (JVM running for 6.779)
+2022-05-18 18:52:06.777 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-18 18:52:06.777 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://192.168.16.64:8076/
+	----------------------------------------------------------
+2022-05-18 18:55:28.699 [background-preinit] INFO  o.h.validator.internal.util.Version:21- HV000001: Hibernate Validator 6.0.22.Final
+2022-05-18 18:55:28.752 [main] INFO  c.b.s.BluewindShortUrlApplication:55- Starting BluewindShortUrlApplication on liuxingyu0100 with PID 55120 (D:\ideaworkplace\bluewind-shorturl\target\classes started by liuxingyu01 in D:\ideaworkplace\bluewind-shorturl)
+2022-05-18 18:55:28.753 [main] INFO  c.b.s.BluewindShortUrlApplication:651- No active profile set, falling back to default profiles: default
+2022-05-18 18:55:30.683 [main] INFO  org.eclipse.jetty.util.log:169- Logging initialized @4315ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-18 18:55:30.781 [main] INFO  org.eclipse.jetty.server.Server:375- jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 1.8.0_322-b01
+2022-05-18 18:55:30.809 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring embedded WebApplicationContext
+2022-05-18 18:55:31.228 [main] INFO  org.eclipse.jetty.server.session:334- DefaultSessionIdManager workerName=node0
+2022-05-18 18:55:31.229 [main] INFO  org.eclipse.jetty.server.session:339- No SessionScavenger set, using defaults
+2022-05-18 18:55:31.230 [main] INFO  org.eclipse.jetty.server.session:132- node0 Scavenging every 660000ms
+2022-05-18 18:55:31.242 [main] INFO  o.e.j.server.handler.ContextHandler:916- Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@2a869a16{application,/,[file:///C:/Users/liuxingyu01/AppData/Local/Temp/jetty-docbase.8076.568933155828648954/],AVAILABLE}
+2022-05-18 18:55:31.243 [main] INFO  org.eclipse.jetty.server.Server:415- Started @4875ms
+2022-05-18 18:55:31.332 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure:56- Init DruidDataSource
+2022-05-18 18:55:31.685 [main] INFO  c.alibaba.druid.pool.DruidDataSource:998- {dataSource-1} inited
+2022-05-18 18:55:31.875 [main] INFO  c.b.s.common.config.ExecutorConfig:37- start asyncServiceExecutor
+2022-05-18 18:55:32.524 [main] INFO  io.lettuce.core.EpollProvider:68- Starting without optional epoll library
+2022-05-18 18:55:32.526 [main] INFO  io.lettuce.core.KqueueProvider:70- Starting without optional kqueue library
+2022-05-18 18:55:33.910 [main] INFO  o.e.j.s.h.ContextHandler.application:2363- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-18 18:55:33.928 [main] INFO  o.e.jetty.server.AbstractConnector:331- Started ServerConnector@12b5454f{HTTP/1.1, (http/1.1)}{0.0.0.0:8076}
+2022-05-18 18:55:33.934 [main] INFO  c.b.s.BluewindShortUrlApplication:61- Started BluewindShortUrlApplication in 6.191 seconds (JVM running for 7.566)
+2022-05-18 18:55:33.936 [main] INFO  c.b.s.BluewindShortUrlApplication:27- bluewind-shorturl 启动成功！
+┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬
+└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │
+└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o
+-------------------------------------------------------------------------
+2022-05-18 18:55:33.937 [main] INFO  c.b.s.BluewindShortUrlApplication:34- 
+----------------------------------------------------------
+	Access URLs:
+	Local: 		http://localhost:8076/
+	External: 	http://192.168.16.64:8076/
+	----------------------------------------------------------
+2022-05-18 18:55:39.215 [qtp1677840544-30] INFO  c.b.s.c.config.AuthenticeInterceptor:38- AuthenticeInterceptor -- preHandle -- userInfo = null
+2022-05-18 18:55:58.322 [qtp1677840544-31] INFO  c.b.s.c.config.AuthenticeInterceptor:38- AuthenticeInterceptor -- preHandle -- userInfo = null
+2022-05-18 18:56:13.811 [qtp1677840544-30] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 18:56:14.065 [qtp1677840544-30] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：254毫秒
+2022-05-18 19:01:12.539 [qtp1677840544-32] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：首页----index
+2022-05-18 19:01:12.540 [qtp1677840544-32] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：首页----index,用时：0毫秒
+2022-05-18 19:07:20.076 [qtp1677840544-25] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链生成----generateShortURL
+2022-05-18 19:07:20.078 [qtp1677840544-25] INFO  c.b.s.m.c.ShortUrlController:91- ShortUrlController -- generateShortURL -- expireDate = 20220525190720
+2022-05-18 19:07:20.079 [qtp1677840544-25] INFO  c.b.s.m.service.ShortUrlServiceImpl:88- ShortUrlServiceImpl -- saveUrlMap -- originalURL = https://zhuanlan.zhihu.com/p/137613156
+2022-05-18 19:07:20.121 [qtp1677840544-25] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 665972
+2022-05-18 19:07:20.123 [qtp1677840544-25] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 708449
+2022-05-18 19:07:20.126 [qtp1677840544-25] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 708457
+2022-05-18 19:07:20.128 [qtp1677840544-25] WARN  c.a.d.pool.DruidAbstractDataSource:1494- discard long time none received connection. , jdbcUrl : jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8, version : 1.2.8, lastPacketReceivedIdleMillis : 708464
+2022-05-18 19:07:20.140 [qtp1677840544-25] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链生成----generateShortURL,用时：63毫秒
+2022-05-18 19:07:29.045 [qtp1677840544-30] INFO  c.b.s.m.c.ShortUrlController:30- 进入方法：短链转发核心控制器----redirect
+2022-05-18 19:07:29.111 [qtp1677840544-30] INFO  c.b.s.m.c.ShortUrlController:40- 方法结束：短链转发核心控制器----redirect,用时：66毫秒
