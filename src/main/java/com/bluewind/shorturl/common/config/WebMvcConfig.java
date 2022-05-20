@@ -23,9 +23,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // 配置拦截上下文列表
         List<String> pathList = new ArrayList<>();
-        pathList.add("/manage/**");
-        pathList.add("/index/index");
+        pathList.add("/tenant/index"); // 租户首页
+        pathList.add("/tenant/logout"); // 租户退出登录
+        pathList.add("/tenant/url/**"); // 租户url短链管理
+        pathList.add("/tenant/log/**"); // 租户短链日志管理
 
         // 注册会话拦截器
         registry.addInterceptor(authenticationInterceptor)

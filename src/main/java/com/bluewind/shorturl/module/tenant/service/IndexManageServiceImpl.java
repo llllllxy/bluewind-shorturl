@@ -1,6 +1,6 @@
-package com.bluewind.shorturl.module.manage.service;
+package com.bluewind.shorturl.module.tenant.service;
 
-import com.bluewind.shorturl.module.manage.dao.IndexManageDaoImpl;
+import com.bluewind.shorturl.module.tenant.dao.IndexManageDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

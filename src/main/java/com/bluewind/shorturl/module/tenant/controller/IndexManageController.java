@@ -1,10 +1,10 @@
-package com.bluewind.shorturl.module.manage.controller;
+package com.bluewind.shorturl.module.tenant.controller;
 
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.consts.SystemConst;
 import com.bluewind.shorturl.common.util.SHA256Utils;
-import com.bluewind.shorturl.module.manage.service.IndexManageServiceImpl;
+import com.bluewind.shorturl.module.tenant.service.IndexManageServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @description
  **/
 @Controller
-@RequestMapping("/index")
+@RequestMapping("/tenant")
 public class IndexManageController {
     final static Logger logger = LoggerFactory.getLogger(IndexManageController.class);
 
