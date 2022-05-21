@@ -4,7 +4,6 @@ import com.bluewind.shorturl.common.util.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.IdGenerator;
 
 import java.util.List;
 import java.util.Map;
@@ -79,8 +78,9 @@ public class ShortUrlDaoImpl {
      * @param expireDate
      * @return
      */
-    public int insertOne(String shortURL, String originalURL, String expireDate) {
-        String sql = "insert into s_url_map (surl, lurl, views, expire_time) values (?,?,?,?)";
-        return jdbcTemplate.update(sql, shortURL, originalURL, 0, expireDate);
+    public int insertUrlMap(String shortURL, String originalURL, String expireDate) {
+        String id = Snowflake.nextId();
+        String sql = "insert into s_url_map (id, surl, lurl, views, expire_time) values (?,?,?,?,?)";
+        return jdbcTemplate.update(sql, id, shortURL, originalURL, 0, expireDate);
     }
 }
