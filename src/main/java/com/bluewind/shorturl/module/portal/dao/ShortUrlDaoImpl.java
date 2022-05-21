@@ -1,8 +1,10 @@
 package com.bluewind.shorturl.module.portal.dao;
 
+import com.bluewind.shorturl.common.util.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.IdGenerator;
 
 import java.util.List;
 import java.util.Map;
@@ -65,8 +67,9 @@ public class ShortUrlDaoImpl {
      * @return
      */
     public int insertAccessLogs(String shortURL, String accessIp, String accessTime, String accessUserAgent, String tenantId) {
-        String sql = "insert into s_access_log (surl, access_time, access_ip, access_user_agent, tenant_id) values (?,?,?,?,?)";
-        return jdbcTemplate.update(sql, shortURL, accessTime, accessIp, accessUserAgent, tenantId);
+        String logId = Snowflake.nextId();
+        String sql = "insert into s_access_log (log_id, surl, access_time, access_ip, access_user_agent, tenant_id) values (?,?,?,?,?,?)";
+        return jdbcTemplate.update(sql, logId, shortURL, accessTime, accessIp, accessUserAgent, tenantId);
     }
 
     /**
