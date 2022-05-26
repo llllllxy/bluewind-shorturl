@@ -1,5 +1,6 @@
 package com.bluewind.shorturl.common.base;
 
+import com.bluewind.shorturl.common.consts.HttpStatus;
 import java.io.Serializable;
 
 /**
@@ -49,15 +50,15 @@ public class Result implements Serializable {
     }
 
     public static Result ok(String msg, Object data) {
-        return new Result(200, msg, data);
+        return new Result(HttpStatus.SUCCESS, msg, data);
     }
 
     public static Result ok(String msg) {
-        return new Result(200, msg, null);
+        return new Result(HttpStatus.SUCCESS, msg, null);
     }
 
     public static Result error(String msg) {
-        return new Result(500, msg);
+        return new Result(HttpStatus.ERROR, msg);
     }
 
     public static Result create(Integer code, String msg, Object data) {

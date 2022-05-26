@@ -1,6 +1,7 @@
 package com.bluewind.shorturl.common.config;
 
 import com.bluewind.shorturl.common.base.Result;
+import com.bluewind.shorturl.common.consts.HttpStatus;
 import com.bluewind.shorturl.common.consts.SystemConst;
 import com.bluewind.shorturl.common.util.JsonUtils;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,7 @@ public class TenantAuthenticeInterceptor implements HandlerInterceptor {
             logger.error("TenantAuthenticeInterceptor -- preHandle -- 请求已拦截");
             // 如果是ajax请求，直接返回302状态码
             if (isAjaxRequest(request)) {
-                Result result = Result.create(401, "会话已失效");
+                Result result = Result.create(HttpStatus.UNAUTHORIZED, "会话已失效，请重新登录");
 
                 response.setContentType("application/json");
                 PrintWriter out = response.getWriter();
