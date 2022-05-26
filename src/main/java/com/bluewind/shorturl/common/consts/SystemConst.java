@@ -12,7 +12,17 @@ public class SystemConst {
     public static final String SYSTEM_NAME = "bluewind-shorturl";
 
     /**
-     * 登录用户 session-key
+     * 管理员 session-key
      */
-    public static final String SYSTEM_USER_KEY = "bluewind-shorturl-user";
+    public static final String ADMIN_USER_KEY = "bluewind-shorturl-admin";
+
+    /**
+     * 租户 session-key
+     */
+    public static final String TENANT_USER_KEY = "bluewind-shorturl-tenant";
+
+    /**
+     * 验证码 redis key
+     */
+    public static final String CAPTCHA_CODE_KEY = "bluewind-shorturl:captcha_codes";
 }

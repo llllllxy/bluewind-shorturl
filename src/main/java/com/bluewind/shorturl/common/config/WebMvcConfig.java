@@ -19,7 +19,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     AccessLimitInterceptor accessLimitInterceptor;
 
     @Autowired
-    AuthenticeInterceptor authenticationInterceptor;
+    TenantAuthenticeInterceptor tenantAuthenticeInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -31,7 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         pathList.add("/tenant/log/**"); // 租户短链日志管理
 
         // 注册会话拦截器
-        registry.addInterceptor(authenticationInterceptor)
+        registry.addInterceptor(tenantAuthenticeInterceptor)
                 .addPathPatterns(pathList); // 只拦截这几个，其余的不拦截
 
         // 注册限流拦截器

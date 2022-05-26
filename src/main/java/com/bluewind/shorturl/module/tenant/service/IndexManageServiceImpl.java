@@ -17,7 +17,7 @@ public class IndexManageServiceImpl {
     @Autowired
     private IndexManageDaoImpl indexManageDao;
 
-    public Map<String, Object> getUserInfo(String account) {
-        return indexManageDao.getUserInfo(account);
+    public Map<String, Object> getTenantInfo(String tenantAccount) {
+        return indexManageDao.getTenantInfo(tenantAccount);
     }
 }

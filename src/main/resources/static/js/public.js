@@ -1,19 +1,118 @@
-
-
 /**
  * 设置AJAX的全局默认选项，
  * 当AJAX请求会话过期时，跳转到登陆页面
  */
 $.ajaxSetup({
-    complete: function(XMLHttpRequest, textStatus){
-        if (XMLHttpRequest.status == 302) {
-            layer.alert('会话已过期，请重新登录', function(index){
-                layer.close(index);
-                window.location.href = Util.ctx + "admin/login";
-            });
+    complete: function(XMLHttpRequest, textStatus) {
+        // alert(JSON.stringify(XMLHttpRequest))
+        if (XMLHttpRequest.responseJSON.code === 401) {
+            if (confirm("会话已过期，请重新登录")) {
+                window.location.href = AjaxUtil.ctx + "tenant/login";
+            }
         }
     }
 } );
+
+
+/**
+ * 驼峰转换下划线
+ * @param name
+ * @returns {string}
+ */
+function toLine(name) {
+    return name.replace(/([A-Z])/g, "_$1").toLowerCase();
+}
+
+
+/**
+ * bootstrapTable封装，减少公共配置项
+ * @param options
+ */
+function initTable(options) {
+    // 初始化表格,动态从服务器加载数据
+    $("#" + options.domId).bootstrapTable('destroy');
+    $("#" + options.domId).bootstrapTable({
+        // 自定义样式配置
+        classes: 'table table-bordered table-hover table-striped',
+        // 使用POST请求到服务器获取数据
+        method: options.method || "POST",
+        contentType: options.contentType || "application/x-www-form-urlencoded;charset=UTF-8",
+        // 获取数据的后端地址
+        url: options.url,
+        // 每一行的唯一标识，一般为主键列
+        uniqueId: options.uniqueId || "id",
+        // 工具按钮用哪个容器
+        toolbar: "#" + options.toolbar,
+        // 表格显示条纹
+        striped: options.striped || true,
+        //数据类型
+        dataType: options.dataType || "json",
+        // 是否显示刷新按钮
+        showRefresh: options.showRefresh || true,
+        // 必须设置刷新事件
+        silent: options.silent || true,
+        // 是否显示列筛选按钮
+        showColumns: options.showColumns || true,
+        // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        cache: options.cache || false,
+        // 是否启用点击选中行，设置true 将在点击行时，自动选择rediobox 和 checkbox
+        clickToSelect: options.cache || true,
+        // 显示导出插件
+        showExport: options.showExport || false,
+        // 导出图标类型
+        Icons: options.Icons || 'glyphicon-export',
+        // basic:当前页的数据,all:全部的数据,selected:选中的数据
+        exportDataType: options.exportDataType || "basic",
+        exportTypes: ['excel'], // 导出文件类型
+        // 文件名称设置
+        exportOptions: {
+            ignoreColumn: [7, 7], // 忽略某一列的索引
+            fileName: options.fileName || "myexcel",
+            tableName: options.tableName || "myexcel"
+        },
+        // 是否启用排序
+        sortable: options.sortable || true,
+        // 排序方式
+        sortOrder: options.sortOrder || "asc",
+        // 默认排序列
+        sortName: options.sortName || "id",
+        // 是否显示搜索框
+        search: options.search || false,
+        // 启动分页
+        pagination: options.pagination || true,
+        // 启用分页条无限循环的功能
+        paginationLoop: options.paginationLoop || false,
+        // 每页显示的记录数
+        pageSize: options.pageSize || 10,
+        // 当前第几页
+        pageNumber: options.pageNumber || 1,
+        // 记录数可选列表
+        pageList: options.pageList || [10, 25, 50, 100],
+        // 显示跳转到
+        paginationShowPageGo: options.paginationShowPageGo || true,
+        paginationPreText: options.paginationPreText || "上一页",
+        paginationNextText: options.paginationNextText || "下一页",
+
+        // 是否启用详细信息视图
+        detailView: false,
+        detailFormatter: options.detailFormatter,
+        // 设置在哪里进行分页，可选值为"client" 或者 "server"
+        sidePagination: "server",
+        // 设置为""可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+        // 设置为limit可以获取limit, offset, search, sort, order
+        queryParamsType: "",
+        queryParams: options.queryParams,
+        // json数据解析，后端固定格式
+        responseHandler: function(res) {
+            return {
+                "rows": res.data.rows,
+                "total": res.data.total
+            };
+        },
+        //数据列
+        columns: options.columns
+    });
+}
 
 
 /**

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>租户登录</title>
+    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/ico">
+    <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
+    <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+    <link th:href="@{/js/bootstrap-validator/css/bootstrapValidator.css}" rel="stylesheet">
+    <style th:inline="text">
+        .lyear-wrapper {
+            position: relative;
+            background-image: url("[[@{/}]]images/login-bg.jpg");
+            background-size: cover;
+        }
+        .lyear-login {
+            display: flex !important;
+            min-height: 100vh;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .lyear-login:after{
+            content: '';
+            min-height: inherit;
+            font-size: 0;
+        }
+        .login-center {
+            background: #fff;
+            min-width: 29.25rem;
+            padding: 2.14286em 3.57143em;
+            border-radius: 3px;
+            margin: 2.85714em;
+        }
+        .login-header {
+            margin-bottom: 1.5rem !important;
+        }
+        .login-center .has-feedback.feedback-left .form-control {
+            padding-left: 38px;
+            padding-right: 12px;
+        }
+        .login-center .has-feedback.feedback-left .form-control-feedback {
+            left: 0;
+            right: auto;
+            width: 38px;
+            height: 38px;
+            line-height: 38px;
+            z-index: 4;
+            color: #dcdcdc;
+        }
+        .login-center .has-feedback.feedback-left.row .form-control-feedback {
+            left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="row lyear-wrapper">
+    <div class="lyear-login">
+        <div class="login-center">
+            <div class="login-header text-center">
+                <img alt="light year admin" th:src="@{/images/logo-sidebar.png}">
+            </div>
+            <form id="loginForm">
+                <div class="form-group has-feedback feedback-left">
+                    <input type="text" placeholder="请输入您的用户名" class="form-control" name="username" id="username" />
+                    <span class="mdi mdi-account form-control-feedback" aria-hidden="true"></span>
+                </div>
+                <div class="form-group has-feedback feedback-left">
+                    <input type="password" placeholder="请输入密码" class="form-control" id="password" name="password" />
+                    <span class="mdi mdi-lock form-control-feedback" aria-hidden="true"></span>
+                </div>
+                <div class="form-group has-feedback feedback-left row">
+                    <div class="col-xs-7">
+                        <input type="text" name="captcha" class="form-control" placeholder="验证码">
+                        <span class="mdi mdi-check-all form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                    <div class="col-xs-5">
+                        <img class="pull-right" id="captcha" style="cursor: pointer;" title="看不清? 点击刷新" alt="captcha">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="lyear-checkbox checkbox-primary m-t-10">
+                        <input type="checkbox"><span>记住密码</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-block btn-primary" type="button" id="saveFormBtn">立即登录</button>
+                </div>
+            </form>
+            <hr>
+            <footer class="col-sm-12 text-center">
+                <p class="m-b-0">Copyright © 2022 <a href="http://lyear.itshubao.com">Bluewind</a>. All right reserved</p>
+            </footer>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-validator/js/bootstrapValidator.js}"></script>
+<script type="text/javascript" th:src="@{/js/md5.js}"></script>
+<script type="text/javascript" th:src="@{/js/coco-message/coco-message.js}"></script>
+<script type="text/javascript" th:src="@{/js/public.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    AjaxUtil.ctx = /*[[@{/}]]*/'';
+
+
+    var verifyKey;
+    $(document).ready(function () {
+        getKaptcha();
+        // 图形验证码点击事件（短信登陆）
+        $("#captcha").click(function () {
+            getKaptcha();
+        });
+
+
+        // 获取图形验证码（邮箱登陆）
+        function getKaptcha() {
+            AjaxUtil.get({
+                url: AjaxUtil.ctx + "tenant/getCaptcha?type=char",
+                success: function (res) {
+                    $("#captcha").prop("src", "data:image/gif;base64," + res.data.img);
+                    verifyKey = res.data.uuid;
+                },
+                error: function (error) {
+                    Message.error(error, 1000);
+                }
+            });
+        }
+
+
+        $('#loginForm').bootstrapValidator({
+            fields: {
+                username: {validators: {notEmpty: {message: '用户账号不能为空'}}},
+                password: {validators: {notEmpty: {message: '用户密码不能为空'}}},
+                captcha: {validators: {notEmpty: {message: '验证码不能为空'}}}
+            }
+        });
+
+
+        $("#saveFormBtn").click(function () {
+            var bv = $('#loginForm').data('bootstrapValidator');
+            bv.validate();
+            if (bv.isValid()) {
+                // 不直接走form.submit()，登陆走ajax比较合
+                let username = $("input[name='username']").val();
+                let password = $("input[name='password']").val();
+                let captcha = $("input[name='captcha']").val();
+
+                // Thymeleaf在js中直接获取model中的值
+                let secret = '[[${secret}]]';
+                let formdata = {
+                    "username": username,
+                    "password": md5(secret + password),
+                    "captcha": captcha,
+                    "verifyKey": verifyKey
+                }
+                // 加载层
+
+                AjaxUtil.post({
+                    url: AjaxUtil.ctx + "tenant/doLogin",
+                    data: formdata,
+                    success: function (res) {
+                        if (res.code === 200) {
+                            Message.success(1000, res.msg, function () {
+                                // 跳转首页
+                                window.location.href = AjaxUtil.ctx + "tenant/index";
+                            });
+                        } else {
+                            Message.error(res.msg, 1000);
+                            getKaptcha();
+                        }
+                    },
+                    error: function (error) {
+                        Message.error(error, 1000);
+                        getKaptcha();
+                    }
+                });
+
+            }
+        });
+
+    });
+
+</script>
+</body>
+</html>

@@ -22,8 +22,8 @@ import java.util.Map;
  * @description 会话拦截器
  **/
 @Component
-public class AuthenticeInterceptor implements HandlerInterceptor {
-    final static Logger logger = LoggerFactory.getLogger(AuthenticeInterceptor.class);
+public class TenantAuthenticeInterceptor implements HandlerInterceptor {
+    final static Logger logger = LoggerFactory.getLogger(TenantAuthenticeInterceptor.class);
 
     /*
      * 进入controller层之前拦截请求
@@ -33,11 +33,11 @@ public class AuthenticeInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        Map<String, Object> userInfo = (Map<String, Object>) request.getSession().getAttribute(SystemConst.SYSTEM_USER_KEY);
-        logger.info("AuthenticeInterceptor -- preHandle -- userInfo = {}", userInfo);
+        Map<String, Object> userInfo = (Map<String, Object>) request.getSession().getAttribute(SystemConst.TENANT_USER_KEY);
+        logger.info("TenantAuthenticeInterceptor -- preHandle -- userInfo = {}", userInfo);
 
         if (userInfo == null || userInfo.isEmpty()) {
-            logger.error("AuthenticeInterceptor -- preHandle -- 请求已拦截");
+            logger.error("TenantAuthenticeInterceptor -- preHandle -- 请求已拦截");
             // 如果是ajax请求，直接返回302状态码
             if (isAjaxRequest(request)) {
                 Result result = Result.create(401, "会话已失效");
@@ -48,7 +48,7 @@ public class AuthenticeInterceptor implements HandlerInterceptor {
                 out.close();
             } else {
                 // 拦截后跳转至登录页
-                response.sendRedirect("/index/login");
+                response.sendRedirect("/tenant/login");
             }
             return false;
         }
