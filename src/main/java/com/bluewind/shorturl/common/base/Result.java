@@ -49,7 +49,7 @@ public class Result {
     }
 
     public static Result error(String msg) {
-        return new Result(400, msg);
+        return new Result(500, msg);
     }
 
     public static Result create(Integer code, String msg, Object data) {
