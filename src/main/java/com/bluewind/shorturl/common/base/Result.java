@@ -1,10 +1,14 @@
 package com.bluewind.shorturl.common.base;
 
+import java.io.Serializable;
+
 /**
  * @author liuxingyu01
  * @date 2022-03-11-16:58
  **/
-public class Result {
+public class Result implements Serializable {
+    private static final long serialVersionUID = -1491499610241557029L;
+
     private Integer code;
     private String msg;
     private Object data;
@@ -46,6 +50,10 @@ public class Result {
 
     public static Result ok(String msg, Object data) {
         return new Result(200, msg, data);
+    }
+
+    public static Result ok(String msg) {
+        return new Result(200, msg, null);
     }
 
     public static Result error(String msg) {
