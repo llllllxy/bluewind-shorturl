@@ -38,7 +38,6 @@ import java.util.Map;
 public class ShortUrlController {
     final static Logger log = LoggerFactory.getLogger(ShortUrlController.class);
 
-
     @Autowired
     private ShortUrlServiceImpl shortUrlServiceImpl;
 
@@ -46,24 +45,24 @@ public class ShortUrlController {
     private Environment env;
 
 
-    @LogAround("首页")
+    @LogAround("门户首页")
     @GetMapping("/")
     public String index() {
-        return "index";
+        return "portal/index";
     }
 
 
-    @LogAround("404页")
+    @LogAround("门户短链404页")
     @GetMapping("/notFound")
     public String notFound() {
-        return "not_found";
+        return "portal/not_found";
     }
 
 
-    @LogAround("短链过期页")
+    @LogAround("门户短链过期页")
     @GetMapping("/expirePage")
     public String expirePage() {
-        return "expire_page";
+        return "portal/expire_page";
     }
 
 

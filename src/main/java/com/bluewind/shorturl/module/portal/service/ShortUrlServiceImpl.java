@@ -105,7 +105,7 @@ public class ShortUrlServiceImpl {
         while (ifContinue) {
             try {
                 // 直到数据库中不存在此shortURL，那则可以进行数据库插入了
-                shortUrlDao.insertUrlMap(shortURL, originalURL, expireDate);
+                shortUrlDao.insertUrlMap(shortURL, originalURL, expireDate, tenantId);
                 // 同时添加redis缓存
                 redisSave(shortURL, originalURL, expireDate, tenantId);
                 ifContinue = false;

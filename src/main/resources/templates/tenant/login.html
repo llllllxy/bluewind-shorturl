@@ -167,7 +167,7 @@
                     success: function (res) {
                         if (res.code === 200) {
                             Message.success(1000, res.msg, function () {
-                                // 跳转首页
+                                // 跳转租户首页
                                 window.location.href = AjaxUtil.ctx + "tenant/index";
                             });
                         } else {
@@ -180,7 +180,6 @@
                         getKaptcha();
                     }
                 });
-
             }
         });
 

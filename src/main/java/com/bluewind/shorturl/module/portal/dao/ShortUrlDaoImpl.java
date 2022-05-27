@@ -21,7 +21,7 @@ public class ShortUrlDaoImpl {
 
     /**
      * 根据短链，获取列表数据
-     * @param shortURL
+     * @param shortURL 短链
      * @return
      */
     public List<Map<String, Object>> queryListByshortURL(String shortURL) {
@@ -33,7 +33,7 @@ public class ShortUrlDaoImpl {
 
     /**
      * 根据短链，判断此短链是否存在
-     * @param shortURL
+     * @param shortURL 短链
      * @return
      */
     public boolean ifExistByShortUrl(String shortURL) {
@@ -49,7 +49,7 @@ public class ShortUrlDaoImpl {
 
     /**
      * 更新shortUrl的访问次数
-     * @param shortURL
+     * @param shortURL 短链
      * @return
      */
     public int updateUrlViews(String shortURL) {
@@ -57,12 +57,13 @@ public class ShortUrlDaoImpl {
         return jdbcTemplate.update(sql, shortURL);
     }
 
+
     /**
      * 插入访问日志表s_access_log
-     * @param shortURL
-     * @param accessIp
-     * @param accessTime
-     * @param accessUserAgent
+     * @param shortURL 短链
+     * @param accessIp 请求IP
+     * @param accessTime 请求时间
+     * @param accessUserAgent 请求UserAgent
      * @return
      */
     public int insertAccessLogs(String shortURL, String accessIp, String accessTime, String accessUserAgent, String tenantId) {
@@ -71,16 +72,18 @@ public class ShortUrlDaoImpl {
         return jdbcTemplate.update(sql, logId, shortURL, accessTime, accessIp, accessUserAgent, tenantId);
     }
 
+
     /**
-     * 新增一条短链
-     * @param shortURL
-     * @param originalURL
-     * @param expireDate
+     * 新增保存一条短链数据
+     * @param shortURL 短链
+     * @param originalURL 原始链接
+     * @param expireDate 过期时间
+     * @param tenantId 租户ID
      * @return
      */
-    public int insertUrlMap(String shortURL, String originalURL, String expireDate) {
+    public int insertUrlMap(String shortURL, String originalURL, String expireDate, String tenantId) {
         String id = Snowflake.nextId();
-        String sql = "insert into s_url_map (id, surl, lurl, views, expire_time) values (?,?,?,?,?)";
-        return jdbcTemplate.update(sql, id, shortURL, originalURL, 0, expireDate);
+        String sql = "insert into s_url_map (id, surl, lurl, views, expire_time, tenant_id) values (?,?,?,?,?,?)";
+        return jdbcTemplate.update(sql, id, shortURL, originalURL, 0, expireDate, tenantId);
     }
 }
