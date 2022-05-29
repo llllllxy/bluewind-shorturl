@@ -22,7 +22,13 @@ public class SystemConst {
     public static final String TENANT_USER_KEY = "bluewind-shorturl-tenant";
 
     /**
-     * 验证码 redis key
+     * 图片验证码 redis key
      */
     public static final String CAPTCHA_CODE_KEY = "bluewind-shorturl:captcha_codes";
+
+
+    /**
+     * 手机验证码 redis key
+     */
+    public static final String SMS_CODE_KEY = "bluewind-shorturl:sms_codes";
 }

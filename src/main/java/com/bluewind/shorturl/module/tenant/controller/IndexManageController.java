@@ -1,13 +1,16 @@
 package com.bluewind.shorturl.module.tenant.controller;
 
+import com.bluewind.shorturl.common.annotation.AccessLimit;
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.consts.SystemConst;
 import com.bluewind.shorturl.common.util.SHA256Utils;
+import com.bluewind.shorturl.common.util.SmsUtils;
 import com.bluewind.shorturl.module.tenant.service.IndexManageServiceImpl;
 import com.wf.captcha.ArithmeticCaptcha;
 import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.base.Captcha;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author liuxingyu01
  * @date 2022-05-18 15:24
- * @description
+ * @description 租户控制器
  **/
 @Controller
 @RequestMapping("/tenant")
@@ -39,6 +42,9 @@ public class IndexManageController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private SmsUtils smsUtils;
+
 
     /**
      * 加密盐值
@@ -47,11 +53,19 @@ public class IndexManageController {
     private String salt;
 
 
-    @LogAround("跳转到后台管理登陆页")
+    @LogAround("跳转到租户后台登陆页")
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("secret", "@#@iiU70ojmY");
         return "tenant/login";
+    }
+
+
+    @LogAround("跳转到租户后台注册页")
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("secret", "@#@iiU70ojmY");
+        return "tenant/register";
     }
 
 
@@ -150,6 +164,33 @@ public class IndexManageController {
             return Result.error("请传入参数：验证码类型！");
         }
     }
+
+
+    /**
+     * 获取手机验证码
+     */
+    @LogAround("获取手机验证码")
+    @AccessLimit(seconds = 60, maxCount = 1, msg = "60秒内只能获取一次手机验证码")
+    @PostMapping("/sendSms")
+    @ResponseBody
+    public Result sendSms(@RequestParam(value = "tenant_phone") String tenant_phone) throws Exception {
+        // 保存验证码信息
+        String verifyKey = UUID.randomUUID().toString().trim().replaceAll("-", "");
+
+        String randomCode = smsUtils.sendMessage(tenant_phone);
+
+        if (StringUtils.isNotEmpty(randomCode)) {
+            // 存入redis中，有效期10分钟
+            redisTemplate.opsForValue().set(SystemConst.SMS_CODE_KEY + ":" + verifyKey, randomCode, 10, TimeUnit.MINUTES);
+            Map<String,String> result = new HashMap<>();
+            result.put("verifyKey", verifyKey);
+            return Result.ok("获取验证码成功", result);
+        } else {
+            return Result.error("获取手机验证码失败，请联系系统管理页！");
+        }
+
+    }
+
 
 
     @LogAround("执行后台管理退出登陆操作")

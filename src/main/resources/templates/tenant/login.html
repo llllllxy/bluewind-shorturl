@@ -88,7 +88,7 @@
                     </label>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-block btn-primary" type="button" id="saveFormBtn">立即登录</button>
+                    <button class="btn btn-block btn-primary" type="button" id="saveFormBtn" data-loading-text="登陆中...." >立即登录</button>
                 </div>
             </form>
             <hr>
@@ -159,7 +159,8 @@
                     "captcha": captcha,
                     "verifyKey": verifyKey
                 }
-                // 加载层
+                // 按钮加载
+                $("#saveFormBtn").button('loading').queue();
 
                 AjaxUtil.post({
                     url: AjaxUtil.ctx + "tenant/doLogin",
@@ -172,11 +173,15 @@
                             });
                         } else {
                             Message.error(res.msg, 1000);
+                            $("#saveFormBtn").button('reset');
+                            $("#saveFormBtn").dequeue();
                             getKaptcha();
                         }
                     },
                     error: function (error) {
                         Message.error(error, 1000);
+                        $("#saveFormBtn").button('reset');
+                        $("#saveFormBtn").dequeue();
                         getKaptcha();
                     }
                 });
