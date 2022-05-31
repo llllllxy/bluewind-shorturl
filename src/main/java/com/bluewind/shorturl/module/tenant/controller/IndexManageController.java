@@ -47,7 +47,7 @@ public class IndexManageController {
 
 
     /**
-     * 加密盐值
+     * 密码加密盐值
      */
     @Value("${hash.salt}")
     private String salt;
@@ -123,9 +123,6 @@ public class IndexManageController {
     }
 
 
-    /**
-     * 生成验证码
-     */
     @LogAround("生成图形验证码")
     @GetMapping("/getCaptcha")
     @ResponseBody
@@ -166,9 +163,6 @@ public class IndexManageController {
     }
 
 
-    /**
-     * 获取手机验证码
-     */
     @LogAround("获取手机验证码")
     @AccessLimit(seconds = 60, maxCount = 1, msg = "60秒内只能获取一次手机验证码")
     @PostMapping("/sendSms")
@@ -190,7 +184,6 @@ public class IndexManageController {
         }
 
     }
-
 
 
     @LogAround("执行后台管理退出登陆操作")

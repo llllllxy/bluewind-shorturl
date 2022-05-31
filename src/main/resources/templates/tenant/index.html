@@ -80,11 +80,11 @@
                                 <span>笔下光年 <span class="caret"></span></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li> <a class="multitabs" data-url="lyear_pages_profile.html" href="javascript:void(0)"><i class="mdi mdi-account"></i> 个人信息</a> </li>
-                                <li> <a class="multitabs" data-url="lyear_pages_edit_pwd.html" href="javascript:void(0)"><i class="mdi mdi-lock-outline"></i> 修改密码</a> </li>
-                                <li> <a href="javascript:void(0)"><i class="mdi mdi-delete"></i> 清空缓存</a></li>
+                                <li> <a class="multitabs" data-url="lyear_pages_profile.html" href="javascript:void(0)"><i class="mdi mdi-account"></i>个人信息</a> </li>
+                                <li> <a class="multitabs" data-url="lyear_pages_edit_pwd.html" href="javascript:void(0)"><i class="mdi mdi-lock-outline"></i>修改密码</a> </li>
+                                <li> <a href="javascript:void(0)" id="emptyCache"><i class="mdi mdi-delete"></i>清空缓存</a></li>
                                 <li class="divider"></li>
-                                <li> <a href="lyear_pages_login.html"><i class="mdi mdi-logout-variant"></i> 退出登录</a> </li>
+                                <li> <a href="javascript:void(0)" id="logout"><i class="mdi mdi-logout-variant"></i>退出登录</a> </li>
                             </ul>
                         </li>
                         <!--切换主题配色-->
@@ -225,11 +225,31 @@
 <script type="text/javascript" th:inline="javascript">
     AjaxUtil.ctx = /*[[@{/}]]*/'';
 
+    $(document).ready(function () {
+        // 退出登录按钮的响应
+        $("#logout").click(function () {
+            AjaxUtil.get({
+                url: AjaxUtil.ctx + "tenant/logout",
+                success: function (res) {
+                    if (res.code === 200) {
+                        Message.success(1000, res.msg, function () {
+                            // 跳转租户登录页
+                            window.location.href = AjaxUtil.ctx + "tenant/login";
+                        });
+                    } else {
+                        Message.error(res.msg, 1000);
+                    }
+                },
+                error: function (error) {
+                    Message.error(error, 1000);
+                }
+            });
+        });
 
 
 
 
-
+    });
 </script>
 </body>
 </html>
