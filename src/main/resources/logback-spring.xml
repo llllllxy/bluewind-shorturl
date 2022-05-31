@@ -2,12 +2,15 @@
 <configuration>
     <!--输出格式-->
     <!-- 日志存放路径 -->
-    <property name="log.path" value="./log"/>
+    <property name="log.path" value="./log" />
+    <!-- 日志输出格式 -->
+    <property name="log.pattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{20} - [%method,%line] - %msg%n" />
 
+    <!-- 控制台输出 -->
     <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %d - %msg%n
+                ${log.pattern}
             </pattern>
         </layout>
     </appender>
@@ -19,14 +22,14 @@
         </filter>
         <!-- encoder负责两件事，一是把日志信息转换成字节数组，二是把字节数组写入到输出流。 -->
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L- %msg%n</pattern>
+            <pattern>${log.pattern}</pattern>
             <!-- 日志编码 -->
             <charset class="java.nio.charset.Charset">UTF-8</charset>
         </encoder>
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/logerror.%d{yyyy-MM-dd}.%i.log</fileNamePattern><!--路径-->
-            <maxFileSize>20MB</maxFileSize>  <!-- 日志文件过大会使的编辑器打开非常慢，因此设置日志最大50MB -->
+            <maxFileSize>20MB</maxFileSize>  <!-- 日志文件过大会使的编辑器打开非常慢，因此设置日志最大20MB -->
             <maxHistory>30</maxHistory>  <!-- 保存30天 -->
             <totalSizeCap>10GB</totalSizeCap>  <!-- 总日志大小 -->
         </rollingPolicy>
@@ -34,22 +37,23 @@
 
     <!--输出info文件-->
     <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 过滤器，可以过滤掉不符合条件的日志，ERROR及以上的日志被处理，其它的拒绝 -->
+        <!-- 按级别过滤日志，只输出 INFO 级别 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <!--过滤error日志-->
-            <level>ERROR</level>
-            <onMatch>DENY</onMatch>
-            <onMismatch>ACCEPT</onMismatch>
+            <level>INFO</level>
+            <!-- 匹配时的操作：接收（记录） -->
+            <onMatch>ACCEPT</onMatch>
+            <!-- 不匹配时的操作：拒绝（不记录） -->
+            <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L- %msg%n</pattern>
+            <pattern>${log.pattern}</pattern>
             <!-- 日志编码 -->
             <charset class="java.nio.charset.Charset">UTF-8</charset>
         </encoder>
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/loginfo.%d{yyyy-MM-dd}.%i.log</fileNamePattern><!--路径-->
-            <maxFileSize>20MB</maxFileSize>  <!-- 日志文件过大会使的编辑器打开非常慢，因此设置日志最大50MB -->
+            <maxFileSize>20MB</maxFileSize>  <!-- 日志文件过大会使的编辑器打开非常慢，因此设置日志最大20MB -->
             <maxHistory>30</maxHistory>  <!-- 保存30天 -->
             <totalSizeCap>10GB</totalSizeCap>  <!-- 总日志大小 -->
         </rollingPolicy>
