@@ -88,7 +88,7 @@
                     </label>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-block btn-primary" type="button" id="saveFormBtn" data-loading-text="登陆中...." >立即登录</button>
+                    <button class="btn btn-block btn-primary" type="button" id="saveFormBtn" data-loading-text="登录中...." >立即登录</button>
                 </div>
             </form>
             <hr>
@@ -112,13 +112,13 @@
     var verifyKey;
     $(document).ready(function () {
         getKaptcha();
-        // 图形验证码点击事件（短信登陆）
+        // 图形验证码点击事件
         $("#captcha").click(function () {
             getKaptcha();
         });
 
 
-        // 获取图形验证码（邮箱登陆）
+        // 获取图形验证码
         function getKaptcha() {
             AjaxUtil.get({
                 url: AjaxUtil.ctx + "tenant/getCaptcha?type=char",
