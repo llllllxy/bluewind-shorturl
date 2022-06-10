@@ -17,7 +17,24 @@ public class IndexManageServiceImpl {
     @Autowired
     private IndexManageDaoImpl indexManageDao;
 
+    /**
+     * 根据租户账户查询租户信息
+     * @param tenantAccount
+     * @return
+     */
     public Map<String, Object> getTenantInfo(String tenantAccount) {
         return indexManageDao.getTenantInfo(tenantAccount);
+    }
+
+    /**
+     * 新增一个租户账户
+     * @param tenantAccount
+     * @param tenantName
+     * @param tenantPassword
+     * @param tenantPhone
+     * @return
+     */
+    public int addTenantInfo(String tenantAccount, String tenantName, String tenantPassword, String tenantPhone) {
+        return indexManageDao.addTenantInfo(tenantAccount, tenantName, tenantPassword, tenantPhone);
     }
 }

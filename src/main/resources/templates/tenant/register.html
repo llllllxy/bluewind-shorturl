@@ -96,13 +96,13 @@
                 <div class="form-group row">
                     <label class="col-md-4 control-label is-required">验证码：</label>
                     <div class="col-md-7">
-                        <input type="text" name="smsCode" class="form-control" placeholder="请输入验证码">
+                        <input type="text" name="sms_code" class="form-control" placeholder="请输入验证码">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-10 col-md-offset-1">
-                        <button class="btn btn-block btn-primary" type="button" id="submitForm">立即提交</button>
+                        <button class="btn btn-block btn-primary" type="button" id="submitForm" data-loading-text="注册中....">立即提交</button>
                     </div>
                 </div>
             </form>
@@ -128,9 +128,12 @@
 
         $('#loginForm').bootstrapValidator({
             fields: {
-                username: {validators: {notEmpty: {message: '用户账号不能为空'}}},
-                password: {validators: {notEmpty: {message: '用户密码不能为空'}}},
-                smsCode: {validators: {notEmpty: {message: '验证码不能为空'}}}
+                tenant_account: {validators: {notEmpty: {message: '组织团队账号不能为空'}}},
+                tenant_name: {validators: {notEmpty: {message: '组织团队名称不能为空'}}},
+                tenant_password: {validators: {notEmpty: {message: '密码不能为空'}}},
+                tenant_password2: {validators: {notEmpty: {message: '确认密码不能为空'}}},
+                tenant_phone: {validators: {notEmpty: {message: '手机号不能为空'}}},
+                sms_code: {validators: {notEmpty: {message: '验证码不能为空'}}}
             }
         });
 
@@ -188,19 +191,31 @@
             bv.validate();
             if (bv.isValid()) {
                 // 不直接走form.submit()，登陆走ajax比较合
-                let username = $("input[name='username']").val();
-                let password = $("input[name='password']").val();
-                let captcha = $("input[name='captcha']").val();
+                let tenantAccount = $("input[name='tenant_account']").val();
+                let tenantName = $("input[name='tenant_name']").val();
+                let tenantPassword = $("input[name='tenant_password']").val();
+                let tenantPassword2 = $("input[name='tenant_password2']").val();
+                let tenantPhone = $("input[name='tenant_phone']").val();
+                let smsCode = $("input[name='sms_code']").val();
+
+                // 判断两次密码一样不
+                if (tenantPassword !== tenantPassword2) {
+                    Message.error("两次密码请输入一致", 1000);
+                    return false;
+                }
 
                 // Thymeleaf在js中直接获取model中的值
                 let secret = '[[${secret}]]';
                 let formdata = {
-                    "username": username,
-                    "password": md5(secret + password),
-                    "captcha": captcha,
+                    "tenantAccount": tenantAccount,
+                    "tenantName": tenantName,
+                    "tenantPassword": md5(secret + tenantPassword),
+                    "tenantPhone": tenantPhone,
+                    "smsCode": smsCode,
                     "verifyKey": verifyKey
                 }
-                // 加载层
+                // 按钮加载
+                $("#submitForm").button('loading').queue();
 
                 AjaxUtil.post({
                     url: AjaxUtil.ctx + "tenant/doRegister",
@@ -212,21 +227,21 @@
                                 window.location.href = AjaxUtil.ctx + "tenant/index";
                             });
                         } else {
+                            $("#submitForm").button('reset');
+                            $("#submitForm").dequeue();
                             Message.error(res.msg, 1000);
-                            getKaptcha();
                         }
                     },
                     error: function (error) {
+                        $("#submitForm").button('reset');
+                        $("#submitForm").dequeue();
                         Message.error(error, 1000);
-                        getKaptcha();
                     }
                 });
             }
         });
 
     });
-
-
 
 
     /**

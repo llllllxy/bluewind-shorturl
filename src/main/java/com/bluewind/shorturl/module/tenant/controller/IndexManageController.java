@@ -76,7 +76,7 @@ public class IndexManageController {
     }
 
 
-    @LogAround("执行后台管理登陆操作")
+    @LogAround("执行后台管理登录操作")
     @PostMapping("/doLogin")
     @ResponseBody
     public Result doLogin(@RequestParam String username,
@@ -186,7 +186,47 @@ public class IndexManageController {
     }
 
 
-    @LogAround("执行后台管理退出登陆操作")
+    @LogAround("执行后台管理注册操作")
+    @PostMapping("/doRegister")
+    @ResponseBody
+    public Result doRegister(@RequestParam String tenantAccount,
+                             @RequestParam String tenantName,
+                             @RequestParam String tenantPassword,
+                             @RequestParam String tenantPhone,
+                             @RequestParam String smsCode,
+                             @RequestParam String verifyKey,
+                          HttpSession session) {
+        logger.info("IndexManageController doRegister tenantAccount = {}", tenantAccount);
+
+        String smsCodeInRedis = redisTemplate.opsForValue().get(SystemConst.SMS_CODE_KEY + ":" + verifyKey);
+        boolean result = smsCode.equalsIgnoreCase(smsCodeInRedis);
+        if (result) {
+            // 删除掉这个redis缓存值
+            redisTemplate.delete(SystemConst.SMS_CODE_KEY + ":" + verifyKey);
+        } else {
+            return Result.error("手机验证码错误，请重试！");
+        }
+
+        // 再次hash密码
+        tenantPassword = SHA256Utils.SHA256Encode(salt + tenantPassword);
+
+        // 插入到租户表中
+        int num = indexManageService.addTenantInfo(tenantAccount, tenantName, tenantPassword, tenantPhone);
+        if (num > 0) {
+            logger.info("IndexManageController - doRegister - {}登陆成功！", tenantAccount);
+            // 根据用户名查找到租户信息
+            Map<String, Object> tenantInfo = indexManageService.getTenantInfo(tenantAccount);
+            tenantInfo.put("tenant_password", "");
+            // 保存会话信息
+            session.setAttribute(SystemConst.TENANT_USER_KEY, tenantInfo);
+            return Result.ok("注册成功，欢迎您！",null);
+        } else {
+            return Result.error("注册失败，请联系系统管理员！");
+        }
+    }
+
+
+    @LogAround("执行后台管理退出登录操作")
     @GetMapping("/logout")
     @ResponseBody
     public Result logout(HttpSession session) {

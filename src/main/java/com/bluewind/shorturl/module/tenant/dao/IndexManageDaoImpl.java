@@ -1,5 +1,6 @@
 package com.bluewind.shorturl.module.tenant.dao;
 
+import com.bluewind.shorturl.common.util.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +19,11 @@ public class IndexManageDaoImpl {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    /**
+     * 根据租户账户查询租户信息
+     * @param tenantAccount
+     * @return
+     */
     public Map<String, Object> getTenantInfo(String tenantAccount) {
         try {
             String sql = "select * from s_tenant where tenant_account = ?";
@@ -26,6 +32,20 @@ public class IndexManageDaoImpl {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    /**
+     * 新增一个租户账户
+     * @param tenantAccount
+     * @param tenantName
+     * @param tenantPassword
+     * @param tenantPhone
+     * @return
+     */
+    public int addTenantInfo(String tenantAccount, String tenantName, String tenantPassword, String tenantPhone) {
+        String tenantId = Snowflake.nextId();
+        String sql = "insert into s_tenant (tenant_id, tenant_account, tenant_password, tenant_name, tenant_phone,) values (?,?,?,?,?)";
+        return jdbcTemplate.update(sql, tenantId, tenantAccount, tenantPassword, tenantName, tenantPhone);
     }
 
 }
