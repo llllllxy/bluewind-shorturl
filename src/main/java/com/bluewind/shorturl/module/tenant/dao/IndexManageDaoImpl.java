@@ -44,7 +44,7 @@ public class IndexManageDaoImpl {
      */
     public int addTenantInfo(String tenantAccount, String tenantName, String tenantPassword, String tenantPhone) {
         String tenantId = Snowflake.nextId();
-        String sql = "insert into s_tenant (tenant_id, tenant_account, tenant_password, tenant_name, tenant_phone,) values (?,?,?,?,?)";
+        String sql = "insert into s_tenant (tenant_id, tenant_account, tenant_password, tenant_name, tenant_phone) values (?,?,?,?,?)";
         return jdbcTemplate.update(sql, tenantId, tenantAccount, tenantPassword, tenantName, tenantPhone);
     }
 
