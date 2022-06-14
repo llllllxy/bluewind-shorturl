@@ -1,4 +1,4 @@
-package com.bluewind.shorturl.common.config;
+package com.bluewind.shorturl.common.config.security;
 
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.consts.HttpStatus;
@@ -34,10 +34,10 @@ public class TenantAuthenticeInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        Map<String, Object> userInfo = (Map<String, Object>) request.getSession().getAttribute(SystemConst.TENANT_USER_KEY);
-        logger.info("TenantAuthenticeInterceptor -- preHandle -- userInfo = {}", userInfo);
+        Map<String, Object> tenantInfo = (Map<String, Object>) request.getSession().getAttribute(SystemConst.TENANT_USER_KEY);
+        logger.info("TenantAuthenticeInterceptor -- preHandle -- tenantInfo = {}", tenantInfo);
 
-        if (userInfo == null || userInfo.isEmpty()) {
+        if (tenantInfo == null || tenantInfo.isEmpty()) {
             logger.error("TenantAuthenticeInterceptor -- preHandle -- 请求已拦截");
             // 如果是ajax请求，直接返回302状态码
             if (isAjaxRequest(request)) {
@@ -53,6 +53,7 @@ public class TenantAuthenticeInterceptor implements HandlerInterceptor {
             }
             return false;
         }
+        TenantHolder.setTenant(tenantInfo);
 
         // 合格不需要拦截，放行
         return true;
@@ -64,7 +65,7 @@ public class TenantAuthenticeInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        //System.out.println("执行了postHandle方法");
+        //logger.info("TenantAuthenticeInterceptor -- postHandle -- 执行了");
     }
 
     /*
@@ -72,7 +73,8 @@ public class TenantAuthenticeInterceptor implements HandlerInterceptor {
      */
     @Override
     public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3) throws Exception {
-        //System.out.println("执行到了afterCompletion方法");
+        //logger.info("TenantAuthenticeInterceptor -- afterCompletion -- 执行了");
+        TenantHolder.clearTenant();
     }
 
 

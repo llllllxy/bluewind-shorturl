@@ -1,5 +1,6 @@
 package com.bluewind.shorturl.common.config;
 
+import com.bluewind.shorturl.common.config.security.TenantAuthenticeInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
