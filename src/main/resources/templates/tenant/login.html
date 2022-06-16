@@ -147,6 +147,13 @@
             }
         });
 
+        // 键盘回车登录
+        $('body').keydown(function () {
+            if (13 == event.keyCode) {
+                $('#saveFormBtn').trigger('click');
+            }
+        });
+
 
         $("#saveFormBtn").click(function () {
             var bv = $('#loginForm').data('bootstrapValidator');

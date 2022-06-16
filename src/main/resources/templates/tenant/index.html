@@ -34,26 +34,23 @@
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a class="multitabs" href="lyear_main.html">
+                            <a class="multitabs" th:href="@{/tenant/url/index}">
                                 <i class="mdi mdi-home"></i> <span>短链列表</span>
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a class="multitabs" href="lyear_main.html">
+                            <a class="multitabs" th:href="@{/tenant/statistic/index}">
                                 <i class="mdi mdi-home"></i> <span>数据统计</span>
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a class="multitabs" href="lyear_main.html">
+                            <a class="multitabs" th:href="@{/tenant/accesslog/index}">
                                 <i class="mdi mdi-home"></i> <span>访问日志</span>
                             </a>
                         </li>
                     </ul>
                 </nav>
 
-                <div class="sidebar-footer">
-                    <p class="copyright">Copyright &copy; 2019. <a target="_blank" href="http://lyear.itshubao.com">IT书包</a> All rights reserved.</p>
-                </div>
             </div>
 
         </aside>
@@ -246,9 +243,6 @@
                 }
             });
         });
-
-
-
 
     });
 </script>

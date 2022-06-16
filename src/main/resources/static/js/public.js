@@ -100,7 +100,7 @@ function initTable(options) {
         sidePagination: "server",
         // 设置为""可以获取pageNumber，pageSize，searchText，sortName，sortOrder
         // 设置为limit可以获取limit, offset, search, sort, order
-        queryParamsType: "",
+        queryParamsType: options.queryParamsType || "",
         queryParams: options.queryParams,
         // json数据解析，后端固定格式
         responseHandler: function(res) {
