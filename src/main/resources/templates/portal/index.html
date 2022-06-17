@@ -12,52 +12,82 @@
 
     </style>
 </head>
-<body style="background-color: #D2F5F1">
-<div id="app" style="width: 50%;margin-left: 25%;margin-top: 10%;">
-    <el-card class="box-card">
-        <el-row :gutter="10">
-            <el-col :span="16">
-                <el-input size="medium" v-model="originalUrl" placeholder="请输入您的链接，如：http://www.thymeleaf.org">
-                </el-input>
-            </el-col>
-            <el-col :span="4">
-                <el-select size="medium" v-model="validityPeriod" placeholder="有效期">
-                    <el-option label="七天" value="sevenday"></el-option>
-                    <el-option label="3个月" value="threemonth"></el-option>
-                    <el-option label="半年" value="halfyear"></el-option>
-                    <el-option label="永久" value="forever"></el-option>
-                </el-select>
-            </el-col>
+<body>
+<div id="app" style="height: 100%;">
+    <el-container style="height: 100%;">
+        <el-header style="padding: 0; height: 60px">
+            <el-row>
+                <el-col :span="8" :offset="8">
+                    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                        <el-menu-item index="1">主页</el-menu-item>
+                        <el-menu-item index="2">API接口</el-menu-item>
+                        <el-menu-item index="3">关于我们</el-menu-item>
+                    </el-menu>
+                </el-col>
+            </el-row>
+        </el-header>
+        <el-main style="background-color: #409EFF;height: 100%;">
+            <el-row :gutter="10">
+                <el-col :span="24" align="middle">
+                        <span style="color: white;font-size: 30px;font-weight: bold;line-height: 60px;margin-left: 20px;cursor: pointer">
+                            专业的网址缩短和数据分析平台
+                        </span>
+                </el-col>
+            </el-row>
 
-            <el-col :span="3">
-                <el-button size="medium" type="primary" @click="generateShortURL()">生成短链接</el-button>
-            </el-col>
-        </el-row>
+            <div style="width: 50%;margin-left: 25%;margin-top: 20px;">
+                <el-card class="box-card">
+                    <el-row :gutter="10">
+                        <el-col :span="16">
+                            <el-input size="medium" v-model="originalUrl" placeholder="请输入您的链接，如：http://www.thymeleaf.org">
+                            </el-input>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-select size="medium" v-model="validityPeriod" placeholder="有效期">
+                                <el-option label="七天" value="sevenday"></el-option>
+                                <el-option label="3个月" value="threemonth"></el-option>
+                                <el-option label="半年" value="halfyear"></el-option>
+                                <el-option label="永久" value="forever"></el-option>
+                            </el-select>
+                        </el-col>
 
-    </el-card>
-    <el-card class="box-card" style="margin-top:10px" v-show="ifShowResult">
-        <el-row :gutter="10" type="flex" align="middle">
-            <el-col :span="4">
-                <div ref="qrCodeDiv" style="width: 100px; height: 100px;"> </div>
-            </el-col>
-            <el-col :span="20">
-                <el-row type="flex" align="middle">
+                        <el-col :span="3">
+                            <el-button size="medium" type="primary" @click="generateShortURL()">生成短链接</el-button>
+                        </el-col>
+                    </el-row>
+
+                </el-card>
+                <el-card class="box-card" style="margin-top:10px" v-show="ifShowResult">
+                    <el-row :gutter="10" type="flex" align="middle">
+                        <el-col :span="4">
+                            <div ref="qrCodeDiv" style="width: 100px; height: 100px;"> </div>
+                        </el-col>
+                        <el-col :span="20">
+                            <el-row type="flex" align="middle">
                     <span>
                         短链接：<a :href="shortUrl" target="_blank">{{shortUrl}}</a>
                     </span>
-                    &nbsp;&nbsp;
-                    <el-tooltip class="item" effect="light" content="点击复制短链" placement="top-start">
-                        <i class="el-icon-document-copy" @click="copy($event)" style="cursor: pointer"></i>
-                    </el-tooltip>
-                </el-row>
-                <el-row type="flex" align="middle" style="margin-top: 10px">
+                                &nbsp;&nbsp;
+                                <el-tooltip class="item" effect="light" content="点击复制短链" placement="top-start">
+                                    <i class="el-icon-document-copy" @click="copy($event)" style="cursor: pointer"></i>
+                                </el-tooltip>
+                            </el-row>
+                            <el-row type="flex" align="middle" style="margin-top: 10px">
                     <span style="color: #C5C7CE">
                         原始链接：<a :href="originalUrl" target="_blank" style="color: #C5C7CE">{{originalUrl}}</a>
                     </span>
-                </el-row>
-            </el-col>
-        </el-row>
-    </el-card>
+                            </el-row>
+                            <el-row type="flex" align="middle" style="margin-top: 10px">
+                    <span style="font-size: 14px;">
+                        当前您尚未登录，生成的短链接无法保存和查看统计分析数据，请您 <a th:href="@{/tenant/login}">登录</a> 后使用完整功能!
+                    </span>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </div>
+        </el-main>
+    </el-container>
 </div>
 <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/vue/2.6.12/vue.min.js" type="application/javascript"></script>
 <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/index.min.js"></script>
@@ -76,10 +106,14 @@
                 validityPeriod: '',
                 shortUrl: '',
                 qrcode: '',
-                ifShowResult: false
+                ifShowResult: false,
+                activeIndex: '1'
             }
         },
         methods: {
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+            },
             copy: function(event) {
                 this.handleClipboard(this.shortUrl, event);
             },
