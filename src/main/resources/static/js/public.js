@@ -92,9 +92,9 @@ function initTable(options) {
         paginationShowPageGo: options.paginationShowPageGo || true,
         paginationPreText: options.paginationPreText || "上一页",
         paginationNextText: options.paginationNextText || "下一页",
-
         // 是否启用详细信息视图
         detailView: false,
+        // 在行下面展示其他数据列表
         detailFormatter: options.detailFormatter,
         // 设置在哪里进行分页，可选值为"client" 或者 "server"
         sidePagination: "server",
