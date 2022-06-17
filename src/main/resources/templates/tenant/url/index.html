@@ -38,9 +38,13 @@
 
                         <div class="form-group">
                             <!-- 查询按钮 -->
-                            <a class="btn btn-primary m-sm" onclick="reloadTable()"><span class="mdi mdi-plus" aria-hidden="true"></span>&nbsp;搜索</a>
+                            <a class="btn btn-primary m-r-5" onclick="reloadTable()">
+                                <span class="mdi mdi-magnify" aria-hidden="true"></span>搜索
+                            </a>
                             <!-- 重置表单按钮 -->
-                            <a class="btn btn-warning m-sm" onclick="$('#formId')[0].reset()"><span class="mdi mdi-loop" aria-hidden="true"></span>&nbsp;重置</a>
+                            <a class="btn btn-warning" onclick="$('#formId')[0].reset()">
+                                <span class="mdi mdi-loop" aria-hidden="true"></span>重置
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -90,7 +94,7 @@
         var options = {
             domId: "tableId",
             toolbar: "toolbar",
-            url: AjaxUtil.ctx + "siteclass/list",
+            url: AjaxUtil.ctx + "tenant/url/list",
             uniqueId: "id",
             // 是否启用排序
             sortable: true,
@@ -110,15 +114,21 @@
                 field: "id",
                 sortable: true
             }, {
-                title: "分类名称",
-                field: "title"
+                title: "短链",
+                field: "surl"
             }, {
-                title: "创建时间",
-                field: "createTime",
+                title: "原始链接",
+                field: "lurl",
                 sortable: true
-            }, {
-                title: "更新时间",
-                field: "updateTime",
+            },
+            {
+                title: "访问次数",
+                field: "views",
+                sortable: true
+            },
+            {
+                title: "创建时间",
+                field: "created_at",
                 sortable: true
             }, {
                 title: "操作",
@@ -141,7 +151,8 @@
     // 分页查询参数，是以键值对的形式设置的
     function queryParams(params) {
         return {
-            title: $("#title").val(), // 请求时向服务端传递的参数
+            surl: $("#surl").val(), // 请求时向服务端传递的参数
+            createdAt: $("#created_at").val(), // 请求时向服务端传递的参数
             pageSize: params.pageSize, // 每页显示数量
             pageNumber: params.pageNumber, // SQL语句偏移量
             sortName: params.sortName,

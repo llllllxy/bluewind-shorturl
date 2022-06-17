@@ -1,5 +1,10 @@
 package com.bluewind.shorturl.module.tenant.dao;
 
+import com.bluewind.shorturl.common.config.security.TenantHolder;
+import com.bluewind.shorturl.common.util.page.IPageHandle;
+import com.bluewind.shorturl.common.util.page.Page;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,4 +14,23 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public class UrlManageDaoImpl {
+    @Autowired
+    private IPageHandle pageHandle;
+
+    public Page getPage(Integer pageSize, Integer pageNumber, String surl, String createdAt, String sortName, String sortOrder) {
+        String tenantId = TenantHolder.getTenantId();
+        StringBuilder sb =  new StringBuilder();
+        sb.append("select * from s_url_map where tenant_id = '").append(tenantId).append("' ");
+        if (StringUtils.isNotBlank(surl)) {
+            sb.append("and surl = '").append(surl).append("' ");
+        }
+        if (StringUtils.isNotBlank(createdAt)) {
+            sb.append("and created_at like '").append(createdAt).append("%' ");
+        }
+        if (StringUtils.isNotBlank(sortName) && StringUtils.isNotBlank(sortOrder)) {
+            sb.append("order by ").append(sortName).append(" ").append(sortOrder);
+        }
+        Page page = pageHandle.getPage(sb.toString(), pageNumber, pageSize);
+        return page;
+    }
 }

@@ -1,5 +1,8 @@
 package com.bluewind.shorturl.module.tenant.service;
 
+import com.bluewind.shorturl.common.util.page.Page;
+import com.bluewind.shorturl.module.tenant.dao.UrlManageDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,4 +12,11 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class UrlManageServiceImpl {
+
+    @Autowired
+    private UrlManageDaoImpl UrlManageDaoImpl;
+
+    public Page getPage(Integer pageSize, Integer pageNumber, String surl, String createdAt, String sortName, String sortOrder) {
+        return UrlManageDaoImpl.getPage(pageSize, pageNumber, surl, createdAt, sortName, sortOrder);
+    }
 }

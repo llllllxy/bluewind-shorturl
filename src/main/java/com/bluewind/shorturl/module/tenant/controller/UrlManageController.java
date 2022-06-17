@@ -3,6 +3,9 @@ package com.bluewind.shorturl.module.tenant.controller;
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.BaseController;
 import com.bluewind.shorturl.common.base.Result;
+import com.bluewind.shorturl.common.util.page.Page;
+import com.bluewind.shorturl.module.tenant.service.UrlManageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/tenant/url")
 public class UrlManageController extends BaseController {
+    @Autowired
+    private UrlManageServiceImpl urlManageService;
 
 
     @LogAround("跳转到短链列表查询页")
@@ -31,15 +36,14 @@ public class UrlManageController extends BaseController {
     public Result list(@RequestParam("pageSize") Integer pageSize,
                        @RequestParam("pageNumber") Integer pageNumber,
                        @RequestParam(required = false, defaultValue = "", value = "surl") String surl,
-                       @RequestParam(required = false, defaultValue = "", value = "created_at") String created_at,
+                       @RequestParam(required = false, defaultValue = "", value = "createdAt") String createdAt,
                        @RequestParam("sortName") String sortName,
-                       @RequestParam("sortOrder") String sortOrder){
-
-
+                       @RequestParam("sortOrder") String sortOrder) {
+        Page page = urlManageService.getPage(pageSize, pageNumber, surl, createdAt, sortName, sortOrder);
 
         Map<String, Object> result = new HashMap<>();
-//        result.put(RESULT_ROWS, rows);
-//        result.put(RESULT_TOTAL, total);
+        result.put(RESULT_ROWS, page.getRecords());
+        result.put(RESULT_TOTAL, page.getTotal());
         return Result.ok("获取短链列表成功！", result);
     }
 }
