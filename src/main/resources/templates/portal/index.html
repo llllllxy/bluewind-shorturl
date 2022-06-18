@@ -9,29 +9,51 @@
     <link rel="bookmark" th:href="@{/images/favicon.ico}">
     <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/theme-chalk/index.min.css">
     <style>
-
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+        a {
+            color: #606288;
+        }
     </style>
 </head>
 <body>
 <div id="app" style="height: 100%;">
     <el-container style="height: 100%;">
-        <el-header style="padding: 0; height: 60px">
-            <el-row>
-                <el-col :span="8" :offset="8">
-                    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                        <el-menu-item index="1">主页</el-menu-item>
-                        <el-menu-item index="2">API接口</el-menu-item>
-                        <el-menu-item index="3">租户登录</el-menu-item>
-                        <el-menu-item index="4">关于我们</el-menu-item>
+        <el-header style="padding: 0;">
+            <el-row style="background-color:#00162A; height: 60px">
+                <el-col :span="8">
+                    <span style="color: white;font-size: 30px;font-weight: bold;line-height: 60px;margin-left: 20px;cursor: pointer"
+                          @click="freshWeb">
+                        <i class="el-icon-share"></i>&nbsp;蓝风短链平台
+                    </span>
+                </el-col>
+                <el-col :span="14">
+                    <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect"
+                             background-color="#00162A" text-color="#fff" active-text-color="#ffd04b">
+                        <el-menu-item index="index">
+                            <span style="font-weight: bold">主页</span>
+                        </el-menu-item>
+                        <el-menu-item index="api">
+                            <span style="font-weight: bold">API接口</span>
+                        </el-menu-item>
+                        <el-menu-item index="tenant">
+                            <span style="font-weight: bold">租户登录</span>
+                        </el-menu-item>
                     </el-menu>
+                </el-col>
+
+                <el-col :span="2" style="padding-top: 12px">
+                    <el-button size="medium" round>注册/登陆</el-button>
                 </el-col>
             </el-row>
         </el-header>
-        <el-main style="background-color: #409EFF;height: 100%;">
-            <el-row :gutter="10">
+        <el-main style="background-color: #FFF;height: 600px;">
+            <el-row>
                 <el-col :span="24" align="middle">
-                        <span style="color: white;font-size: 30px;font-weight: bold;line-height: 60px;margin-left: 20px;cursor: pointer">
-                            专业的网址缩短和数据分析平台
+                        <span style="color: #00162A;font-size: 30px;font-weight: bold;line-height: 60px;cursor: pointer">
+                            专业的短链和数据分析平台
                         </span>
                 </el-col>
             </el-row>
@@ -65,9 +87,9 @@
                         </el-col>
                         <el-col :span="20">
                             <el-row type="flex" align="middle">
-                    <span>
-                        短链接：<a :href="shortUrl" target="_blank">{{shortUrl}}</a>
-                    </span>
+                                <span>
+                                    短链接：<a :href="shortUrl" target="_blank">{{shortUrl}}</a>
+                                </span>
                                 &nbsp;&nbsp;
                                 <el-tooltip class="item" effect="light" content="点击复制短链" placement="top-start">
                                     <i class="el-icon-document-copy" @click="copy($event)" style="cursor: pointer"></i>
@@ -88,6 +110,20 @@
                 </el-card>
             </div>
         </el-main>
+
+        <el-footer style="background-color: #FFF">
+            <el-row>
+                <el-col :span="24" align="middle">
+                    <span style="color: #606288;font-size: 12px;">
+                        免责声明：短链接由用户生成，所跳转的内容与本站无关。本站禁止违法违规内容的网站生成短链接，如有发现立刻封停！
+                    </span>
+                    <br/>
+                    <span style="color: #606288;font-size: 12px;">
+                        ICP备案：<a href="http://beian.miit.gov.cn" target="_blank">鲁ICP备xxxxxxx号-1</a> | 联系我们：xxxx@163.com | <a href="https://www.baidu.com/" target="_blank">资讯中心</a> | <a href="https://www.baidu.com/" target="_blank">关于我们</a>
+                    </span>
+                </el-col>
+            </el-row>
+        </el-footer>
     </el-container>
 </div>
 <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/vue/2.6.12/vue.min.js" type="application/javascript"></script>
@@ -108,10 +144,13 @@
                 shortUrl: '',
                 qrcode: '',
                 ifShowResult: false,
-                activeIndex: '1'
+                activeIndex: 'index'
             }
         },
         methods: {
+            freshWeb() {
+                window.location.reload();
+            },
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },
