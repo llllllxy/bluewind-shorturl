@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>短链接生成</title>
+    <title>蓝风短链平台</title>
     <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
     <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
     <link rel="icon" th:href="@{/images/favicon.ico}">
@@ -45,7 +45,7 @@
                 </el-col>
 
                 <el-col :span="2" style="padding-top: 12px">
-                    <el-button size="medium" round>注册/登陆</el-button>
+                    <el-button size="medium" round @click="login()">注册/登陆</el-button>
                 </el-col>
             </el-row>
         </el-header>
@@ -96,14 +96,14 @@
                                 </el-tooltip>
                             </el-row>
                             <el-row type="flex" align="middle" style="margin-top: 10px">
-                    <span style="color: #C5C7CE">
-                        原始链接：<a :href="originalUrl" target="_blank" style="color: #C5C7CE">{{originalUrl}}</a>
-                    </span>
+                                <span style="color: #C5C7CE">
+                                    原始链接：<a :href="originalUrl" target="_blank" style="color: #C5C7CE">{{originalUrl}}</a>
+                                </span>
                             </el-row>
                             <el-row type="flex" align="middle" style="margin-top: 10px">
-                    <span style="font-size: 14px;">
-                        当前您尚未登录，生成的短链接无法保存和查看统计分析数据，请您 <a th:href="@{/tenant/login}">登录</a> 后使用完整功能!
-                    </span>
+                                <span style="font-size: 14px;">
+                                    当前您尚未登录，生成的短链接无法保存和查看统计分析数据，请您 <a th:href="@{/tenant/login}">登录</a> 后使用完整功能!
+                                </span>
                             </el-row>
                         </el-col>
                     </el-row>
@@ -134,6 +134,8 @@
 <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/qrcodejs/1.0.0/qrcode.min.js" type="application/javascript"></script>
 
 <script>
+    var ctx = /*[[@{/}]]*/'';
+
     new Vue({
         el: '#app',
         data: function() {
@@ -151,6 +153,10 @@
             freshWeb() {
                 window.location.reload();
             },
+            login() {
+                // 跳转租户登录页
+                window.location.href = ctx + "tenant/login";
+            },
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },
@@ -166,7 +172,7 @@
 
                     axios({
                         method: 'post',
-                        url: "/generate",
+                        url: ctx + "generate",
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                         },
