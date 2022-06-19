@@ -66,20 +66,20 @@ public class ShortUrlController {
     }
 
 
-    @LogAround("短链生成")
+    @LogAround("门户短链生成")
     @AccessLimit(seconds = 10, maxCount = 100, msg = "10秒内只能生成两次短链接")
     @PostMapping("/generate")
     @ResponseBody
-    public Result generateShortURL(@RequestParam String originalUrl,
-                                   @RequestParam(required = false, defaultValue = "", value = "tenantId") String tenantId,
-                                   @RequestParam(required = false, defaultValue = "sevenday", value = "validityPeriod") String validityPeriod) throws UnknownHostException {
+    public Result generate(@RequestParam String originalUrl,
+                           @RequestParam(value = "tenantId") String tenantId,
+                           @RequestParam(required = false, defaultValue = "sevenday", value = "validityPeriod") String validityPeriod) throws UnknownHostException {
         if (StringUtils.isEmpty(tenantId)) {
             return Result.error("租户ID不能为空，请检查请求参数");
         }
-
         if (UrlUtils.checkURL(originalUrl)) {
             String expireDate = "";
             String currentTime = DateTool.getCurrentTime("HHmmss");
+            // 构建过期时间
             if ("sevenday".equals(validityPeriod)) {
                 expireDate = DateTool.nextWeek() + currentTime;
             }
@@ -93,7 +93,7 @@ public class ShortUrlController {
                 expireDate = "20991231235959";
             }
             if (log.isInfoEnabled()) {
-                log.info("ShortUrlController -- generateShortURL -- expireDate = {}", expireDate);
+                log.info("ShortUrlController -- generate -- expireDate = {}", expireDate);
             }
 
             String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId);

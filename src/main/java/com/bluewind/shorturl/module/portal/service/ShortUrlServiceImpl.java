@@ -55,13 +55,10 @@ public class ShortUrlServiceImpl {
         }
         // Redis没有缓存，则从数据库查找
         List<Map<String, Object>> result = shortUrlDao.queryListByshortURL(shortURL);
-        String originalURL = "";
-        String expireDate = "";
-        String tenantId = "";
         if (result != null && !result.isEmpty()) {
-            originalURL = result.get(0).get("lurl") == null ? null : (String) result.get(0).get("lurl");
-            expireDate = result.get(0).get("expire_time") == null ? null : (String) result.get(0).get("expire_time");
-            tenantId = result.get(0).get("tenant_id") == null ? null : (String) result.get(0).get("tenant_id");
+            String originalURL = result.get(0).get("lurl") == null ? null : (String) result.get(0).get("lurl");
+            String expireDate = result.get(0).get("expire_time") == null ? null : (String) result.get(0).get("expire_time");
+            String tenantId = result.get(0).get("tenant_id") == null ? null : (String) result.get(0).get("tenant_id");
 
             // 数据库有此短链接，则添加缓存
             redisSave(shortURL, originalURL, expireDate, tenantId);
