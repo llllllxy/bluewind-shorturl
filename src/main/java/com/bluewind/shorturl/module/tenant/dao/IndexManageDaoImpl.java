@@ -1,5 +1,6 @@
 package com.bluewind.shorturl.module.tenant.dao;
 
+import com.bluewind.shorturl.common.util.GenerateAkAndSk;
 import com.bluewind.shorturl.common.util.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -44,8 +45,12 @@ public class IndexManageDaoImpl {
      */
     public int addTenantInfo(String tenantAccount, String tenantName, String tenantPassword, String tenantPhone) {
         String tenantId = Snowflake.nextId();
-        String sql = "insert into s_tenant (tenant_id, tenant_account, tenant_password, tenant_name, tenant_phone) values (?,?,?,?,?)";
-        return jdbcTemplate.update(sql, tenantId, tenantAccount, tenantPassword, tenantName, tenantPhone);
+        // 注册成功时，自动生成accessKey和accessKeySecret
+        String accessKey = GenerateAkAndSk.generateAk();
+        String accessKeySecret = GenerateAkAndSk.generateSk();
+
+        String sql = "insert into s_tenant (tenant_id, tenant_account, tenant_password, tenant_name, tenant_phone, access_key, access_key_secret) values (?,?,?,?,?,?,?)";
+        return jdbcTemplate.update(sql, tenantId, tenantAccount, tenantPassword, tenantName, tenantPhone, accessKey, accessKeySecret);
     }
 
 }

@@ -1,10 +1,17 @@
 package com.bluewind.shorturl.common.config.filter;
 
 
+import com.bluewind.shorturl.common.base.Result;
+import com.bluewind.shorturl.common.consts.HttpStatus;
+import com.bluewind.shorturl.common.util.DateTool;
+import com.bluewind.shorturl.common.util.JsonUtils;
 import com.bluewind.shorturl.common.util.SpringContextUtil;
+import com.bluewind.shorturl.module.api.service.ApiServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -13,80 +20,63 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author liuxingyu01
  * @date 2022-06-19 21:05
  * @description
  **/
-@WebFilter(filterName = "ItfcCommonFilter",
-        urlPatterns = {"/anon/itfc/*"},
+@WebFilter(filterName = "ApiFilter",
+        urlPatterns = {"/api/*"},
         dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
-public class ApiFilter {
-
+public class ApiFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(ApiFilter.class);
 
-    private final static String TIME_FORMAT = "yyyyMMddHHmmss";
-
-    private static final String ITFC_IDENTITY_CONFIG = "itfc_identity_config";
+    private static final String TENANT_API_CONFIG = "tenant_api_config";
 
     public ApiFilter() {
     }
 
-    public void destroy() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("ApiFilter destroy");
-        }
-    }
+
+//    private static ApiServiceImpl apiServiceImpl;
+//
+//    private static ApiServiceImpl getApiServiceImpl() {
+//        if (apiServiceImpl == null) {
+//            Object bean = SpringContextUtil.getBean("apiServiceImpl");
+//            if (bean == null) {
+//                logger.error("apiServiceImpl bean is null!");
+//            }
+//            apiServiceImpl = (ApiServiceImpl) bean;
+//        }
+//        return apiServiceImpl;
+//    }
 
 
-    private static ItfcCommonFilterMapper itfcCommonFilterMapper;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
-    private static ItfcCommonFilterMapper getItfcCommonFilterMapper() {
-        if (itfcCommonFilterMapper == null) {
-            Object bean = SpringContextUtil.getBean("itfcCommonFilterMapper");
-            if (bean == null) {
-                logger.error("itfcCommonFilterMapper bean is null!");
-            }
-            itfcCommonFilterMapper = (ItfcCommonFilterMapper) bean;
-        }
-        return itfcCommonFilterMapper;
-    }
+    @Autowired
+    private ApiServiceImpl apiServiceImpl;
 
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String sysZone = "";
         try {
-            sysZone = RuleUtil.getRuleValue("SYS_ZONE", "00");
-        } catch (Exception e) {
-            sysZone = "17"; // 江苏
-        }
-        if (logger.isDebugEnabled()) {
-            logger.debug("ItfcCommonFilter -- doFilter -- sysZone = {}", sysZone);
-        }
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-
-        // 加了配置的才会走这个过滤器，所以不会对江苏产生影响
-        if (StringUtils.isNotBlank(sysZone) && !"17".equals(sysZone)) {
-            String ak = httpRequest.getHeader("ak");
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
+            String access_key = httpRequest.getHeader("access_key");
             String reqtime = httpRequest.getHeader("reqtime");
-            // ak + sk + reqtime然后进行MD5加密(16进制的)
+            // access_key + access_key_secret + reqtime然后进行MD5加密(16进制的)
             String signature = httpRequest.getHeader("signature");
-
             if (logger.isDebugEnabled()) {
-                logger.debug("ItfcCommonFilter doFilter ak : {}, signature: {}, reqtime: {}", ak, signature, reqtime);
+                logger.debug("ApiFilter doFilter access_key : {}, signature: {}, reqtime: {}", access_key, signature, reqtime);
             }
-
-            if (StringUtils.isBlank(ak)) {
-                outWrite(response, "ak不允许为空，认证未通过!");
+            if (StringUtils.isBlank(access_key)) {
+                outWrite(response, "access_key不允许为空，认证未通过!");
                 return;
             }
-
             if (StringUtils.isBlank(signature)) {
                 outWrite(response, "signature不允许为空，认证未通过!");
                 return;
@@ -97,86 +87,79 @@ public class ApiFilter {
                 outWrite(response, "reqtime不允许为空，认证未通过!");
                 return;
             } else { // 判断时间戳是否是前后五分钟内
-                String nowTime = getNowTime();
+                String nowTime = DateTool.getNowTime();
                 try {
-                    long timeDiff = timeDiffSeconds(nowTime, reqtime);
-                    // 超过五分钟的时间戳也不合格
+                    long timeDiff = DateTool.timeDiffSeconds(nowTime, reqtime);
+                    // 前后超过五分钟的时间戳也不合格
                     if (timeDiff > 300) {
                         outWrite(response, "reqtime时间戳只有在当前时间的前后5分钟内有效，认证未通过!");
                         return;
                     }
                 } catch (Exception e) {
-                    logger.debug("ItfcCommonFilter -- doFilter -- timeDiffSeconds - Exception = {e}", e);
+                    logger.error("ApiFilter -- doFilter -- timeDiffSeconds - Exception = {e}", e);
                     outWrite(response, "reqtime格式不正确，认证未通过!");
                     return;
                 }
             }
 
-            Map configMap = new HashMap();
+            Map<String, Object> configMap = new HashMap<>();
 
-            String cacheStr = RedisUtil.get(ITFC_IDENTITY_CONFIG + ":" + ak);
+            String cacheStr = redisTemplate.opsForValue().get(TENANT_API_CONFIG + ":" + access_key);
             if (StringUtils.isNotBlank(cacheStr)) {
-                configMap = JSON.parseObject(cacheStr);
+                configMap = (Map<String, Object>) JsonUtils.readValue(cacheStr, Map.class);
             } else {
-                // redis里拿不到的话，就从数据库里查
-                configMap = getItfcCommonFilterMapper().getConfigData(ak);
-                if (MapUtils.isNotEmpty(configMap)) {
+                // redis缓存里拿不到的话，就从数据库里查
+                configMap = apiServiceImpl.getConfigData(access_key);
+                if (configMap != null && !configMap.isEmpty()) {
                     // 缓存到redis中，减小数据库压力
-                    String configMapJson = JSON.toJSONString(configMap);
-                    RedisUtil.set(ITFC_IDENTITY_CONFIG + ":" + ak, configMapJson, 300);
+                    redisTemplate.opsForValue().set(TENANT_API_CONFIG + ":" + access_key, JsonUtils.writeValueAsString(configMap) , 300, TimeUnit.SECONDS );
                 }
             }
-            if (MapUtils.isNotEmpty(configMap)) {
-                // 检验signature是否正确，规则是 ak + sk 然后进行MD5加密(16进制的)
-                String sk = (String) configMap.get("sk");
-                String mysignature = getMD5String(ak + sk + reqtime);
+            if (configMap != null && !configMap.isEmpty()) {
+                // 检验signature是否正确，规则是 access_key_secret + access_key_secret + reqtime 然后进行MD5加密(16进制的)
+                String access_key_secret = (String) configMap.get("access_key_secret");
+                String mysignature = getMD5String(access_key + access_key_secret + reqtime);
                 if (!signature.equalsIgnoreCase(mysignature)) {
                     outWrite(response, "signature不正确，认证未通过!");
                     return;
                 }
-                // 判断密钥是否过期
-                String expireDate = configMap.get("expire_date") == null ? "" : configMap.get("expire_date").toString();
-                if (StringUtils.isNotBlank(expireDate)) {
-                    // 获取今天日期
-                    String today = getToday("yyyyMMdd");
-                    if (expireDate.compareTo(today) < 0) { // 有效期小于今天，那就过期了呀，不允许调用
-                        outWrite(response, "您的密钥已过有效期，认证未通过!");
-                    } else {
-                        // 全部验证通过
-                        chain.doFilter(request, response);
-                    }
-                } else { // 如果为空的话，则为无限期可用，直接通过
-                    // 全部验证通过
-                    chain.doFilter(request, response);
-                }
+                // 全部验证通过，放入ThreadLocal
+                ApiFilterHolder.set(configMap);
+                chain.doFilter(request, response);
             } else {
-                outWrite(response, "您的ak不正确，认证未通过!");
+                outWrite(response, "您的access_key_secret不正确，认证未通过!");
             }
-        } else {
-            // 验证通过
-            chain.doFilter(request, response);
+        } catch (Exception e) {
+            logger.error("ApiFilter -- doFilter - Exception = {e}", e);
+            outWrite(response, "毁灭性错误，请联系客服处理!");
+        } finally {
+            // ThreadLocal用完一定要remove
+            ApiFilterHolder.clear();
+        }
+    }
+
+    @Override
+    public void init(FilterConfig config) throws ServletException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("ApiFilter init config : {}", config);
         }
     }
 
 
-    public void init(FilterConfig config) throws ServletException {
+    @Override
+    public void destroy() {
         if (logger.isDebugEnabled()) {
-            logger.debug("ItfcCommonFilter init config : {}", config);
+            logger.debug("ApiFilter destroy");
         }
     }
 
 
     public void outWrite(ServletResponse response, String message) throws IOException {
-        JSONObject res = new JSONObject();
-        res.put("code", "401");
-        res.put("message", message);
-        res.put("success", false);
-        res.put("data", (Object) null);
-
+        Result result = Result.create(HttpStatus.ERROR, message);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
-        out.append(res.toString());
+        out.append(JsonUtils.writeValueAsString(result));
         out.close();
     }
 
@@ -208,70 +191,6 @@ public class ApiFilter {
             e.printStackTrace();
         }
         return buffer.toString();
-    }
-
-
-    /**
-     * 获取当前日期 比如 DateTool.getToday("yyyyMMdd"); 返回值为 20120515
-     *
-     * @param format
-     * @return
-     */
-    public static String getToday(String format) {
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
-        return dateTimeFormatter.format(today);
-    }
-
-
-    /**
-     * 获取当前时间，返回固定格式 yyyyMMddHHmmss
-     *
-     * @return
-     */
-    public static String getNowTime() {
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(TIME_FORMAT);
-        return dateTimeFormatter.format(dateTime);
-    }
-
-
-
-    /**
-     * 计量时间差 (time2 - time1)，返回秒数 比如 DateTool.timeDiffSeconds("2012-10-25
-     * 02:49:15","2012-10-25 02:50:30") 返回值为 75
-     *
-     * @param previousTime
-     * @param nextTime
-     * @return
-     */
-    public static long timeDiffSeconds(String previousTime, String nextTime) {
-        DateTimeFormatter df1 = DateTimeFormatter.ofPattern(TIME_FORMAT);
-        LocalDateTime previousDateTime = LocalDateTime.parse(previousTime, df1);
-
-        DateTimeFormatter df2 = DateTimeFormatter.ofPattern(TIME_FORMAT);
-        LocalDateTime nextDateTime = LocalDateTime.parse(nextTime, df2);
-
-        Duration duration = Duration.between(previousDateTime, nextDateTime);
-        long millis = duration.toMillis(); // 相差毫秒数(所有的)
-
-        return Math.abs(Math.round(millis / 1000));
-    }
-
-
-
-    /**
-     * 记录调用日志（先留下，暂时不用）
-     *
-     * @param request
-     * @param ak
-     * @param sk
-     * @param note
-     * @return
-     */
-    public static void signLog(ServletRequest request, String ak, String sk, String note) {
-
-
     }
 
 

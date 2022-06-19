@@ -190,13 +190,13 @@
             <div id="bd">
                 <div class="wrap">
                     <div class="block" id="block-1">
-                        <div class="hd"><h3>API说明(key:<span id="key"><a href="http://console.link66.cn/#/login">登录后查看</a></span>)</h3></div>
+                        <div class="hd"><h3>API说明(access_key和access_key_secret:<span id="key"><a href="http://console.link66.cn/#/login">登录后查看</a></span>)</h3></div>
                     </div>
                     <div class="block" id="block-1.1">
                         <div class="hd"><h4>1 请求地址</h4></div>
                         <div class="bd">
                             <p>
-                                http://create.link66.cn/api
+                                http://192.168.0.105:8076/api/generate
                             </p>
                         </div>
                     </div>
@@ -222,113 +222,102 @@
                                     <th>示例值</th>
                                 </tr>
                                 <tr>
-                                    <td>longUrl</th>
+                                    <td>originalUrl</th>
                                     <td>String</td>
                                     <td>是</td>
-                                    <td>urlencode('链接')</td>
+                                    <td>urlencode('原始链接')</td>
                                     <td>http%3a%2f%2fwww.baidu.com</td>
                                 </tr>
                                 <tr>
-                                    <td>format</th>
+                                    <td>validityPeriod</th>
                                     <td>String</td>
                                     <td>否</td>
-                                    <td>调用格式，值为json或jsonp或不传，不传时返回数据为text</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>callback</th>
-                                    <td>String</td>
-                                    <td>否</td>
-                                    <td>回调函数名，当format=jsonp时必传</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>key</th>
-                                    <td>String</td>
-                                    <td>是</td>
-                                    <td>登录后查看</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>expireDate</th>
-                                    <td>String</td>
-                                    <td>否</td>
-                                    <td>如,expireDate=2020-12-31</td>
-                                    <td>&nbsp;</td>
+                                    <td>过期时间，默认为一星期，可选参数为sevenday，threemonth，halfyear，forever</td>
+                                    <td>threemonth</td>
                                 </tr>
                             </table>
                             </p>
-
                         </div>
                     </div>
 
                     <div class="block" id="block-1.4">
-                        <div class="hd"><h4>4 返回结果</h4></div>
+                        <div class="hd"><h4>4 设置请求头</h4></div>
                         <div class="bd">
                             <p>
                             <table border="1">
                                 <tr>
-                                    <th>参数名</th>
-                                    <th>参数类型</th>
+                                    <th>KEY</th>
+                                    <th>VALUE</th>
+                                    <th>是否必需</th>
                                     <th>描述</th>
                                     <th>示例值</th>
                                 </tr>
                                 <tr>
-                                    <td>url</th>
+                                    <td>access_key</th>
                                     <td>String</td>
-                                    <td>生成的短网址，如果生成失败，则返回空</td>
-                                    <td>http://3z6.cn/2AuiCe</td>
+                                    <td>是</td>
+                                    <td>access_key注册后获取</td>
+                                    <td>b6febb10ddd47f49c451046c1afb414</td>
                                 </tr>
                                 <tr>
-                                    <td>err</th>
+                                    <td>reqtime</th>
                                     <td>String</td>
-                                    <td>错误描述</td>
-                                    <td>生成成功时该值为空</td>
+                                    <td>是</td>
+                                    <td>当前时间，格式为yyyyMMddHHmmss</td>
+                                    <td>20220619223516</td>
+                                </tr>
+                                <tr>
+                                    <td>signature</th>
+                                    <td>String</td>
+                                    <td>是</td>
+                                    <td>签名，规则是 access_key_secret + access_key_secret + reqtime 然后进行MD5加密(16进制的)，access_key_secret注册后获取</td>
+                                    <td>threemonth</td>
                                 </tr>
                             </table>
                             </p>
                         </div>
                     </div>
 
+
                     <div class="block" id="block-1.5">
-                        <div class="hd"><h5>4-1 【TXT格式】请求与返回示例</h5></div>
+                        <div class="hd"><h4>5 返回结果</h4></div>
                         <div class="bd">
                             <P>
                                 请求：<br/>
-                                http://create.link66.cn/api?longUrl=urlencode('http://www.baidu.com')&key=asdk1871as&expireDate=2020-12-31
+                                http://192.168.0.105:8076/api/generate?originalUrl=https%3A%2F%2Fwww.jianshu.com%2Fp%2F7d4bc61c1a5b&validityPeriod=threemonth
                             </P>
                             <P>
                                 返回：<br/>
-                                http://3z6.cn/2AuiCe
+                                {"code":200,"msg":"请求成功","data":"http://192.168.0.105:8076/2qve90"}
                             </P>
-                        </div>
-                    </div>
-
-                    <div class="block" id="block-1.6">
-                        <div class="hd"><h5>4-2 【JSON格式】请求与返回示例</h5></div>
-                        <div class="bd">
-                            <P>
-                                请求：<br/>
-                                http://create.link66.cn/api?format=json&longUrl=urlencode('http://www.baidu.com')&key=asdk1871as&expireDate=2020-12-31
-                            </P>
-                            <P>
-                                返回：<br/>
-                                {"url":"http://3z6.cn/2AuiCe","err":""}
-                            </P>
-                        </div>
-                    </div>
-
-                    <div class="block" id="block-1.7">
-                        <div class="hd"><h5>4-3 【JSONP格式】请求与返回示例</h5></div>
-                        <div class="bd">
-                            <P>
-                                请求：<br/>
-                                http://create.link66.cn/api?format=jsonp&longUrl=urlencode('http://www.baidu.com')&callback=callbackname&key=asdk1871as&expireDate=2020-12-31
-                            </P>
-                            <P>
-                                返回：<br/>
-                                callbackname({"url":"http://3z6.cn/2AuiCe","err":""})
-                            </P>
+                            <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>KEY</th>
+                                        <th>VALUE</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>code</th>
+                                        <td>String</td>
+                                        <td>标识码，200为成功</td>
+                                        <td>200</td>
+                                    </tr>
+                                    <tr>
+                                        <td>msg</th>
+                                        <td>String</td>
+                                        <td>消息</td>
+                                        <td>请求成功</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data</th>
+                                        <td>String</td>
+                                        <td>转换的短链</td>
+                                        <td>http://192.168.0.105:8076/2qve90</td>
+                                    </tr>
+                                </table>
+                            </p>
                         </div>
                     </div>
 
