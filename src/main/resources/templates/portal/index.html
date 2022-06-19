@@ -35,7 +35,7 @@
                         <el-menu-item index="index">
                             <span style="font-weight: bold">主页</span>
                         </el-menu-item>
-                        <el-menu-item index="api">
+                        <el-menu-item index="apidoc">
                             <span style="font-weight: bold">API接口</span>
                         </el-menu-item>
                         <el-menu-item index="tenant">
@@ -159,6 +159,13 @@
             },
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
+                if (key === 'index') {
+                    window.location.href = ctx + '';
+                } else if (key === 'apidoc') {
+                    window.location.href = ctx + 'apiDoc';
+                } else if (key === 'tenant') {
+                    this.$message('拼命开发中！');
+                }
             },
             copy: function(event) {
                 this.handleClipboard(this.shortUrl, event);

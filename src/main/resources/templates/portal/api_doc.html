@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>蓝风短链平台</title>
+    <meta http-equiv="description"
+          content="蓝风短链平台提供专业的网址缩短服务，具有稳定、快速、安全的特点，帮您把冗长的URL地址缩短成6个字符以内的短网址，支持批量缩短，淘宝百度网址缩短、营销数据分析、开放API接口等服务"/>
+    <meta http-equiv="keywords"
+          content="蓝风软件,短链生成,在线短链生成,长链转短链,短网址,短链接,短连接,网址缩短,短域名,短地址,缩短网址,url缩短,短网址生成,短网址在线生成,短网址生成器,短网址在线转换,短网址接口,免费短网址"/>
+    <link rel="icon" th:href="@{/images/favicon.ico}">
+    <link rel="bookmark" th:href="@{/images/favicon.ico}">
+    <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/theme-chalk/index.min.css">
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            padding: 0;
+            font-family: 'microsoft yahei', Tahoma, Verdana, sans-serif, simsun;
+            font-size: 13px;
+            color: #505050;
+        }
+
+        a {
+            color: #606288;
+        }
+
+        h1, h2, h3, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-weight: bold;
+        }
+
+        p {
+            margin: 0 0 10px;
+            line-height: 2;
+        }
+
+        #hd {
+            background: #3D485A;
+            height: 65px;
+        }
+
+        .header {
+            width: 900px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            padding: 20px 0 0;
+            font: bold 18px 'microsoft yahei', 'ºÚÌå', 'ËÎÌå';
+            color: #E06329;
+        }
+
+        .warn {
+            color: #f00;
+        }
+
+        #bd {
+            width: 900px;
+            margin: 20px auto;
+            background: #F0F5F8;
+            padding: 10px;
+        }
+
+        #ft {
+            background: #3D485A;
+            padding: 10px;
+            text-align: center;
+            color: #eee;
+        }
+
+        .wrap {
+            margin: 0 0 10px;
+            border: 1px solid #CDE1EF;
+            background: #fff;
+        }
+
+        .wrap-contact {
+            margin: 0;
+            padding: 10px 10px 10px 25px;
+        }
+
+        .block {
+            padding: 10px;
+        }
+
+        .block .hd {
+            padding: 0 0 15px 15px;
+            border-bottom: 1px solid #CEE1EE;
+        }
+
+        .block h3 {
+            padding: 6px 0;
+            color: #336699;
+            font-size: 16px;
+        }
+
+        .block h4 {
+            font-size: 14px;
+        }
+
+        .block h5 {
+            font-size: 13px;
+        }
+
+        .block .bd {
+            padding: 6px 0 0 15px;
+        }
+
+        .block .bd strong {
+            color: #000;
+            font-weight: normal;
+        }
+
+        .block .ft .imgMain {
+            padding: 10px 0 0;
+            text-align: center;
+        }
+
+        .block .ft ul {
+            height: 30px;
+            margin: 0 0 0 250px;
+        }
+
+        .block .ft li {
+            float: left;
+            margin: 0 50px 0 20px;
+        }
+
+        .block ul {
+            margin: 0 0 0 30px;
+        }
+
+        ul.index {
+            line-height: 1.8;
+        }
+
+        table tr th {
+            border: 1px solid #ccc;
+            height: 30px;
+            background-color: #ccc;
+        }
+
+        table tr th, table tr td {
+            border: 1px solid #ccc;
+            height: 40px;
+        }
+
+        table {
+            text-align: center;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<div id="app" style="height: 100%;">
+    <el-container style="height: 100%;">
+        <el-header style="padding: 0;">
+            <el-row style="background-color:#00162A; height: 60px">
+                <el-col :span="8">
+                    <span style="color: white;font-size: 30px;font-weight: bold;line-height: 60px;margin-left: 20px;cursor: pointer"
+                          @click="freshWeb">
+                        <i class="el-icon-share"></i>&nbsp;蓝风短链平台
+                    </span>
+                </el-col>
+                <el-col :span="14">
+                    <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect"
+                             background-color="#00162A" text-color="#fff" active-text-color="#ffd04b">
+                        <el-menu-item index="index">
+                            <span style="font-weight: bold">主页</span>
+                        </el-menu-item>
+                        <el-menu-item index="apidoc">
+                            <span style="font-weight: bold">API接口</span>
+                        </el-menu-item>
+                        <el-menu-item index="tenant">
+                            <span style="font-weight: bold">租户登录</span>
+                        </el-menu-item>
+                    </el-menu>
+                </el-col>
+
+                <el-col :span="2" style="padding-top: 12px">
+                    <el-button size="medium" round @click="login()">注册/登陆</el-button>
+                </el-col>
+            </el-row>
+        </el-header>
+        <el-main style="background-color: #FFF;">
+            <div id="bd">
+                <div class="wrap">
+                    <div class="block" id="block-1">
+                        <div class="hd"><h3>API说明(key:<span id="key"><a href="http://console.link66.cn/#/login">登录后查看</a></span>)</h3></div>
+                    </div>
+                    <div class="block" id="block-1.1">
+                        <div class="hd"><h4>1 请求地址</h4></div>
+                        <div class="bd">
+                            <p>
+                                http://create.link66.cn/api
+                            </p>
+                        </div>
+                    </div>
+                    <div class="block" id="block-1.2">
+                        <div class="hd"><h4>2 请求方式</h4></div>
+                        <div class="bd">
+                            <p>
+                                GET/POST
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="block" id="block-1.3">
+                        <div class="hd"><h4>3 输入参数</h4></div>
+                        <div class="bd">
+                            <p>
+                            <table border="1">
+                                <tr>
+                                    <th>参数名</th>
+                                    <th>参数类型</th>
+                                    <th>是否必需</th>
+                                    <th>描述</th>
+                                    <th>示例值</th>
+                                </tr>
+                                <tr>
+                                    <td>longUrl</th>
+                                    <td>String</td>
+                                    <td>是</td>
+                                    <td>urlencode('链接')</td>
+                                    <td>http%3a%2f%2fwww.baidu.com</td>
+                                </tr>
+                                <tr>
+                                    <td>format</th>
+                                    <td>String</td>
+                                    <td>否</td>
+                                    <td>调用格式，值为json或jsonp或不传，不传时返回数据为text</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>callback</th>
+                                    <td>String</td>
+                                    <td>否</td>
+                                    <td>回调函数名，当format=jsonp时必传</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>key</th>
+                                    <td>String</td>
+                                    <td>是</td>
+                                    <td>登录后查看</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>expireDate</th>
+                                    <td>String</td>
+                                    <td>否</td>
+                                    <td>如,expireDate=2020-12-31</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <div class="block" id="block-1.4">
+                        <div class="hd"><h4>4 返回结果</h4></div>
+                        <div class="bd">
+                            <p>
+                            <table border="1">
+                                <tr>
+                                    <th>参数名</th>
+                                    <th>参数类型</th>
+                                    <th>描述</th>
+                                    <th>示例值</th>
+                                </tr>
+                                <tr>
+                                    <td>url</th>
+                                    <td>String</td>
+                                    <td>生成的短网址，如果生成失败，则返回空</td>
+                                    <td>http://3z6.cn/2AuiCe</td>
+                                </tr>
+                                <tr>
+                                    <td>err</th>
+                                    <td>String</td>
+                                    <td>错误描述</td>
+                                    <td>生成成功时该值为空</td>
+                                </tr>
+                            </table>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="block" id="block-1.5">
+                        <div class="hd"><h5>4-1 【TXT格式】请求与返回示例</h5></div>
+                        <div class="bd">
+                            <P>
+                                请求：<br/>
+                                http://create.link66.cn/api?longUrl=urlencode('http://www.baidu.com')&key=asdk1871as&expireDate=2020-12-31
+                            </P>
+                            <P>
+                                返回：<br/>
+                                http://3z6.cn/2AuiCe
+                            </P>
+                        </div>
+                    </div>
+
+                    <div class="block" id="block-1.6">
+                        <div class="hd"><h5>4-2 【JSON格式】请求与返回示例</h5></div>
+                        <div class="bd">
+                            <P>
+                                请求：<br/>
+                                http://create.link66.cn/api?format=json&longUrl=urlencode('http://www.baidu.com')&key=asdk1871as&expireDate=2020-12-31
+                            </P>
+                            <P>
+                                返回：<br/>
+                                {"url":"http://3z6.cn/2AuiCe","err":""}
+                            </P>
+                        </div>
+                    </div>
+
+                    <div class="block" id="block-1.7">
+                        <div class="hd"><h5>4-3 【JSONP格式】请求与返回示例</h5></div>
+                        <div class="bd">
+                            <P>
+                                请求：<br/>
+                                http://create.link66.cn/api?format=jsonp&longUrl=urlencode('http://www.baidu.com')&callback=callbackname&key=asdk1871as&expireDate=2020-12-31
+                            </P>
+                            <P>
+                                返回：<br/>
+                                callbackname({"url":"http://3z6.cn/2AuiCe","err":""})
+                            </P>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </el-main>
+
+        <el-footer style="background-color: #FFF">
+            <el-row>
+                <el-col :span="24" align="middle">
+                    <span style="color: #606288;font-size: 12px;">
+                        免责声明：短链接由用户生成，所跳转的内容与本站无关。本站禁止违法违规内容的网站生成短链接，如有发现立刻封停！
+                    </span>
+                    <br/>
+                    <span style="color: #606288;font-size: 12px;">
+                        ICP备案：<a href="http://beian.miit.gov.cn" target="_blank">鲁ICP备xxxxxxx号-1</a> | 联系我们：xxxx@163.com | <a
+                            href="https://www.baidu.com/" target="_blank">资讯中心</a> | <a href="https://www.baidu.com/"
+                                                                                        target="_blank">关于我们</a>
+                    </span>
+                </el-col>
+            </el-row>
+        </el-footer>
+    </el-container>
+</div>
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/vue/2.6.12/vue.min.js" type="application/javascript"></script>
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/element-ui/2.15.7/index.min.js"></script>
+
+<script>
+    var ctx = /*[[@{/}]]*/'';
+
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                message: 'Hello Vue.js!',
+                activeIndex: 'apidoc'
+            }
+        },
+        methods: {
+            freshWeb() {
+                window.location.reload();
+            },
+            login() {
+                // 跳转租户登录页
+                window.location.href = ctx + "tenant/login";
+            },
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+                if (key === 'index') {
+                    window.location.href = ctx + '/';
+                } else if (key === 'apidoc') {
+                    window.location.href = ctx + 'apiDoc';
+                } else if (key === 'tenant') {
+                    this.$message('拼命开发中！');
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
