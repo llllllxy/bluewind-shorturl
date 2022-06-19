@@ -9,8 +9,11 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnels;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +22,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author liuxingyu01
  * @date 2022-03-11-16:56
- * @description
- * @reference https://juejin.cn/post/6844904090602848270?share_token=4ba00e67-783a-496a-9b49-fe5cb9b1a4c9
+ * @description 核心代码，短链生成和短链寻址
+ * @reference https://juejin.cn/post/6844904090602848270
  **/
 @Service
 public class ShortUrlServiceImpl {
@@ -37,6 +40,17 @@ public class ShortUrlServiceImpl {
 
     // 最近使用的短链接缓存过期时间(分钟)
     private static final long TIMEOUT = 10;
+
+
+    // 布隆过滤器预计要插入多少数据
+    private static final int SIZE = 1000000;
+
+    // 布隆过滤器期望的误判率
+    private static final double FPP = 0.01;
+
+    // guava提供的jvm级别的布隆过滤器
+    private static final BloomFilter<String> BLOOM_FILTER = BloomFilter.create(Funnels.stringFunnel(StandardCharsets.UTF_8), SIZE, FPP);
+
 
     /**
      * 根据短链获取原始链接
@@ -77,7 +91,7 @@ public class ShortUrlServiceImpl {
 
 
     /**
-     * 生成并保存短链
+     * 生成并保存短链（一开始是递归，后来改成while循环了）
      *
      * @param originalURL 原始链接
      * @param expireDate 过期时间
@@ -96,6 +110,19 @@ public class ShortUrlServiceImpl {
             shortURL = HashUtils.hashToBase62(tempURL);
         }
 
+        // 在布隆过滤器中查找是否存在，如果已经存在了，则再重新HASH一次（还是为了提高性能，减少插入时撞主键的概率，减少数据库的压力嘛）
+        boolean ifBloonContain = true;
+        while (ifBloonContain) {
+            // 可能存在，重新HASH
+            if (BLOOM_FILTER.mightContain(shortURL)) {
+                tempURL += DUPLICATE;
+                shortURL = HashUtils.hashToBase62(tempURL);
+            } else {
+                // 不存在则跳出循环，继续往下走
+                ifBloonContain = false;
+            }
+        }
+
         // 直接存入数据库，如果触发异常的话，说明违反了 surl 的唯一性索引，那说明数据库中已经存在此shortURL了
         // 则拼接上DUPLICATE，继续hash，直到不再冲突
         boolean ifContinue = true;
@@ -103,6 +130,8 @@ public class ShortUrlServiceImpl {
             try {
                 // 直到数据库中不存在此shortURL，那则可以进行数据库插入了
                 shortUrlDao.insertUrlMap(shortURL, originalURL, expireDate, tenantId);
+                // 放入到布隆过滤器中去
+                BLOOM_FILTER.put(shortURL);
                 // 同时添加redis缓存
                 redisSave(shortURL, originalURL, expireDate, tenantId);
                 ifContinue = false;

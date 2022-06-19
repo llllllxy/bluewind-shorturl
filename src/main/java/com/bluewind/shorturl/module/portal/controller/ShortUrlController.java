@@ -51,6 +51,11 @@ public class ShortUrlController {
         return "portal/index";
     }
 
+    @LogAround("API接口首页")
+    @GetMapping("/apiDoc")
+    public String apiDoc() {
+        return "portal/api_doc";
+    }
 
     @LogAround("门户短链404页")
     @GetMapping("/notFound")
