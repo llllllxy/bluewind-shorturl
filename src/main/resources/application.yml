@@ -12,9 +12,6 @@ server:
   servlet:
     session:
       timeout: 1800s
-  jetty:
-    max-threads: 200
-    min-threads: 8
 
 spring:
   #设置编码
@@ -23,16 +20,17 @@ spring:
       charset: UTF-8
       force: true
       enabled: true
-  # 设置jackson的默认时区
+  # 设置jackson的默认时区和默认格式
   jackson:
     time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
   #数据库配置
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/short_url?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
+    url: jdbc:mysql://rm.mysql.rds.aliyuncs.com:3306/bluewind-shorturl?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
     username: root
-    password: 199725
+    password: xxxxxx
     druid:
       initialSize: 5
       minIdle: 10
@@ -60,7 +58,7 @@ spring:
   redis:
     host: 127.0.0.1 # Redis服务器地址
     port: 6379 # Redis服务器连接端口
-    password: Xingxing9725 # Redis服务器连接密码（默认为空）
+    password: xxxxx # Redis服务器连接密码（默认为空）
     database: 0 #Redis数据库索引（默认为0）
     timeout: 500 # 连接超时时间（毫秒）
     lettuce:
@@ -90,3 +88,8 @@ async:
 # 用户密码加密的盐
 hash:
   salt: ymp8R3Vg7Kv5$y5fM3*xl&ins7SZcTEY
+
+# 阿里云短信的配置
+sms:
+  accessKeyId: xxxxx
+  accessKeySecret: xxxxx
