@@ -57,6 +57,13 @@ api接口文档页
 | Redis             | 业务缓存、会话共享    |
 | guava             | Hash算法、布隆过滤器 |
 
+
+## 启动部署教程
+
+1. 新建数据库并导入script文件夹下的数据库脚本到MySQL
+2. 修改配置文件中application.yml中数据库和Redis连接信息
+3. 运行启动类BluewindShortUrlApplication，即可正常启动项目
+
 ## 实现逻辑
 1、使用 MurmurHash 算法将原始长链接 hash 为 32 位散列值，将散列值转为 BASE62编码 ，即为短链接。
 
