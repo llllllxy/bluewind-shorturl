@@ -1,5 +1,5 @@
 # bluewind-shorturl
-# 在线短链接生成器
+# 在线短链接生成平台
 
 <a href='https://gitee.com/leisureLXY/bluewind-shorturl/stargazers'><img src='https://gitee.com/leisureLXY/bluewind-shorturl/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/leisureLXY/bluewind-shorturl/members'><img src='https://gitee.com/leisureLXY/bluewind-shorturl/badge/fork.svg?theme=dark' alt='fork'></img></a>
@@ -11,22 +11,51 @@
 
 3、支持记录访问次数
 
+4、使用布隆过滤器优化短链冲突问题，提高超大数据量下的性能表现
+
+5、支持多租户，租户注册后可拥有独立的后台数据管理功能
+
+6、租户支持通过API调用方式生成短链接、禁用/启用短链接、更新短链有效期、查看短链接统计信息等功能，提供成熟的API接口文档和鉴权方案（access_key + access_key_secret）
+
 ## 待实现功能
-1、使用布隆过滤器优化短链冲突问题，提高超大数据量下的性能表现
+1、租户后台后台管理部分功能
 
-## 界面展示
-![首页](src/main/resources/static/images/readme/example_main.png)
+2、超级管理员后台管理功能
+
+## 部分界面展示
+首页
+![首页](src/main/resources/static/images/readme/首页.png)
+<br/><br/>
+api接口文档页
+![api接口文档页](src/main/resources/static/images/readme/api接口文档.png)
+<br/><br/>
+关于我们页
+![关于我们页](src/main/resources/static/images/readme/关于我们.png)
+<br/><br/>
+短链寻址失败时-404页
 ![404页](src/main/resources/static/images/readme/example_404.png)
+<br/><br/>
+短链寻址失败时-失效页
 ![失效页](src/main/resources/static/images/readme/example_expire.png)
+<br/><br/>
+租户登录页
+![失效页](src/main/resources/static/images/readme/租户登录.png)
+<br/><br/>
+租户注册页
+![失效页](src/main/resources/static/images/readme/租户注册.png)
+<br/><br/>
+租户后台数据管理
+![失效页](src/main/resources/static/images/readme/租户后台管理.png)
 
-## 技术选型
-| 依赖        | 说明                  |
-| ----------- | ---------------------|
-| SpringBoot | 基础框架             |
-| Thymeleaf   | 模板引擎             |
-| JdbcTemplate| 持久层框架           |
-| Redis       | 缓存                |
-| guava       | Hash算法、布隆过滤器  |
+## 主要技术选型
+| 依赖                | 说明           |
+|-------------------|--------------|
+| SpringBoot 2.2.13 | 基础框架         |
+| Spring-session    | 分布式会话支持      |
+| Thymeleaf         | 模板引擎         |
+| JdbcTemplate      | 持久层框架        |
+| Redis             | 业务缓存、会话共享    |
+| guava             | Hash算法、布隆过滤器 |
 
 ## 实现逻辑
 1、使用 MurmurHash 算法将原始长链接 hash 为 32 位散列值，将散列值转为 BASE62编码 ，即为短链接。
@@ -53,4 +82,25 @@
    - 301，代表 **永久重定向**，也就是说第一次请求拿到长链接后，下次浏览器再去请求短链的话，不会向短网址服务器请求了，而是直接从浏览器的缓存里拿，这样在 server 层面就无法获取到短网址的点击数了，如果这个链接刚好是某个活动的链接，也就无法分析此活动的效果。所以我们一般不采用 301。
    - 302，代表 **临时重定向**，也就是说每次去请求短链都会去请求短网址服务器（除非响应中用 Cache-Control 或 Expired 暗示浏览器缓存）,这样就便于 server 统计点击数，所以虽然用 302 会给 server 增加一点压力，但在数据异常重要的今天，这点代码是值得的，所以推荐使用 302！
   
-   
+5、多租户方案介绍：
+多租户技术，或称多重租赁技术，是一种软件架构技术。它探讨的是如何于多用户的环境下共用相同的系统或者程序组件，并且确保各个用户数据的隔离性。在云计算迅速发展的今天，多租户技术被广为运用于开发云各式服务，不论是 IaaS、PaaS 还是 SaaS，都可以看到多租户技术的影子，SaaS 应用与其它应用最大的差异特征就是多租户。
+
+多租户软件架构的设计目标：
+   - 保证多个租户使用统一的SaaS云平台，同时对多个租户进行良好的隔离;
+   - 能够保证SaaS云平台进行统一的升级,又不破坏各自的应用逻辑;
+   - 支持业务数据的横向扩展,并能够支持某个租户单独扩展资源的能力;
+
+在多租户架构中，根据数据隔离情况可以分为以下三种情况：
+   - 数据库分离
+   - 共享数据库，schema分离
+   - 共享数据库，共享schema
+
+多租户架构类型对比:
+
+| 多租户架构类型 | 优点 | 缺点 |
+| ------- | ------- | ------- |
+|     数据库分离    |   为不同的租户提供独立的数据库，有助于简化数据模型的扩展设计，满足不同租户的独特需求；如果出现故障，恢复数据比较简单   | 增多了数据库的安装数量，随之带来维护成本和购置成本的增加 |
+| 共享数据库,Schema独立 | 为安全性要求较高的租户提供了一定程度的逻辑数据隔离，并不是完全隔离；每个数据库可支持更多的租户数量 | 如果出现故障，数据恢复比较困难，因为恢复数据库将牵涉到其他租户的数据；如果需要跨租户统计数据，存在一定困难 |
+| 共享数据库，共享schema | 维护和购置成本最低，允许每个数据库支持的租户数量最多 | 隔离级别最低，安全性最低，需要在设计开发时加大对安全的开发量； 数据备份和恢复最困难，需要逐表逐条备份和还原 |
+
+本项目属于简单实现，采用了第三种方案
