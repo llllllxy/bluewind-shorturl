@@ -23,4 +23,22 @@ public class ApiDaoImpl {
             return null;
         }
     }
+
+
+    public int expire(String shortUrl, String expireDate, String tenantId) {
+        String sql = "update s_url_map set expire_time = ? where tenant_id = ? and surl = ?";
+        return jdbcTemplate.update(sql, expireDate, tenantId, shortUrl);
+    }
+
+
+    public int disable(String shortUrl, String tenantId) {
+        String sql = "update s_url_map set del_flag = 1 where tenant_id = ? and surl = ?";
+        return jdbcTemplate.update(sql, tenantId, shortUrl);
+    }
+
+
+    public int enable(String shortUrl, String tenantId) {
+        String sql = "update s_url_map set del_flag = 0 where tenant_id = ? and surl = ?";
+        return jdbcTemplate.update(sql, tenantId, shortUrl);
+    }
 }

@@ -65,9 +65,13 @@ public class ApiController {
     @LogAround("API调用启用短链接")
     @RequestMapping (value = "/enable" , method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Result enable(@RequestParam String shortUrl){
-
-        return Result.ok("启用短链" + shortUrl + "成功！" );
+    public Result enable(@RequestParam String shortUrl) {
+        String tenantId = ApiFilterHolder.getTenantId();
+        int num = apiService.enable(shortUrl, tenantId);
+        if (num > 0) {
+            return Result.ok("启用短链" + shortUrl + "成功！" );
+        }
+        return Result.error("启用短链" + shortUrl + "失败，不存在此短链！");
     }
 
 
@@ -75,8 +79,12 @@ public class ApiController {
     @RequestMapping (value = "/disable" , method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Result disable(@RequestParam String shortUrl) {
-
-        return Result.ok("禁止短链" + shortUrl + "成功！");
+        String tenantId = ApiFilterHolder.getTenantId();
+        int num = apiService.disable(shortUrl, tenantId);
+        if (num > 0) {
+            return Result.ok("禁止短链" + shortUrl + "成功！");
+        }
+        return Result.error("禁止短链" + shortUrl + "失败，不存在此短链！");
     }
 
     @LogAround("API调用更改短链失效时间")
@@ -84,8 +92,12 @@ public class ApiController {
     @ResponseBody
     public Result expire(@RequestParam String shortUrl,
                          @RequestParam String expireDate) {
-
-        return Result.ok("更改短链失效时间" + shortUrl + "成功，更新后为：" + expireDate + "");
+        String tenantId = ApiFilterHolder.getTenantId();
+        int num = apiService.expire(shortUrl, expireDate, tenantId);
+        if (num > 0) {
+            return Result.ok("更改短链失效时间" + shortUrl + "成功，更新后为：" + expireDate + "");
+        }
+        return Result.error("更改短链失效时间" + shortUrl + "失败，不存在此短链！");
     }
 
 }

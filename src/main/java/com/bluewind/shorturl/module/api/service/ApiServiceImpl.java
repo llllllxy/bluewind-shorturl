@@ -16,4 +16,18 @@ public class ApiServiceImpl {
     public Map<String, Object> getConfigData(String accessKey) {
         return apiDao.getConfigData(accessKey);
     }
+
+    public int expire(String shortUrl, String expireDate, String tenantId) {
+        return apiDao.expire(shortUrl, expireDate, tenantId);
+    }
+
+
+    public int disable(String shortUrl, String tenantId) {
+        return apiDao.disable(shortUrl, tenantId);
+    }
+
+
+    public int enable(String shortUrl, String tenantId) {
+        return apiDao.enable(shortUrl, tenantId);
+    }
 }
