@@ -1,11 +1,9 @@
 package com.bluewind.shorturl.common.config.filter;
 
-
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.consts.HttpStatus;
 import com.bluewind.shorturl.common.util.DateTool;
 import com.bluewind.shorturl.common.util.JsonUtils;
-import com.bluewind.shorturl.common.util.SpringContextUtil;
 import com.bluewind.shorturl.module.api.service.ApiServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -39,21 +37,6 @@ public class ApiFilter implements Filter {
 
     public ApiFilter() {
     }
-
-
-//    private static ApiServiceImpl apiServiceImpl;
-//
-//    private static ApiServiceImpl getApiServiceImpl() {
-//        if (apiServiceImpl == null) {
-//            Object bean = SpringContextUtil.getBean("apiServiceImpl");
-//            if (bean == null) {
-//                logger.error("apiServiceImpl bean is null!");
-//            }
-//            apiServiceImpl = (ApiServiceImpl) bean;
-//        }
-//        return apiServiceImpl;
-//    }
-
 
     @Autowired
     private StringRedisTemplate redisTemplate;
