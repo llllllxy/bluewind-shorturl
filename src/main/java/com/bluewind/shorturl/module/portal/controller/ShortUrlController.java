@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * @author liuxingyu01
  * @date 2022-03-11-16:54
@@ -57,6 +56,13 @@ public class ShortUrlController {
         return "portal/api_doc";
     }
 
+
+    @LogAround("关于我们页")
+    @GetMapping("/about")
+    public String about() {
+        return "portal/about";
+    }
+
     @LogAround("门户短链404页")
     @GetMapping("/notFound")
     public String notFound() {
@@ -71,11 +77,11 @@ public class ShortUrlController {
     }
 
 
-    @LogAround("门户短链生成")
-    @AccessLimit(seconds = 10, maxCount = 100, msg = "10秒内只能生成两次短链接")
+    @LogAround("门户短链生成，10秒内只能生成两次短链接，门户免费的，肯定不允许一直免费生成")
+    @AccessLimit(seconds = 10, maxCount = 2, msg = "10秒内只能生成两次短链接")
     @PostMapping("/generate")
     @ResponseBody
-    public Result generate(@RequestParam String originalUrl,
+    public Result generate(@RequestParam(value = "originalUrl") String originalUrl,
                            @RequestParam(value = "tenantId") String tenantId,
                            @RequestParam(required = false, defaultValue = "sevenday", value = "validityPeriod") String validityPeriod) throws UnknownHostException {
         if (StringUtils.isEmpty(tenantId)) {

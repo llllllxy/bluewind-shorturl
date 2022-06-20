@@ -175,8 +175,8 @@
                         <el-menu-item index="apidoc">
                             <span style="font-weight: bold">API接口</span>
                         </el-menu-item>
-                        <el-menu-item index="tenant">
-                            <span style="font-weight: bold">租户登录</span>
+                        <el-menu-item index="about">
+                            <span style="font-weight: bold">关于我们</span>
                         </el-menu-item>
                     </el-menu>
                 </el-col>
@@ -225,15 +225,15 @@
                                     <td>originalUrl</th>
                                     <td>String</td>
                                     <td>是</td>
-                                    <td>urlencode('原始链接')</td>
+                                    <td>UrlEncode('原始链接')</td>
                                     <td>http%3a%2f%2fwww.baidu.com</td>
                                 </tr>
                                 <tr>
-                                    <td>validityPeriod</th>
+                                    <td>expireDate</th>
                                     <td>String</td>
                                     <td>否</td>
-                                    <td>过期时间，默认为一星期，可选参数为sevenday，threemonth，halfyear，forever</td>
-                                    <td>threemonth</td>
+                                    <td>短链过期失效的时间，格式为yyyyMMddHHmmss</td>
+                                    <td>20220525190720</td>
                                 </tr>
                             </table>
                             </p>
@@ -371,8 +371,8 @@
                     window.location.href = ctx + '/';
                 } else if (key === 'apidoc') {
                     window.location.href = ctx + 'apiDoc';
-                } else if (key === 'tenant') {
-                    this.$message('拼命开发中！');
+                } else if (key === 'about') {
+                    window.location.href = ctx + 'about';
                 }
             }
         }

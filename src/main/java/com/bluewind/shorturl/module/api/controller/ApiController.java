@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.URLDecoder;
@@ -41,42 +40,25 @@ public class ApiController {
         return Result.ok("测试调用成功: " + ApiFilterHolder.getTenantId());
     }
 
-    @LogAround("API调用短链生成")
+    @LogAround("API调用短链生成，GET/POST均支持")
     @RequestMapping (value = "/generate" , method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Result generate(@RequestParam String originalUrl,
-                           @RequestParam(required = false, defaultValue = "sevenday", value = "validityPeriod") String validityPeriod) throws UnknownHostException, UnsupportedEncodingException {
-        String tenantId = ApiFilterHolder.getTenantId();
-        originalUrl = URLDecoder.decode(originalUrl, "utf-8");
-
-        if (UrlUtils.checkURL(originalUrl)) {
-            String expireDate = "";
-            String currentTime = DateTool.getCurrentTime("HHmmss");
-            // 构建过期时间
-            if ("sevenday".equals(validityPeriod)) {
-                expireDate = DateTool.nextWeek() + currentTime;
-            }
-            if ("threemonth".equals(validityPeriod)) {
-                expireDate = DateTool.plusMonth(3) + currentTime;
-            }
-            if ("halfyear".equals(validityPeriod)) {
-                expireDate = DateTool.plusMonth(6) + currentTime;
-            }
-            if ("forever".equals(validityPeriod)) {
-                expireDate = "20991231235959";
-            }
-            if (log.isInfoEnabled()) {
-                log.info("ShortUrlController -- generate -- expireDate = {}", expireDate);
-            }
-
-            String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId);
-            String host = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"
-                    + env.getProperty("server.port")
-                    + "/";
-            return Result.ok("请求成功", host + shortURL);
+                           @RequestParam(required = false, defaultValue = "20991231235959", value = "expireDate") String expireDate) throws UnknownHostException, UnsupportedEncodingException {
+        if (!DateTool.checkFormat(expireDate, "yyyyMMddHHmmss")) {
+            return Result.error("参数expireDate请传入正确的时间格式");
         }
-        return Result.error("请输入正确的网址链接，注意以http://或https://开头");
-    }
+        originalUrl = URLDecoder.decode(originalUrl, "utf-8");
+        if (!UrlUtils.checkURL(originalUrl)) {
+            return Result.error("请输入正确的网址链接，注意以http://或https://开头");
+        }
 
+        String tenantId = ApiFilterHolder.getTenantId();
+        String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId);
+        String host = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"
+                + env.getProperty("server.port")
+                + "/";
+        return Result.ok("请求成功", host + shortURL);
+    }
 
 }

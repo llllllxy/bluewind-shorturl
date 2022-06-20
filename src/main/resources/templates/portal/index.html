@@ -38,8 +38,8 @@
                         <el-menu-item index="apidoc">
                             <span style="font-weight: bold">API接口</span>
                         </el-menu-item>
-                        <el-menu-item index="tenant">
-                            <span style="font-weight: bold">租户登录</span>
+                        <el-menu-item index="about">
+                            <span style="font-weight: bold">关于我们</span>
                         </el-menu-item>
                     </el-menu>
                 </el-col>
@@ -163,8 +163,8 @@
                     window.location.href = ctx + '';
                 } else if (key === 'apidoc') {
                     window.location.href = ctx + 'apiDoc';
-                } else if (key === 'tenant') {
-                    this.$message('拼命开发中！');
+                } else if (key === 'about') {
+                    window.location.href = ctx + 'about';
                 }
             },
             copy: function(event) {

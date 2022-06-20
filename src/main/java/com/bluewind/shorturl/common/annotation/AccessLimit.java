@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * @author liuxingyu01
  * @date 2022-03-11-16:49
- * @description seconds 秒内只能执行 maxCount 此
+ * @description seconds 秒内只能执行 maxCount 次
  **/
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

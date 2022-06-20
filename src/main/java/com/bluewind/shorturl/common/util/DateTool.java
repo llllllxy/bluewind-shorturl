@@ -628,10 +628,26 @@ public class DateTool {
     }
 
 
+    /**
+     * 校验时间格式是否正确
+     *
+     * @param dateTime 例如：20991231235959
+     * @return format 例如：yyyyMMddHHmmss
+     */
+    public static boolean checkFormat(String dateTime, String format) {
+        try {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
+            LocalDateTime localDateTime = LocalDateTime.parse(dateTime, dateTimeFormatter);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     public static void main(String[] args) {
 
-
+        System.out.println(checkFormat("209912312359591", "yyyyMMddHHmmss"));
     }
 
 }
