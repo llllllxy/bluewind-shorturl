@@ -61,4 +61,31 @@ public class ApiController {
         return Result.ok("请求成功", host + shortURL);
     }
 
+
+    @LogAround("API调用启用短链接")
+    @RequestMapping (value = "/enable" , method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Result enable(@RequestParam String shortUrl){
+
+        return Result.ok("启用短链" + shortUrl + "成功！" );
+    }
+
+
+    @LogAround("API调用禁用短链接")
+    @RequestMapping (value = "/disable" , method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Result disable(@RequestParam String shortUrl) {
+
+        return Result.ok("禁止短链" + shortUrl + "成功！");
+    }
+
+    @LogAround("API调用更改短链失效时间")
+    @RequestMapping (value = "/expire" , method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Result expire(@RequestParam String shortUrl,
+                         @RequestParam String expireDate) {
+
+        return Result.ok("更改短链失效时间" + shortUrl + "成功，更新后为：" + expireDate + "");
+    }
+
 }
