@@ -25,7 +25,7 @@ public class ShortUrlDaoImpl {
      * @return
      */
     public List<Map<String, Object>> queryListByshortURL(String shortURL) {
-        String sql = "select lurl, tenant_id, expire_time from s_url_map where surl = ?";
+        String sql = "select lurl, tenant_id, expire_time from s_url_map where surl = ? and del_flag = 0";
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql, shortURL);
         return result;
     }
