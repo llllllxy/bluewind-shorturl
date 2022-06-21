@@ -19,4 +19,8 @@ public class UrlManageServiceImpl {
     public Page getPage(Integer pageSize, Integer pageNumber, String surl, String createdAt, String sortName, String sortOrder) {
         return UrlManageDaoImpl.getPage(pageSize, pageNumber, surl, createdAt, sortName, sortOrder);
     }
+
+    public int del(String id) {
+        return UrlManageDaoImpl.del(id);
+    }
 }

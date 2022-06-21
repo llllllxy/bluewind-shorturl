@@ -31,6 +31,7 @@ public class UrlManageController extends BaseController {
         return "tenant/url/index";
     }
 
+    @LogAround("短链列表分页查询")
     @ResponseBody
     @PostMapping(value="/list")
     public Result list(@RequestParam("pageSize") Integer pageSize,
@@ -46,4 +47,24 @@ public class UrlManageController extends BaseController {
         result.put(RESULT_TOTAL, page.getTotal());
         return Result.ok("获取短链列表成功！", result);
     }
+
+
+    @LogAround("跳转到短链新增页")
+    @GetMapping("/addPage")
+    public String addPage(Model model) {
+        return "tenant/url/add";
+    }
+
+
+    @LogAround("短链删除")
+    @ResponseBody
+    @GetMapping(value="/del/{id}")
+    public Result del(@PathVariable String id) {
+        int num = urlManageService.del(id);
+        if (num > 0) {
+            return Result.ok("删除短链失效时间【" + id + "】成功");
+        }
+        return Result.error("更改短链失效时间【" + id + "】失败");
+    }
+
 }

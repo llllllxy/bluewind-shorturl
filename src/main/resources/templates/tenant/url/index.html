@@ -13,6 +13,7 @@
     <link th:href="@{/css/style.min.css}" rel="stylesheet">
     <link th:href="@{/js/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet">
     <link th:href="@{/js/bootstrap-table/extensions/page-jump/bootstrap-table-pagejump.min.css}" rel="stylesheet">
+    <link th:href="@{/js/layer/theme/layer.min.css}" rel="stylesheet">
     <!--日期选择插件-->
     <link rel="stylesheet" th:href="@{/js/bootstrap-datepicker/bootstrap-datepicker3.min.css}">
 </head>
@@ -52,16 +53,16 @@
                 <div class="card-body">
 
                     <div id="toolbar" class="toolbar-btn-action">
-                        <button id="btn_add" type="button" class="btn btn-primary m-r-5">
+                        <button id="btn_add" type="button" class="btn btn-primary m-r-5" onclick="add()">
                             <span class="mdi mdi-plus" aria-hidden="true"></span>新增
                         </button>
-                        <button id="btn_enable" type="button" class="btn btn-success m-r-5">
+                        <button id="btn_enable" type="button" class="btn btn-success m-r-5" onclick="enable()">
                             <span class="mdi mdi-check" aria-hidden="true"></span>启用
                         </button>
-                        <button id="btn_disable" type="button" class="btn btn-warning m-r-5">
+                        <button id="btn_disable" type="button" class="btn btn-warning m-r-5" onclick="disable()">
                             <span class="mdi mdi-block-helper" aria-hidden="true"></span>禁用
                         </button>
-                        <button id="btn_delete" type="button" class="btn btn-danger">
+                        <button id="btn_delete" type="button" class="btn btn-danger" onclick="batchDel()">
                             <span class="mdi mdi-window-close" aria-hidden="true"></span>删除
                         </button>
                     </div>
@@ -74,15 +75,18 @@
 
 <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/perfect-scrollbar.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/bootstrap-multitabs/multitabs.js}"></script>
+<!--消息提醒插件-->
 <script type="text/javascript" th:src="@{/js/coco-message/coco-message.js}"></script>
+<!--表格插件-->
 <script type="text/javascript" th:src="@{/js/bootstrap-table/bootstrap-table.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap-table/bootstrap-table-zh-CN.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap-table/extensions/page-jump/bootstrap-table-pagejump.min.js}"></script>
+<!--弹窗插件-->
+<script type="text/javascript" th:src="@{/js/layer/layer.min.js}"></script>
 <!--日期选择插件-->
 <script type="text/javascript" th:src="@{/js/bootstrap-datepicker/bootstrap-datepicker.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js}"></script>
+<!--公共组件-->
 <script type="text/javascript" th:src="@{/js/main.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/public.js}"></script>
 
@@ -135,8 +139,8 @@
                 align: "center",
                 halign: "center",
                 formatter: function (value, row, index) {
-                    var operateHtml = '<button class="btn btn-primary btn-xs" type="button" onclick="edit(\'' + row.id + '\')"> <i class="fa fa-edit"></i>&nbsp;修改</button> &nbsp;';
-                    operateHtml = operateHtml + '<button class="btn btn-danger btn-xs" type="button" onclick="del(\'' + row.id + '\')"><i class="fa fa-remove"></i>&nbsp;删除</button> &nbsp;';
+                    var operateHtml = '<a class="btn btn-primary btn-xs m-r-5" type="button" onclick="edit(\'' + row.id + '\')"> <i class="mdi mdi-pencil"></i>修改</a>'
+                     + '<a class="btn btn-danger btn-xs" type="button" onclick="del(\'' + row.id + '\')"><i class="mdi mdi-window-close"></i>删除</a>';
                     return operateHtml;
                 }
             }]
@@ -171,6 +175,91 @@
     function reloadTable() {
         $("#tableId").bootstrapTable('refresh');
     }
+
+    function add() {
+        layer.open({
+            title: '新增用户',
+            type: 2,
+            shade: 0.2,
+            shadeClose: true,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['1000px', '500px'],
+            content: AjaxUtil.ctx + "tenant/url/addPage",
+            end: function (index) {
+                reloadTable();
+            }
+        });
+    }
+
+    function enable() {
+
+    }
+
+    function disable() {
+
+    }
+
+    function batchDel() {
+        var idlist = $('#tableId').bootstrapTable('getAllSelections');
+        if (idlist == false) {
+            Message.warning('请至少选择一条数据', 1000);
+            return;
+        }
+        var idlistStr = "";
+        for (var i = 0; i < idlist.length; i++) {
+            idlistStr = idlistStr + idlist[i] + ","
+        }
+        idlistStr =
+        alert(idlistStr);
+        return;
+
+        layer.confirm('确定要批量删除吗?', {icon: 'doubt', title: '提示'}, function (index) {
+            AjaxUtil.get({
+                url: AjaxUtil.ctx + "tenant/url/del/" + id,
+                success: function (res) {
+                    layer.close(index);
+                    if (res.code === 200) {
+                        Message.success(1000, res.msg, function () {
+                            reloadTable();
+                        });
+                    } else {
+                        Message.error(res.msg, 1000);
+                    }
+                },
+                error: function (error) {
+                    layer.close(index);
+                    Message.error(error, 1000);
+                }
+            });
+        });
+    }
+
+    function edit(id) {
+
+    }
+
+    function del(id) {
+        layer.confirm('确定要删除吗?', {icon: 'doubt', title: '提示'}, function (index) {
+            AjaxUtil.get({
+                url: AjaxUtil.ctx + "tenant/url/del/" + id,
+                success: function (res) {
+                    layer.close(index);
+                    if (res.code === 200) {
+                        Message.success(1000, res.msg, function () {
+                            reloadTable();
+                        });
+                    } else {
+                        Message.error(res.msg, 1000);
+                    }
+                },
+                error: function (error) {
+                    layer.close(index);
+                    Message.error(error, 1000);
+                }
+            });
+        });
+    }
+
 </script>
 </body>
 </html>
