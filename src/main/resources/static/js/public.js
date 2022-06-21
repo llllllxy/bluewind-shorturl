@@ -56,7 +56,7 @@ function initTable(options) {
         // 设置为 false 禁用 AJAX 数据缓存， 默认为true
         cache: options.cache || false,
         // 是否启用点击选中行，设置true 将在点击行时，自动选择rediobox 和 checkbox
-        clickToSelect: options.cache || true,
+        clickToSelect: options.clickToSelect || false,
         // 显示导出插件
         showExport: options.showExport || false,
         // 导出图标类型
