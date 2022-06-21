@@ -117,6 +117,11 @@
 
     var verifyKey;
     $(document).ready(function () {
+        // 登录过期的时候，跳出ifram框架
+        if (top.location != self.location) {
+            top.location = self.location;
+        }
+
         getKaptcha();
         // 图形验证码点击事件
         $("#captcha").click(function () {
