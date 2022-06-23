@@ -1,0 +1,5 @@
+/* form-group label前的必填红点 */
+.is-required::before {
+    content: "*";
+    color: red;
+}
