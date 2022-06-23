@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>租户首页</title>
+    <title>短链管理首页</title>
     <link rel="icon" th:href="@{/images/favicon.ico}" type="image/ico">
     <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
     <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
@@ -27,14 +27,23 @@
                 <div class="card-header">
                     <!-- 自定义表单开始 -->
                     <form id="formId" role="form" class="form-inline">
-                        <div class="form-group">
+                        <div class="form-group m-r-10">
                             <label class="control-label">短链接：</label>
                             <input type="text" value="" name="surl" id="surl" placeholder="请输入短链接" class="form-control"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group m-r-10">
                             <label>创建时间：</label>
                             <input type="text" class="form-control js-datepicker" data-date-format="yyyy-mm-dd" name="created_at" id="created_at" placeholder="请选择创建时间">
+                        </div>
+
+                        <div class="form-group m-r-10">
+                            <label>状态：</label>
+                            <select class="form-control selectpicker" id="status" name="status">
+                                <option value="">全部</option>
+                                <option value="0" selected>启用</option>
+                                <option value="1">禁用</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -130,6 +139,17 @@
                 sortable: true
             },
             {
+                title: "状态",
+                field: "status",
+                formatter: function (value, row, index) {
+                    if (value === '0') {
+                        return '<span class="label label-info">启用</span>';
+                    } else {
+                        return '<span class="label label-danger">禁用</span>';
+                    }
+                }
+            },
+            {
                 title: "创建时间",
                 field: "created_at",
                 sortable: true
@@ -156,6 +176,7 @@
         return {
             surl: $("#surl").val(), // 请求时向服务端传递的参数
             createdAt: $("#created_at").val(), // 请求时向服务端传递的参数
+            status: $("#status").val(),
             pageSize: params.pageSize, // 每页显示数量
             pageNumber: params.pageNumber, // SQL语句偏移量
             sortName: params.sortName,
@@ -178,12 +199,12 @@
 
     function add() {
         layer.open({
-            title: '新增用户',
+            title: '新增短链',
             type: 2,
             shade: 0.2,
             shadeClose: true,
             maxmin: true, //开启最大化最小化按钮
-            area: ['1000px', '500px'],
+            area: [layerwidth + 'px', layerheight + 'px'],
             content: AjaxUtil.ctx + "tenant/url/addPage",
             end: function (index) {
                 reloadTable();
@@ -207,15 +228,16 @@
         }
         var idlistStr = "";
         for (var i = 0; i < idlist.length; i++) {
-            idlistStr = idlistStr + idlist[i] + ","
+            idlistStr = idlistStr + idlist[i].id + ","
         }
-        idlistStr =
-        alert(idlistStr);
-        return;
+        idlistStr = idlistStr.substring(0, idlistStr.length - 1);
 
         layer.confirm('确定要批量删除吗?', {icon: 'doubt', title: '提示'}, function (index) {
-            AjaxUtil.get({
-                url: AjaxUtil.ctx + "tenant/url/del/" + id,
+            AjaxUtil.post({
+                url: AjaxUtil.ctx + "tenant/url/batchDel",
+                data: {
+                    'idlistStr' : idlistStr
+                },
                 success: function (res) {
                     layer.close(index);
                     if (res.code === 200) {

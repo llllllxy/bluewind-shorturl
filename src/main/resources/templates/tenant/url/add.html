@@ -1,10 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>短链管理新增</title>
+    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/ico">
+    <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
+    <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+    <link th:href="@{/css/public.css}" rel="stylesheet">
+    <!--日期选择插件-->
+    <link rel="stylesheet" th:href="@{/js/bootstrap-datepicker/bootstrap-datepicker3.min.css}">
+
+    <link th:href="@{/js/bootstrap-validator/css/bootstrapValidator.css}" rel="stylesheet">
 </head>
+
 <body>
-<h>哈哈哈</h>
+
+<div class="container-fluid p-t-15">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>短链新增</h4>
+                </div>
+
+                <div class="card-body">
+                    <form id="addForm" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label is-required" for="lurl">原始链接：</label>
+                            <div class="col-md-7">
+                                <input class="form-control" type="text" id="lurl" name="lurl" placeholder="请输入原始链接">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label is-required" for="status">状态：</label>
+                            <div class="col-md-7">
+                                <select class="form-control selectpicker" id="status" name="status">
+                                    <option value="0" selected>启用</option>
+                                    <option value="1">禁用</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label is-required" for="validityPeriod">有效期：</label>
+                            <div class="col-md-7">
+                                <select class="form-control selectpicker" id="validityPeriod" name="validityPeriod">
+                                    <option value="sevenday" checked>七天</option>
+                                    <option value="threemonth">3个月</option>
+                                    <option value="halfyear">半年</option>
+                                    <option value="forever">永久</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="note">备注</label>
+                            <div class="col-md-7">
+                                <textarea class="form-control" id="note" name="note" placeholder="请输入备注"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button class="btn btn-primary" id="submitForm">提交</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<!--表单校验插件-->
+<script type="text/javascript" th:src="@{/js/bootstrap-validator/js/bootstrapValidator.js}"></script>
+<!--消息提醒插件-->
+<script type="text/javascript" th:src="@{/js/coco-message/coco-message.js}"></script>
+<!--弹窗插件-->
+<script type="text/javascript" th:src="@{/js/layer/layer.min.js}"></script>
+<!--日期选择插件-->
+<script type="text/javascript" th:src="@{/js/bootstrap-datepicker/bootstrap-datepicker.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js}"></script>
+<!--公共组件-->
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/public.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    AjaxUtil.ctx = /*[[@{/}]]*/'';
+
+    $(document).ready(function () {
+        $('#addForm').bootstrapValidator({
+            fields: {
+                lurl: {
+                    validators: {
+                        notEmpty: {
+                            message: '原始链接不能为空'
+                        },
+                        callback: function(value, validator) { // 这里可以自定义value的校验规则
+                            if (!isURL(value)) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        }
+                    }
+                },
+                status: {validators: {notEmpty: {message: '状态不能为空'}}},
+                validityPeriod: {validators: {notEmpty: {message: '有效期不能为空'}}}
+            }
+        });
+
+
+        // 提交按钮
+        $("#submitForm").click(function () {
+            var bv = $('#addForm').data('bootstrapValidator');
+            bv.validate();
+            if (bv.isValid()) {
+                console.log('通过校验')
+
+
+
+            } else {
+                console.log('未通过校验')
+            }
+        });
+
+    });
+
+</script>
 </body>
 </html>

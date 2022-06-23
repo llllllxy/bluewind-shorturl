@@ -38,9 +38,10 @@ public class UrlManageController extends BaseController {
                        @RequestParam("pageNumber") Integer pageNumber,
                        @RequestParam(required = false, defaultValue = "", value = "surl") String surl,
                        @RequestParam(required = false, defaultValue = "", value = "createdAt") String createdAt,
+                       @RequestParam(required = false, defaultValue = "", value = "status") String status,
                        @RequestParam("sortName") String sortName,
                        @RequestParam("sortOrder") String sortOrder) {
-        Page page = urlManageService.getPage(pageSize, pageNumber, surl, createdAt, sortName, sortOrder);
+        Page page = urlManageService.getPage(pageSize, pageNumber, surl, createdAt, status, sortName, sortOrder);
 
         Map<String, Object> result = new HashMap<>();
         result.put(RESULT_ROWS, page.getRecords());
@@ -64,7 +65,18 @@ public class UrlManageController extends BaseController {
         if (num > 0) {
             return Result.ok("删除短链失效时间【" + id + "】成功");
         }
-        return Result.error("更改短链失效时间【" + id + "】失败");
+        return Result.error("删除短链失效时间【" + id + "】失败");
     }
 
+
+    @LogAround("短链批量删除")
+    @ResponseBody
+    @PostMapping(value="/batchDel")
+    public Result batchDel(@RequestParam String idlistStr) {
+        int num = urlManageService.batchDel(idlistStr);
+        if (num > 0) {
+            return Result.ok("批量删除短链失效时间【" + idlistStr + "】成功");
+        }
+        return Result.error("批量短链失效时间【" + idlistStr + "】失败");
+    }
 }
