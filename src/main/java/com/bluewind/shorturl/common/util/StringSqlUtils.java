@@ -91,6 +91,6 @@ public class StringSqlUtils {
         System.out.println(arrayToSpString(new String[]{"a", "b", "c", "d",
                 "e"}, "'", ","));
         String s = "1,2";
-        System.out.println(muliStringToSpString(s, "*", ","));
+        System.out.println(muliStringToSpString(s, "'", ","));
     }
 }
