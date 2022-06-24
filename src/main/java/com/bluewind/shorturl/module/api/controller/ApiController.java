@@ -44,17 +44,22 @@ public class ApiController {
     @RequestMapping (value = "/generate" , method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Result generate(@RequestParam String originalUrl,
+                           @RequestParam(required = false, defaultValue = "0", value = "status") String status,
                            @RequestParam(required = false, defaultValue = "20991231235959", value = "expireDate") String expireDate) throws UnknownHostException, UnsupportedEncodingException {
         if (!DateTool.checkFormat(expireDate, "yyyyMMddHHmmss")) {
             return Result.error("参数expireDate请传入正确的时间格式");
         }
+        if (!"0".equals(status) && !"1".equals(status)) {
+            return Result.error("参数status请传入正确的格式");
+        }
+
         originalUrl = URLDecoder.decode(originalUrl, "utf-8");
         if (!UrlUtils.checkURL(originalUrl)) {
             return Result.error("请输入正确的网址链接，注意以http://或https://开头");
         }
 
         String tenantId = ApiFilterHolder.getTenantId();
-        String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId);
+        String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId, status, "租户API调用生成");
         String host = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"
                 + env.getProperty("server.port")
                 + "/";

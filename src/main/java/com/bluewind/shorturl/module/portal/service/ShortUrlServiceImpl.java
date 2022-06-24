@@ -97,7 +97,7 @@ public class ShortUrlServiceImpl {
      * @param expireDate 过期时间
      * @return 生成的短链
      */
-    public String generateUrlMap(String originalURL, String expireDate, String tenantId) {
+    public String generateUrlMap(String originalURL, String expireDate, String tenantId, String status, String note) {
         if (log.isInfoEnabled()) {
             log.info("ShortUrlServiceImpl -- generateUrlMap -- originalURL = {}", originalURL);
         }
@@ -129,7 +129,7 @@ public class ShortUrlServiceImpl {
         while (ifContinue) {
             try {
                 // 直到数据库中不存在此shortURL，那则可以进行数据库插入了
-                shortUrlDao.insertUrlMap(shortURL, originalURL, expireDate, tenantId);
+                shortUrlDao.insertUrlMap(shortURL, originalURL, expireDate, tenantId, status, note);
                 // 放入到布隆过滤器中去
                 BLOOM_FILTER.put(shortURL);
                 // 同时添加redis缓存

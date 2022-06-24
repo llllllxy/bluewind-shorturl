@@ -81,9 +81,9 @@ public class ShortUrlDaoImpl {
      * @param tenantId 租户ID
      * @return
      */
-    public int insertUrlMap(String shortURL, String originalURL, String expireDate, String tenantId) {
+    public int insertUrlMap(String shortURL, String originalURL, String expireDate, String tenantId, String status, String note) {
         String id = Snowflake.nextId();
-        String sql = "insert into s_url_map (id, surl, lurl, views, expire_time, tenant_id) values (?,?,?,?,?,?)";
-        return jdbcTemplate.update(sql, id, shortURL, originalURL, 0, expireDate, tenantId);
+        String sql = "insert into s_url_map (id, surl, lurl, views, expire_time, tenant_id, status, note) values (?,?,?,?,?,?,?,?)";
+        return jdbcTemplate.update(sql, id, shortURL, originalURL, 0, expireDate, tenantId, status, note);
     }
 }

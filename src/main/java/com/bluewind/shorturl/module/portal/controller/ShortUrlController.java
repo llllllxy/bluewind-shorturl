@@ -107,7 +107,7 @@ public class ShortUrlController {
                 log.info("ShortUrlController -- generate -- expireDate = {}", expireDate);
             }
 
-            String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId);
+            String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId, "0", "门户平台生成");
             String host = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"
                     + env.getProperty("server.port")
                     + "/";

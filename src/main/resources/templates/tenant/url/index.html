@@ -22,7 +22,7 @@
 
 <div class="container-fluid p-t-15">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <!-- 自定义表单开始 -->
@@ -112,10 +112,9 @@
             // 是否启用排序
             sortable: true,
             // 排序方式
-            sortOrder: "asc",
+            sortOrder: "desc",
             // 默认排序列
-            sortName: "id",
-            //detailFormatter: detailFormatter,
+            sortName: "created_at",
             queryParams: queryParams,
             //数据列
             columns: [{
@@ -185,13 +184,6 @@
     }
 
 
-    function detailFormatter(index, row) {
-        var html = [];
-        html.push('<p><b>描述:</b> ' + row.description + '</p>');
-        return html.join('');
-    }
-
-
     // 查询操作
     function reloadTable() {
         $("#tableId").bootstrapTable('refresh');
@@ -207,12 +199,77 @@
         });
     }
 
-    function enable() {
 
+    function enable() {
+        var idlist = $('#tableId').bootstrapTable('getAllSelections');
+        if (idlist == false) {
+            Message.warning('请至少选择一条数据', 1000);
+            return;
+        }
+        var idlistStr = "";
+        for (var i = 0; i < idlist.length; i++) {
+            idlistStr = idlistStr + idlist[i].id + ","
+        }
+        idlistStr = idlistStr.substring(0, idlistStr.length - 1);
+
+        layer.confirm('确定要启用删除吗?', {icon: 'doubt', title: '提示'}, function (index) {
+            AjaxUtil.post({
+                url: AjaxUtil.ctx + "tenant/url/enable",
+                data: {
+                    'idlistStr' : idlistStr
+                },
+                success: function (res) {
+                    layer.close(index);
+                    if (res.code === 200) {
+                        Message.success(1000, res.msg, function () {
+                            reloadTable();
+                        });
+                    } else {
+                        Message.error(res.msg, 1000);
+                    }
+                },
+                error: function (error) {
+                    layer.close(index);
+                    Message.error(error, 1000);
+                }
+            });
+        });
     }
 
     function disable() {
+        var idlist = $('#tableId').bootstrapTable('getAllSelections');
+        if (idlist == false) {
+            Message.warning('请至少选择一条数据', 1000);
+            return;
+        }
+        var idlistStr = "";
+        for (var i = 0; i < idlist.length; i++) {
+            idlistStr = idlistStr + idlist[i].id + ","
+        }
+        idlistStr = idlistStr.substring(0, idlistStr.length - 1);
 
+        layer.confirm('确定要批量禁用吗?', {icon: 'doubt', title: '提示'}, function (index) {
+            AjaxUtil.post({
+                url: AjaxUtil.ctx + "tenant/url/disable",
+                data: {
+                    'idlistStr' : idlistStr
+                },
+                success: function (res) {
+                    layer.close(index);
+                    if (res.code === 200) {
+                        Message.success(1000, res.msg, function () {
+                            reloadTable();
+                        });
+                    } else {
+                        Message.error(res.msg, 1000);
+                    }
+                },
+                error: function (error) {
+                    layer.close(index);
+                    Message.error(error, 1000);
+                }
+            });
+        });
     }
 
     function batchDel() {
@@ -252,7 +309,13 @@
     }
 
     function edit(id) {
-
+        LayerUtil.openPage({
+            title: '修改短链',
+            content: AjaxUtil.ctx + "tenant/url/editPage/" + id,
+            end: function (index) {
+                reloadTable();
+            }
+        });
     }
 
     function del(id) {

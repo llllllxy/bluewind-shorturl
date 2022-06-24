@@ -49,9 +49,7 @@
 
                         <div class="form-group">
                             <label class="col-md-3 control-label is-required" for="expireDate">过期日期：</label>
-                            <div class="col-md-7">
-                                <input type="text" class="form-control js-datepicker" data-date-format="yyyy-mm-dd" name="expireDate" id="expireDate" placeholder="请选择过期日期">
-                            </div>
+                            <input type="text" class="form-control js-datepicker" data-date-format="yyyy-mm-dd" name="expireDate" id="expireDate" placeholder="请选择过期日期">
                         </div>
 
                         <div class="form-group">
@@ -124,7 +122,7 @@
                 console.log('通过校验')
 
                 AjaxUtil.post({
-                    url: AjaxUtil.ctx + "tenant/url/add",
+                    url: AjaxUtil.ctx + "tenant/url/update",
                     data: $('#addForm').serialize(),
                     success: function (res) {
                         if (res.code === 200) {

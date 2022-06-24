@@ -27,4 +27,12 @@ public class UrlManageServiceImpl {
     public int batchDel(String idlistStr) {
         return UrlManageDaoImpl.batchDel(idlistStr);
     }
+
+    public int enable(String idlistStr) {
+        return UrlManageDaoImpl.enable(idlistStr);
+    }
+
+    public int disable(String idlistStr) {
+        return UrlManageDaoImpl.disable(idlistStr);
+    }
 }

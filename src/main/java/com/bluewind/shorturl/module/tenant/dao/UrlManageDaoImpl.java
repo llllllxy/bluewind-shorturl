@@ -64,4 +64,29 @@ public class UrlManageDaoImpl {
         String sql = "update s_url_map set del_flag = '1' where id in (:idList)";
         return namedJdbcTemplate.update(sql, param);
     }
+
+
+    public int disable(String idlistStr) {
+        List<String> idList = new ArrayList<>();
+        Collections.addAll(idList, idlistStr.split(","));
+
+        NamedParameterJdbcTemplate namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        Map<String, Object> param = new HashMap<>();
+        param.put("idList", idList);
+
+        String sql = "update s_url_map set status = '1' where id in (:idList)";
+        return namedJdbcTemplate.update(sql, param);
+    }
+
+    public int enable(String idlistStr) {
+        List<String> idList = new ArrayList<>();
+        Collections.addAll(idList, idlistStr.split(","));
+
+        NamedParameterJdbcTemplate namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        Map<String, Object> param = new HashMap<>();
+        param.put("idList", idList);
+
+        String sql = "update s_url_map set status = '0' where id in (:idList)";
+        return namedJdbcTemplate.update(sql, param);
+    }
 }

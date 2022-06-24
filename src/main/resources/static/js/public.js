@@ -266,8 +266,8 @@ const LayerUtil = {
         options.title = options.title || '新页面'
         options.maxmin = options.maxmin || true // 开启最大化最小化按钮
         options.shadeClose = options.shadeClose || false
-        options.shade = options.shade || 0.5
-        options.area = options.area || ['45%', '100%']
+        options.shade = options.shade || 0.3
+        options.area = options.area || ['35%', '100%']
         options.offset = options.offset || 'r'
         options.anim = options.anim || 2
         layer.open({
