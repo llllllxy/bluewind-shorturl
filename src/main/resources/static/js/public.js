@@ -141,13 +141,6 @@ function initTable(options) {
 
 
 /**
- * 配置layer.open的宽度和高度
- */
-const layerwidth = 800;
-const layerheight = ($(window).height() - 50);
-
-
-/**
  * Ajax请求封装
  */
 const AjaxUtil = {
@@ -254,6 +247,41 @@ const AjaxUtil = {
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 // 错误回调
                 options.error("错误提示： " + XMLHttpRequest.status + " " + XMLHttpRequest.statusText);
+            }
+        });
+    }
+}
+
+
+const LayerUtil = {
+    /**
+     * 打开新增、修改页面、明细页面
+     */
+    openPage(options) {
+        if (!options.content) {
+            alert('请求错误，content不能为空');
+            return false;
+        }
+        options.type = options.type || 2
+        options.title = options.title || '新页面'
+        options.maxmin = options.maxmin || true // 开启最大化最小化按钮
+        options.shadeClose = options.shadeClose || false
+        options.shade = options.shade || 0.5
+        options.area = options.area || ['45%', '100%']
+        options.offset = options.offset || 'r'
+        options.anim = options.anim || 2
+        layer.open({
+            type: options.type,
+            title: options.title,
+            shadeClose: options.shadeClose,
+            maxmin: options.maxmin,
+            shade: options.shade,
+            area: options.area,
+            content: options.content,
+            offset: options.offset,
+            anim: options.anim,
+            end: function (index, layero) {
+                options.end(index, layero);
             }
         });
     }

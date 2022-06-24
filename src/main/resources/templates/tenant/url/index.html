@@ -198,13 +198,8 @@
     }
 
     function add() {
-        layer.open({
+        LayerUtil.openPage({
             title: '新增短链',
-            type: 2,
-            shade: 0.2,
-            shadeClose: true,
-            maxmin: true, //开启最大化最小化按钮
-            area: [layerwidth + 'px', layerheight + 'px'],
             content: AjaxUtil.ctx + "tenant/url/addPage",
             end: function (index) {
                 reloadTable();
