@@ -82,7 +82,7 @@ public class UrlManageController extends BaseController {
 
 
 
-    @LogAround("跳转到短链新增页")
+    @LogAround("跳转到短链修改页")
     @GetMapping("/editPage/{id}")
     public String editPage(Model model, @PathVariable String id) {
         Map<String, Object> urlInfo = urlManageService.findById(id);
@@ -90,6 +90,25 @@ public class UrlManageController extends BaseController {
         model.addAttribute("urlInfo", urlInfo);
 
         return "tenant/url/edit";
+    }
+
+
+    @LogAround("短链修改")
+    @ResponseBody
+    @PostMapping(value="/edit")
+    public Result edit(@RequestParam(required = false, defaultValue = "", value = "note") String note,
+                      @RequestParam("id") String id,
+                      @RequestParam("expireDate") String expireDate,
+                      @RequestParam("status") String status) {
+        // 日期格式转换
+        expireDate = DateTool.dateFormat(expireDate, "yyyy-MM-dd", "yyyyMMdd");
+        expireDate = expireDate + "000000";
+        // 修改短链
+        int num = urlManageService.edit(id, status, expireDate, note);
+        if (num > 0) {
+            return Result.ok("修改短链【" + id + "】成功");
+        }
+        return Result.error("修改短链【" + id + "】失败");
     }
 
 

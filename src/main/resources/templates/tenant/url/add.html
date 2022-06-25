@@ -111,7 +111,7 @@
                     }
                 },
                 status: {validators: {notEmpty: {message: '状态不能为空'}}},
-                validityPeriod: {validators: {notEmpty: {message: '有效期不能为空'}}}
+                expireDate: {validators: {notEmpty: {message: '过期时间不能为空'}}}
             }
         });
 
@@ -129,7 +129,8 @@
                     success: function (res) {
                         if (res.code === 200) {
                             Message.success(1000, res.msg, function () {
-                                reloadTable();
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index);
                             });
                         } else {
                             Message.error(res.msg, 1000);

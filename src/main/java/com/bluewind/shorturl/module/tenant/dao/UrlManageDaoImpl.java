@@ -100,4 +100,10 @@ public class UrlManageDaoImpl {
         String sql = "update s_url_map set status = '0' where id in (:idList)";
         return namedJdbcTemplate.update(sql, param);
     }
+
+
+    public int edit(String id, String status, String expireDate, String note) {
+        String sql = "update s_url_map set status = ?, expire_time = ?, note = ? where id = ?";
+        return jdbcTemplate.update(sql, status, expireDate, note, id);
+    }
 }

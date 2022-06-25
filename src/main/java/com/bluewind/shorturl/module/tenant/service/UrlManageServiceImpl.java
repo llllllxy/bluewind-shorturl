@@ -41,4 +41,8 @@ public class UrlManageServiceImpl {
     public int disable(String idlistStr) {
         return UrlManageDaoImpl.disable(idlistStr);
     }
+
+    public int edit(String id, String status, String expireDate, String note) {
+        return UrlManageDaoImpl.edit(id, status, expireDate, note);
+    }
 }
