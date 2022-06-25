@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>短链管理新增</title>
+    <title>短链管理修改</title>
     <link rel="icon" th:href="@{/images/favicon.ico}" type="image/ico">
     <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
     <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
@@ -25,37 +25,49 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>短链新增</h4>
+                    <h4>短链修改</h4>
                 </div>
 
                 <div class="card-body">
                     <form id="addForm" class="form-horizontal">
+                        <input type="hidden" name="id" id="id" th:value="${urlInfo.id}">
+
                         <div class="form-group">
                             <label class="col-md-3 control-label is-required" for="lurl">原始链接：</label>
                             <div class="col-md-7">
-                                <input class="form-control" type="text" id="lurl" name="lurl" placeholder="请输入原始链接">
+                                <p class="form-control-static" th:text="${urlInfo.lurl}"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label is-required" for="surl">短链接：</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" th:text="${urlInfo.surl}"></p>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-3 control-label is-required" for="status">状态：</label>
                             <div class="col-md-7">
-                                <select class="form-control selectpicker" id="status" name="status">
-                                    <option value="0" selected>启用</option>
-                                    <option value="1">禁用</option>
+                                <select class="form-control selectpicker" id="status" name="status" th:value="${urlInfo.status}">
+                                    <option value="0" th:selected="(${urlInfo.status} eq '0')">启用</option>
+                                    <option value="1" th:selected="(${urlInfo.status} eq '1')">禁用</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-3 control-label is-required" for="expireDate">过期日期：</label>
-                            <input type="text" class="form-control js-datepicker" data-date-format="yyyy-mm-dd" name="expireDate" id="expireDate" placeholder="请选择过期日期">
+                            <div class="col-md-7">
+                                <input type="text" class="form-control js-datepicker" data-date-format="yyyy-mm-dd" name="expireDate"
+                                       id="expireDate" placeholder="请选择过期日期" th:value="${urlInfo.expire_time}">
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="note">备注</label>
                             <div class="col-md-7">
-                                <textarea class="form-control" id="note" name="note" placeholder="请输入备注"></textarea>
+                                <textarea class="form-control" id="note" name="note" placeholder="请输入备注" th:text="${urlInfo.note}"></textarea>
                             </div>
                         </div>
 

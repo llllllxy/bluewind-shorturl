@@ -81,6 +81,18 @@ public class UrlManageController extends BaseController {
     }
 
 
+
+    @LogAround("跳转到短链新增页")
+    @GetMapping("/editPage/{id}")
+    public String editPage(Model model, @PathVariable String id) {
+        Map<String, Object> urlInfo = urlManageService.findById(id);
+        urlInfo.put("expire_time", DateTool.timeFormat(urlInfo.get("expire_time").toString(), "yyyyMMddHHmmss", "yyyy-MM-dd"));
+        model.addAttribute("urlInfo", urlInfo);
+
+        return "tenant/url/edit";
+    }
+
+
     @LogAround("短链删除")
     @ResponseBody
     @GetMapping(value="/del/{id}")

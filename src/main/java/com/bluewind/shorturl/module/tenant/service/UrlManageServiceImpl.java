@@ -5,6 +5,8 @@ import com.bluewind.shorturl.module.tenant.dao.UrlManageDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
  * @author liuxingyu01
  * @date 2022-05-18 11:27
@@ -18,6 +20,10 @@ public class UrlManageServiceImpl {
 
     public Page getPage(Integer pageSize, Integer pageNumber, String surl, String createdAt, String status, String sortName, String sortOrder) {
         return UrlManageDaoImpl.getPage(pageSize, pageNumber, surl, createdAt, status, sortName, sortOrder);
+    }
+
+    public Map<String, Object> findById(String id) {
+        return UrlManageDaoImpl.findById(id);
     }
 
     public int del(String id) {

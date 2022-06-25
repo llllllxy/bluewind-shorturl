@@ -1,11 +1,11 @@
 package com.bluewind.shorturl.module.tenant.dao;
 
 import com.bluewind.shorturl.common.config.security.TenantHolder;
-import com.bluewind.shorturl.common.util.StringSqlUtils;
 import com.bluewind.shorturl.common.util.page.IPageHandle;
 import com.bluewind.shorturl.common.util.page.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -44,6 +44,17 @@ public class UrlManageDaoImpl {
         }
         Page page = pageHandle.getPage(sb.toString(), pageNumber, pageSize);
         return page;
+    }
+
+
+    public Map<String, Object> findById(String id) {
+        try {
+            String sql = "select * from s_url_map where id = ?";
+            Map<String, Object> result = jdbcTemplate.queryForMap(sql, id);
+            return result;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
 
