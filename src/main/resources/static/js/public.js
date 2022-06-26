@@ -105,6 +105,21 @@ function digit(num, length){
 }
 
 
+
+/**
+ * 判断对象是否为空
+ * @param obj
+ * @returns {boolean}
+ */
+function isEmpty(obj) {
+    if (typeof obj === 'undefined' || obj == null || obj === '') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 /**
  * bootstrapTable封装，减少公共配置项
  * @param options

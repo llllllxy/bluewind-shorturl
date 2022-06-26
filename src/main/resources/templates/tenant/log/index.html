@@ -60,10 +60,10 @@
                 <div class="card-body">
 
                     <div id="toolbar" class="toolbar-btn-action">
-                        <button id="btn_export" type="button" class="btn btn-primary m-r-5" onclick="export()">
+                        <button id="btn_export" type="button" class="btn btn-primary m-r-5" onclick="exportPage()">
                             <span class="mdi mdi-download" aria-hidden="true"></span>导出本页
                         </button>
-                        <button id="btn_exportAll" type="button" class="btn btn-primary m-r-5" onclick="exportAl()">
+                        <button id="btn_exportAll" type="button" class="btn btn-primary m-r-5" onclick="exportAll()">
                             <span class="mdi mdi-folder-download" aria-hidden="true"></span>导出全部
                         </button>
                     </div>
@@ -187,6 +187,55 @@
 
             }
         });
+    }
+
+    function exportPage() {
+        var data = $('#tableId').bootstrapTable('getData', {useCurrentPage: true});
+        console.log(JSON.stringify(data));
+
+        var xhr = new XMLHttpRequest();
+        //使用HTTP POST请求与服务器交互数据
+        xhr.open("POST", AjaxUtil.ctx + "tenant/log/exportPage", true);
+        // 返回类型blob
+        xhr.responseType = "blob";
+        //设置发送数据的请求格式
+        xhr.setRequestHeader('content-type', 'application/json');
+
+        xhr.onload = function () {
+            // 请求完成
+            if (this.status === 200) {
+                // 返回200
+                var blob = this.response;
+
+                console.log(xhr.getResponseHeader("content-disposition"))
+                let temp = xhr.getResponseHeader("content-disposition").split(";")[1].split("filename=")[1];
+                temp = temp.replace('"', ''); // 去除两边的引号
+
+                var fileName = decodeURIComponent(temp);
+                if (isEmpty(fileName)) {
+                    fileName = '访问日志';
+                }
+
+                var reader = new FileReader();
+                reader.readAsDataURL(blob);    // 转换为base64，可以直接放入a表情href
+                reader.onload = function (e) {
+                    // 转换完成，创建一个a标签用于下载
+                    var a = document.createElement('a');
+                    a.download = fileName + '.xlsx';
+                    a.href = e.target.result;
+                    $("body").append(a);    // 修复firefox中无法触发click
+                    a.click();
+                    $(a).remove();
+                }
+            }
+        };
+
+        xhr.send(JSON.stringify(data));
+    }
+
+
+    function exportAll() {
+
     }
 
 </script>
