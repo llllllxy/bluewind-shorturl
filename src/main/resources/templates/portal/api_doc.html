@@ -189,108 +189,242 @@
         <el-main style="background-color: #FFF;">
             <div id="bd">
                 <div class="wrap">
-                    <div class="block" id="block-1">
-                        <div class="hd"><h3>API说明(access_key和access_key_secret:<span id="key"><a href="http://console.link66.cn/#/login">登录后查看</a></span>)</h3></div>
-                    </div>
-                    <div class="block" id="block-1.1">
-                        <div class="hd"><h4>1 请求地址</h4></div>
-                        <div class="bd">
-                            <p>
-                                http://192.168.0.105:8076/api/generate
-                            </p>
+                    <div class="block">
+                        <div class="hd">
+                            <el-link type="primary" @click="toggle('generate')">1、生成接口</el-link>
+                            <el-link type="primary" @click="toggle('enable')">2、启用接口</el-link>
+                            <el-link type="primary" @click="toggle('disable')">3、禁用接口</el-link>
+                            <el-link type="primary" @click="toggle('update')">4、更新失效时间接口</el-link>
                         </div>
                     </div>
-                    <div class="block" id="block-1.2">
-                        <div class="hd"><h4>2 请求方式</h4></div>
-                        <div class="bd">
-                            <p>
-                                GET/POST
-                            </p>
+                    <!-- 生成接口div此处开始结束 -->
+                    <div id="generate" v-show="showGenerate">
+                        <div class="block">
+                            <div class="hd"><h4>1 请求地址</h4></div>
+                            <div class="bd">
+                                <p>
+                                    http://192.168.0.105:8076/api/generate
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>2 请求方式</h4></div>
+                            <div class="bd">
+                                <p>
+                                    GET/POST
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="block">
+                            <div class="hd"><h4>3 输入参数</h4></div>
+                            <div class="bd">
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>参数名</th>
+                                        <th>参数类型</th>
+                                        <th>是否必需</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>originalUrl</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>UrlEncode('原始链接')</td>
+                                        <td>http%3a%2f%2fwww.baidu.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td>status</td>
+                                        <td>String</td>
+                                        <td>否</td>
+                                        <td>短链状态：0--启用，1--禁用</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>expireDate</td>
+                                        <td>String</td>
+                                        <td>否</td>
+                                        <td>短链过期失效的时间，格式为yyyyMMddHHmmss</td>
+                                        <td>20220525190720</td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="block">
+                            <div class="hd"><h4>4 设置请求头</h4></div>
+                            <div class="bd">
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>KEY</th>
+                                        <th>VALUE</th>
+                                        <th>是否必需</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>access_key</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>access_key注册后获取</td>
+                                        <td>b6febb10ddd47f49c451046c1afb414</td>
+                                    </tr>
+                                    <tr>
+                                        <td>reqtime</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>当前时间，格式为yyyyMMddHHmmss</td>
+                                        <td>20220619223516</td>
+                                    </tr>
+                                    <tr>
+                                        <td>signature</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>签名，规则是 access_key_secret + access_key_secret + reqtime 然后进行MD5加密(16进制的)，access_key_secret注册后获取</td>
+                                        <td>threemonth</td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>5 返回结果</h4></div>
+                            <div class="bd">
+                                <P>
+                                    请求：<br/>
+                                    http://192.168.0.105:8076/api/generate?originalUrl=https%3A%2F%2Fwww.jianshu.com%2Fp%2F7d4bc61c1a5b&validityPeriod=threemonth
+                                </P>
+                                <P>
+                                    返回：<br/>
+                                    {"code":200,"msg":"请求成功","data":"http://192.168.0.105:8076/2qve90"}
+                                </P>
+                                <p>
+                                    <table border="1">
+                                        <tr>
+                                            <th>KEY</th>
+                                            <th>VALUE</th>
+                                            <th>描述</th>
+                                            <th>示例值</th>
+                                        </tr>
+                                        <tr>
+                                            <td>code</th>
+                                            <td>String</td>
+                                            <td>标识码，200为成功</td>
+                                            <td>200</td>
+                                        </tr>
+                                        <tr>
+                                            <td>msg</th>
+                                            <td>String</td>
+                                            <td>消息</td>
+                                            <td>请求成功</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data</th>
+                                            <td>String</td>
+                                            <td>转换的短链</td>
+                                            <td>http://192.168.0.105:8076/2qve90</td>
+                                        </tr>
+                                    </table>
+                                </p>
+                            </div>
                         </div>
                     </div>
+                    <!-- 生成接口div到此结束 -->
 
-                    <div class="block" id="block-1.3">
-                        <div class="hd"><h4>3 输入参数</h4></div>
-                        <div class="bd">
-                            <p>
-                            <table border="1">
-                                <tr>
-                                    <th>参数名</th>
-                                    <th>参数类型</th>
-                                    <th>是否必需</th>
-                                    <th>描述</th>
-                                    <th>示例值</th>
-                                </tr>
-                                <tr>
-                                    <td>originalUrl</th>
-                                    <td>String</td>
-                                    <td>是</td>
-                                    <td>UrlEncode('原始链接')</td>
-                                    <td>http%3a%2f%2fwww.baidu.com</td>
-                                </tr>
-                                <tr>
-                                    <td>expireDate</th>
-                                    <td>String</td>
-                                    <td>否</td>
-                                    <td>短链过期失效的时间，格式为yyyyMMddHHmmss</td>
-                                    <td>20220525190720</td>
-                                </tr>
-                            </table>
-                            </p>
+                    <!-- 启用接口div此处开始结束 -->
+                    <div id="enable" v-show="showEnable">
+                        <div class="block">
+                            <div class="hd"><h4>1 请求地址</h4></div>
+                            <div class="bd">
+                                <p>
+                                    http://192.168.0.105:8076/api/enable
+                                </p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="block" id="block-1.4">
-                        <div class="hd"><h4>4 设置请求头</h4></div>
-                        <div class="bd">
-                            <p>
-                            <table border="1">
-                                <tr>
-                                    <th>KEY</th>
-                                    <th>VALUE</th>
-                                    <th>是否必需</th>
-                                    <th>描述</th>
-                                    <th>示例值</th>
-                                </tr>
-                                <tr>
-                                    <td>access_key</th>
-                                    <td>String</td>
-                                    <td>是</td>
-                                    <td>access_key注册后获取</td>
-                                    <td>b6febb10ddd47f49c451046c1afb414</td>
-                                </tr>
-                                <tr>
-                                    <td>reqtime</th>
-                                    <td>String</td>
-                                    <td>是</td>
-                                    <td>当前时间，格式为yyyyMMddHHmmss</td>
-                                    <td>20220619223516</td>
-                                </tr>
-                                <tr>
-                                    <td>signature</th>
-                                    <td>String</td>
-                                    <td>是</td>
-                                    <td>签名，规则是 access_key_secret + access_key_secret + reqtime 然后进行MD5加密(16进制的)，access_key_secret注册后获取</td>
-                                    <td>threemonth</td>
-                                </tr>
-                            </table>
-                            </p>
+                        <div class="block">
+                            <div class="hd"><h4>2 请求方式</h4></div>
+                            <div class="bd">
+                                <p>
+                                    GET/POST
+                                </p>
+                            </div>
                         </div>
-                    </div>
-
-
-                    <div class="block" id="block-1.5">
-                        <div class="hd"><h4>5 返回结果</h4></div>
-                        <div class="bd">
-                            <P>
-                                请求：<br/>
-                                http://192.168.0.105:8076/api/generate?originalUrl=https%3A%2F%2Fwww.jianshu.com%2Fp%2F7d4bc61c1a5b&validityPeriod=threemonth
-                            </P>
-                            <P>
-                                返回：<br/>
-                                {"code":200,"msg":"请求成功","data":"http://192.168.0.105:8076/2qve90"}
-                            </P>
-                            <p>
+                        <div class="block">
+                            <div class="hd"><h4>3 输入参数</h4></div>
+                            <div class="bd">
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>参数名</th>
+                                        <th>参数类型</th>
+                                        <th>是否必需</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>shortUrl</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>短链接</td>
+                                        <td>2pEKPH</td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>4 设置请求头</h4></div>
+                            <div class="bd">
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>KEY</th>
+                                        <th>VALUE</th>
+                                        <th>是否必需</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>access_key</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>access_key注册后获取</td>
+                                        <td>b6febb10ddd47f49c451046c1afb414</td>
+                                    </tr>
+                                    <tr>
+                                        <td>reqtime</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>当前时间，格式为yyyyMMddHHmmss</td>
+                                        <td>20220619223516</td>
+                                    </tr>
+                                    <tr>
+                                        <td>signature</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>签名，规则是 access_key_secret + access_key_secret + reqtime 然后进行MD5加密(16进制的)，access_key_secret注册后获取</td>
+                                        <td>threemonth</td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>5 返回结果</h4></div>
+                            <div class="bd">
+                                <P>
+                                    请求：<br/>
+                                    http://192.168.0.105:8076/api/enable?shortUrl=2pEKPH
+                                </P>
+                                <P>
+                                    返回：<br/>
+                                    {"code":200,"msg":"启用短链2pEKPH成功","data": ""}
+                                </P>
+                                <p>
                                 <table border="1">
                                     <tr>
                                         <th>KEY</th>
@@ -313,13 +447,267 @@
                                     <tr>
                                         <td>data</th>
                                         <td>String</td>
-                                        <td>转换的短链</td>
-                                        <td>http://192.168.0.105:8076/2qve90</td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </table>
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
+                    <!-- 启用接口div到此结束 -->
+
+                    <!-- 禁用接口div此处开始结束 -->
+                    <div id="disable" v-show="showDisable">
+                        <div class="block">
+                            <div class="hd"><h4>1 请求地址</h4></div>
+                            <div class="bd">
+                                <p>
+                                    http://192.168.0.105:8076/api/disable
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>2 请求方式</h4></div>
+                            <div class="bd">
+                                <p>
+                                    GET/POST
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>3 输入参数</h4></div>
+                            <div class="bd">
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>参数名</th>
+                                        <th>参数类型</th>
+                                        <th>是否必需</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>shortUrl</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>短链接</td>
+                                        <td>2pEKPH</td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>4 设置请求头</h4></div>
+                            <div class="bd">
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>KEY</th>
+                                        <th>VALUE</th>
+                                        <th>是否必需</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>access_key</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>access_key注册后获取</td>
+                                        <td>b6febb10ddd47f49c451046c1afb414</td>
+                                    </tr>
+                                    <tr>
+                                        <td>reqtime</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>当前时间，格式为yyyyMMddHHmmss</td>
+                                        <td>20220619223516</td>
+                                    </tr>
+                                    <tr>
+                                        <td>signature</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>签名，规则是 access_key_secret + access_key_secret + reqtime 然后进行MD5加密(16进制的)，access_key_secret注册后获取</td>
+                                        <td>threemonth</td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>5 返回结果</h4></div>
+                            <div class="bd">
+                                <P>
+                                    请求：<br/>
+                                    http://192.168.0.105:8076/api/disable?shortUrl=2pEKPH
+                                </P>
+                                <P>
+                                    返回：<br/>
+                                    {"code":200,"msg":"禁用短链2pEKPH成功","data": ""}
+                                </P>
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>KEY</th>
+                                        <th>VALUE</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>code</th>
+                                        <td>String</td>
+                                        <td>标识码，200为成功</td>
+                                        <td>200</td>
+                                    </tr>
+                                    <tr>
+                                        <td>msg</th>
+                                        <td>String</td>
+                                        <td>消息</td>
+                                        <td>请求成功</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data</th>
+                                        <td>String</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 禁用接口div到此结束 -->
+
+
+                    <!-- 禁用接口div此处开始结束 -->
+                    <div id="update" v-show="showUpdate">
+                        <div class="block">
+                            <div class="hd"><h4>1 请求地址</h4></div>
+                            <div class="bd">
+                                <p>
+                                    http://192.168.0.105:8076/api/expire
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>2 请求方式</h4></div>
+                            <div class="bd">
+                                <p>
+                                    GET/POST
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>3 输入参数</h4></div>
+                            <div class="bd">
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>参数名</th>
+                                        <th>参数类型</th>
+                                        <th>是否必需</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>shortUrl</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>短链接</td>
+                                        <td>2pEKPH</td>
+                                    </tr>
+                                    <tr>
+                                        <td>expireDate</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>短链过期失效的时间，格式为yyyyMMddHHmmss</td>
+                                        <td>20220624143424</td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>4 设置请求头</h4></div>
+                            <div class="bd">
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>KEY</th>
+                                        <th>VALUE</th>
+                                        <th>是否必需</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>access_key</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>access_key注册后获取</td>
+                                        <td>b6febb10ddd47f49c451046c1afb414</td>
+                                    </tr>
+                                    <tr>
+                                        <td>reqtime</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>当前时间，格式为yyyyMMddHHmmss</td>
+                                        <td>20220619223516</td>
+                                    </tr>
+                                    <tr>
+                                        <td>signature</th>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td>签名，规则是 access_key_secret + access_key_secret + reqtime 然后进行MD5加密(16进制的)，access_key_secret注册后获取</td>
+                                        <td>threemonth</td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="hd"><h4>5 返回结果</h4></div>
+                            <div class="bd">
+                                <P>
+                                    请求：<br/>
+                                    http://192.168.0.105:8076/api/expire?shortUrl=2pEKPH
+                                </P>
+                                <P>
+                                    返回：<br/>
+                                    {"code":200,"msg":"更改短链失效时间2pEKPH成功，更新后为：20220624143424","data": ""}
+                                </P>
+                                <p>
+                                <table border="1">
+                                    <tr>
+                                        <th>KEY</th>
+                                        <th>VALUE</th>
+                                        <th>描述</th>
+                                        <th>示例值</th>
+                                    </tr>
+                                    <tr>
+                                        <td>code</th>
+                                        <td>String</td>
+                                        <td>标识码，200为成功</td>
+                                        <td>200</td>
+                                    </tr>
+                                    <tr>
+                                        <td>msg</th>
+                                        <td>String</td>
+                                        <td>消息</td>
+                                        <td>请求成功</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data</th>
+                                        <td>String</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 禁用接口div到此结束 -->
 
                 </div>
             </div>
@@ -354,7 +742,12 @@
         data: function () {
             return {
                 message: 'Hello Vue.js!',
-                activeIndex: 'apidoc'
+                activeIndex: 'apidoc',
+
+                showGenerate: true,
+                showEnable: false,
+                showDisable: false,
+                showUpdate: false
             }
         },
         methods: {
@@ -373,6 +766,39 @@
                     window.location.href = ctx + 'apiDoc';
                 } else if (key === 'about') {
                     window.location.href = ctx + 'about';
+                }
+            },
+            toggle(para) {
+                switch(para) {
+                    case 'generate':
+                        this.showGenerate = true;
+                        this.showEnable = false;
+                        this.showDisable = false;
+                        this.showUpdate = false;
+                        break;
+                    case 'enable':
+                        this.showEnable = true;
+                        this.showGenerate = false;
+                        this.showDisable = false;
+                        this.showUpdate = false;
+                        break;
+                    case 'disable':
+                        this.showEnable = false;
+                        this.showGenerate = false;
+                        this.showDisable = true;
+                        this.showUpdate = false;
+                        break;
+                    case 'update':
+                        this.showEnable = false;
+                        this.showGenerate = false;
+                        this.showDisable = false;
+                        this.showUpdate = true;
+                        break;
+                    default:
+                        this.showGenerate = true;
+                        this.showEnable = false;
+                        this.showDisable = false;
+                        this.showUpdate = false;
                 }
             }
         }
