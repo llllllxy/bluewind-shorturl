@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>短链管理首页</title>
+    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/ico">
+    <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
+    <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+    <link th:href="@{/js/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet">
+    <link th:href="@{/js/bootstrap-table/extensions/page-jump/bootstrap-table-pagejump.min.css}" rel="stylesheet">
+    <link th:href="@{/js/layer/theme/layer.min.css}" rel="stylesheet">
+    <!--日期选择插件-->
+    <link rel="stylesheet" th:href="@{/js/bootstrap-datepicker/bootstrap-datepicker3.min.css}">
+</head>
+
+<body>
+
+<div class="container-fluid p-t-15">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <!-- 自定义表单开始 -->
+                    <form id="formId" role="form" class="form-inline">
+                        <div class="form-group m-r-10">
+                            <label class="control-label">短链接：</label>
+                            <input type="text" value="" name="surl" id="surl" placeholder="请输入短链接" class="form-control"/>
+                        </div>
+
+                        <div class="form-group m-r-10">
+                            <label>访问时间：</label>
+                            <input type="text" class="form-control js-datepicker" data-date-format="yyyy-mm-dd" name="startTime" id="startTime" placeholder="请选择开始时间">
+                            <span> - </span>
+                            <input type="text" class="form-control js-datepicker" data-date-format="yyyy-mm-dd" name="endTime" id="endTime" placeholder="请选择结束时间">
+                        </div>
+
+                        <div class="form-group m-r-10">
+                            <label class="control-label">访问IP：</label>
+                            <input type="text" value="" name="accessIp" id="accessIp" placeholder="访问IP" class="form-control"/>
+                        </div>
+
+                        <div class="form-group">
+                            <!-- 查询按钮 -->
+                            <a class="btn btn-primary m-r-5" onclick="reloadTable()">
+                                <span class="mdi mdi-magnify" aria-hidden="true"></span>搜索
+                            </a>
+                            <!-- 重置表单按钮 -->
+                            <a class="btn btn-warning" onclick="$('#formId')[0].reset()">
+                                <span class="mdi mdi-loop" aria-hidden="true"></span>重置
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-body">
+
+                    <div id="toolbar" class="toolbar-btn-action">
+                        <button id="btn_export" type="button" class="btn btn-primary m-r-5" onclick="export()">
+                            <span class="mdi mdi-download" aria-hidden="true"></span>导出本页
+                        </button>
+                        <button id="btn_exportAll" type="button" class="btn btn-primary m-r-5" onclick="exportAl()">
+                            <span class="mdi mdi-folder-download" aria-hidden="true"></span>导出全部
+                        </button>
+                    </div>
+                    <table id="tableId"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<!--消息提醒插件-->
+<script type="text/javascript" th:src="@{/js/coco-message/coco-message.js}"></script>
+<!--表格插件-->
+<script type="text/javascript" th:src="@{/js/bootstrap-table/bootstrap-table.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-table/bootstrap-table-zh-CN.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-table/extensions/page-jump/bootstrap-table-pagejump.min.js}"></script>
+<!--弹窗插件-->
+<script type="text/javascript" th:src="@{/js/layer/layer.min.js}"></script>
+<!--日期选择插件-->
+<script type="text/javascript" th:src="@{/js/bootstrap-datepicker/bootstrap-datepicker.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js}"></script>
+<!--公共组件-->
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/public.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    AjaxUtil.ctx = /*[[@{/}]]*/'';
+
+    $(document).ready(function () {
+
+        var options = {
+            domId: "tableId",
+            toolbar: "toolbar",
+            url: AjaxUtil.ctx + "tenant/log/list",
+            uniqueId: "log_id",
+            // 是否启用排序
+            sortable: true,
+            // 排序方式
+            sortOrder: "desc",
+            // 默认排序列
+            sortName: "access_time",
+            queryParams: queryParams,
+            //数据列
+            columns: [{
+                title: '序号',
+                align: "center",
+                width: 40,
+                formatter: function (value, row, index) {
+                    // 获取每页显示的数量
+                    var pageSize = $('#tableId').bootstrapTable('getOptions').pageSize;
+                    // 获取当前是第几页
+                    var pageNumber = $('#tableId').bootstrapTable('getOptions').pageNumber;
+                    // 返回序号，注意index是从0开始的，所以要加上1
+                    return pageSize * (pageNumber - 1) + index + 1;
+                }
+            }, {
+                title: "日志ID",
+                field: "log_id",
+                sortable: true
+            }, {
+                title: "短链",
+                field: "surl"
+            }, {
+                title: "访问时间",
+                field: "access_time",
+                sortable: true,
+                formatter: function (value, row, index) {
+                    return value.substring(0, 4) + "-" + value.substring(4, 6) + "-" + value.substring(6, 8) + " " +value.substring(8, 10) + ":" + value.substring(10, 12) + ":" + value.substring(12, 14);
+                }
+            }, {
+                title: "访问IP",
+                field: "access_ip",
+                sortable: true
+            }, {
+                    title: "userAgent",
+                    field: "access_user_agent",
+                    sortable: true
+            }, {
+                title: "操作",
+                field: "empty",
+                align: "center",
+                halign: "center",
+                formatter: function (value, row, index) {
+                    return '<a class="btn btn-primary btn-xs m-r-5" type="button" onclick="detail(\'' + row.log_id + '\')"> <i class="mdi mdi-library-books"></i>明细</a>';
+                }
+            }]
+        }
+
+        // 初始化表格
+        initTable(options);
+    });
+
+
+    // 分页查询参数，是以键值对的形式设置的
+    function queryParams(params) {
+        return {
+            surl: $("#surl").val(), // 请求时向服务端传递的参数
+            startTime: $("#startTime").val(), // 请求时向服务端传递的参数
+            endTime: $("#endTime").val(),
+            accessIp: $("#accessIp").val(),
+            pageSize: params.pageSize, // 每页显示数量
+            pageNumber: params.pageNumber, // SQL语句偏移量
+            sortName: params.sortName,
+            sortOrder: params.sortOrder
+        }
+    }
+
+
+    // 查询操作
+    function reloadTable() {
+        $("#tableId").bootstrapTable('refresh');
+    }
+
+    function detail(log_id) {
+        LayerUtil.openPage({
+            title: '访问日志明细',
+            content: AjaxUtil.ctx + "tenant/log/detail/" + log_id,
+            end: function (index) {
+
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

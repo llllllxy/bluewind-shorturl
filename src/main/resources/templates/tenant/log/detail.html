@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>访问日志明细</title>
+    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/ico">
+    <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
+    <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+    <link th:href="@{/css/public.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container-fluid p-t-15">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>访问日志明细</h4>
+                </div>
+
+                <div class="card-body">
+                    <form id="addForm" class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label is-required" for="log_id">日志ID：</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" th:text="${logInfo.log_id}"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label is-required" for="surl">短链接：</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" th:text="${logInfo.surl}"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label is-required" for="access_time">访问时间：</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" th:text="${logInfo.access_time}"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label is-required" for="access_ip">访问IP：</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" th:text="${logInfo.access_ip}"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label is-required" for="access_user_agent">userAgent：</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" th:text="${logInfo.access_user_agent}"></p>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+
+<!--弹窗插件-->
+<script type="text/javascript" th:src="@{/js/layer/layer.min.js}"></script>
+
+<!--公共组件-->
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/public.js}"></script>
+
+
+</body>
+</html>

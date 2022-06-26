@@ -46,7 +46,63 @@ function isURL(str_url) {
         return true;
     }
     return false;
-};
+}
+
+
+
+/**
+ * 转化时间戳或日期对象为日期格式字符
+ * time：可以是日期对象，也可以是毫秒数
+ * format：日期字符格式（默认：yyyy-MM-dd HH:mm:ss），可随意定义，如：yyyy年MM月dd日
+ */
+function toDateString(time, format) {
+    //若 null 或空字符，则返回空字符
+    if (time === null || time === '') return '';
+    var that = this
+        , date = new Date(function () {
+        if (!time) return;
+        return isNaN(time) ? time : (typeof time === 'string' ? parseInt(time) : time)
+    }() || new Date())
+        , ymd = [
+        that.digit(date.getFullYear(), 4)
+        , that.digit(date.getMonth() + 1)
+        , that.digit(date.getDate())
+    ]
+        , hms = [
+        that.digit(date.getHours())
+        , that.digit(date.getMinutes())
+        , that.digit(date.getSeconds())
+    ];
+
+    if (!date.getDate()) {
+        console.error('Invalid Msec for "util.toDateString(Msec)');
+        return '';
+    }
+
+    format = format || 'yyyy-MM-dd HH:mm:ss';
+    return format.replace(/yyyy/g, ymd[0])
+        .replace(/MM/g, ymd[1])
+        .replace(/dd/g, ymd[2])
+        .replace(/HH/g, hms[0])
+        .replace(/mm/g, hms[1])
+        .replace(/ss/g, hms[2]);
+}
+
+/**
+ * 数字前置补零(配合toDateString使用)
+ * @param num
+ * @param length
+ * @returns {string}
+ */
+function digit(num, length){
+    var str = '';
+    num = String(num);
+    length = length || 2;
+    for(var i = num.length; i < length; i++){
+        str += '0';
+    }
+    return num < Math.pow(10, length) ? str + (num|0) : num;
+}
 
 
 /**
