@@ -159,13 +159,13 @@ public class ShortUrlController {
             log.info("ShortUrlController -- generateShortURL -- applyList = {}", applyList);
         }
 
-        SqlPara sqlPara = Db.getSqlPara("user.getAllList", new HashMap());
-        List<Record> applyList2 = Db.find(sqlPara);
+        SqlPara sqlPara = Db.getSqlPara("access_log.getLogList", new HashMap());
+        List<Record> accessLogList = Db.find(sqlPara);
         if (log.isInfoEnabled()) {
-            log.info("ShortUrlController -- generateShortURL -- applyList2 = {}", applyList2);
+            log.info("ShortUrlController -- generateShortURL -- accessLogList = {}", accessLogList);
         }
 
-        return Result.ok("测试成功", applyList2);
+        return Result.ok("测试成功", accessLogList);
     }
 
 }

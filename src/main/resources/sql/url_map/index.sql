@@ -1,3 +1,3 @@
-#sql("url_map.getAllList")
-	select * from s_url_map
+#sql("getUrlList")
+	select * from s_url_map limit 10
 #end

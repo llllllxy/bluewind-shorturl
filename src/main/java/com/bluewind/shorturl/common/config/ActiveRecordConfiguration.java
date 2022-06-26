@@ -8,13 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
-import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.template.source.ClassPathSourceFactory;
 
 /**
  * @author liuxingyu01
  * @date 2022-05-14 22:39
- * @description
+ * @description jfinal activerecord orm的配置
  **/
 @Configuration
 public class ActiveRecordConfiguration {
