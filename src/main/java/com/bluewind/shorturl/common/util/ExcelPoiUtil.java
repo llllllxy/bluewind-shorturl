@@ -30,12 +30,12 @@ public class ExcelPoiUtil {
 
     /**
      * @param sheetName  工作表名，文件名，头部信息
-     * @param listName   列名
+     * @param columnHeader   列名
      * @param list       需要写入的数据
      * @param listBottom 底部写入信息：<列位置，数据>
      * @param response   返回
      */
-    public static void excelPort(String sheetName, List<String> listName, List<Map<String, String>> list, List<Map<Integer, String>> listBottom, HttpServletResponse response) {
+    public static void excelPort(String sheetName, List<String> columnHeader, List<Map<String, String>> list, List<Map<Integer, String>> listBottom, HttpServletResponse response) {
         try {
             if (list.size() == 0) {
                 throw new BackingStoreException("数据为空");
@@ -53,7 +53,7 @@ public class ExcelPoiUtil {
             cell1.setCellValue(sheetName);
 
             // 合并表头
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, listName.size() - 1));
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnHeader.size() - 1));
             rowReportTitle.setHeight((short) 600); // 行高
 
             // 设置表头字体
@@ -87,10 +87,10 @@ public class ExcelPoiUtil {
             TreeMap<String, Integer> headMap = new TreeMap<>();
             // 标题写入
             XSSFRow row = sheet.createRow(1);
-            for (int i = 0; i < listName.size(); i++) {
+            for (int i = 0; i < columnHeader.size(); i++) {
                 row.setHeight((short) 450);
                 XSSFCell cell = row.createCell(i);
-                String headName = listName.get(i);
+                String headName = columnHeader.get(i);
                 cell.setCellValue(headName); // 写入列名
                 headMap.put(headName, i);
                 cell.setCellStyle(titleStyle);
@@ -130,7 +130,7 @@ public class ExcelPoiUtil {
 
             // 写入底部
             if (listBottom != null) {
-                int columnNum = listName.size(); // 当前表有多少列
+                int columnNum = columnHeader.size(); // 当前表有多少列
                 for (Map<Integer, String> map : listBottom) {
                     XSSFRow bottom = sheet.createRow(ind);
                     bottom.setHeight((short) 400); // 行高
