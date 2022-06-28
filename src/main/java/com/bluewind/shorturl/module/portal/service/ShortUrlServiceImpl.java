@@ -191,9 +191,10 @@ public class ShortUrlServiceImpl {
         shortUrlDao.updateUrlViews(shortURL);
         // 然后插入访问日志表
         String accessIp = IpAddressUtils.getIpAddress(request);
+        String accessAddress = AddressUtils.getAddressByIP(accessIp);
         String accessTime = DateTool.getCurrentTime();
         String accessUserAgent = JsonUtils.writeValueAsString(UserAgentUtils.getUserAgent(request));
 
-        shortUrlDao.insertAccessLogs(shortURL, accessIp, accessTime, accessUserAgent, tenantId);
+        shortUrlDao.insertAccessLogs(shortURL, accessIp, accessAddress, accessTime, accessUserAgent, tenantId);
     }
 }

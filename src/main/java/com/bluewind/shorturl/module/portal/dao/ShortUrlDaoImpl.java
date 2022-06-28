@@ -21,6 +21,7 @@ public class ShortUrlDaoImpl {
 
     /**
      * 根据短链，获取列表数据
+     *
      * @param shortURL 短链
      * @return
      */
@@ -33,6 +34,7 @@ public class ShortUrlDaoImpl {
 
     /**
      * 根据短链，判断此短链是否存在
+     *
      * @param shortURL 短链
      * @return
      */
@@ -49,6 +51,7 @@ public class ShortUrlDaoImpl {
 
     /**
      * 更新shortUrl的访问次数
+     *
      * @param shortURL 短链
      * @return
      */
@@ -60,25 +63,27 @@ public class ShortUrlDaoImpl {
 
     /**
      * 插入访问日志表s_access_log
-     * @param shortURL 短链
-     * @param accessIp 请求IP
-     * @param accessTime 请求时间
+     *
+     * @param shortURL        短链
+     * @param accessIp        请求IP
+     * @param accessTime      请求时间
      * @param accessUserAgent 请求UserAgent
      * @return
      */
-    public int insertAccessLogs(String shortURL, String accessIp, String accessTime, String accessUserAgent, String tenantId) {
+    public int insertAccessLogs(String shortURL, String accessIp, String accessAddress, String accessTime, String accessUserAgent, String tenantId) {
         String logId = Snowflake.nextId();
-        String sql = "insert into s_access_log (log_id, surl, access_time, access_ip, access_user_agent, tenant_id) values (?,?,?,?,?,?)";
-        return jdbcTemplate.update(sql, logId, shortURL, accessTime, accessIp, accessUserAgent, tenantId);
+        String sql = "insert into s_access_log (log_id, surl, access_time, access_ip, access_address, access_user_agent, tenant_id) values (?,?,?,?,?,?,?)";
+        return jdbcTemplate.update(sql, logId, shortURL, accessTime, accessIp, accessAddress, accessUserAgent, tenantId);
     }
 
 
     /**
      * 新增保存一条短链数据
-     * @param shortURL 短链
+     *
+     * @param shortURL    短链
      * @param originalURL 原始链接
-     * @param expireDate 过期时间
-     * @param tenantId 租户ID
+     * @param expireDate  过期时间
+     * @param tenantId    租户ID
      * @return
      */
     public int insertUrlMap(String shortURL, String originalURL, String expireDate, String tenantId, String status, String note) {
