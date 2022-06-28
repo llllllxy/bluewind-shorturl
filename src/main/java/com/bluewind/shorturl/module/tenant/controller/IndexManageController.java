@@ -3,6 +3,7 @@ package com.bluewind.shorturl.module.tenant.controller;
 import com.bluewind.shorturl.common.annotation.AccessLimit;
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
+import com.bluewind.shorturl.common.config.security.TenantHolder;
 import com.bluewind.shorturl.common.consts.SystemConst;
 import com.bluewind.shorturl.common.util.SHA256Utils;
 import com.bluewind.shorturl.common.util.SmsUtils;
@@ -71,7 +72,8 @@ public class IndexManageController {
 
     @LogAround("跳转到后台管理首页")
     @GetMapping("/index")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("tenantAccount", TenantHolder.getTenantAccount());
         return "tenant/index";
     }
 
