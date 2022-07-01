@@ -11,7 +11,7 @@
  Target Server Version : 50737
  File Encoding         : 65001
 
- Date: 27/06/2022 19:29:41
+ Date: 01/07/2022 09:30:24
 */
 
 SET NAMES utf8mb4;
@@ -27,6 +27,7 @@ CREATE TABLE `s_access_log`  (
                                  `surl` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '短链',
                                  `access_time` char(14) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '访问时间：格式为yyyyMMddHHmmss',
                                  `access_ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '访问IP',
+                                 `access_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '访问地址',
                                  `access_user_agent` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '访问者的user_agent',
                                  `created_at` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                  PRIMARY KEY (`log_id`) USING BTREE
@@ -35,30 +36,32 @@ CREATE TABLE `s_access_log`  (
 -- ----------------------------
 -- Records of s_access_log
 -- ----------------------------
-INSERT INTO `s_access_log` VALUES ('1', '231233522', '17mVP6', '20220518112401', '[0:0:0:0:0:0:0:1]', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-18 11:24:01');
-INSERT INTO `s_access_log` VALUES ('1527832830138134528', 'common', '1HdSE5', '20220521100507', '10.49.12.120', '{\"operatingSystem\":\"WINDOWS_10\",\"browser\":\"CHROME10\",\"id\":35131151,\"browserVersion\":{\"version\":\"101.0.4951.64\",\"majorVersion\":\"101\",\"minorVersion\":\"0\"}}', '2022-05-21 10:05:07');
-INSERT INTO `s_access_log` VALUES ('1527834752045146112', 'common', '4GAYP3', '20220521101245', '10.49.12.120', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-21 10:12:45');
-INSERT INTO `s_access_log` VALUES ('1527835119554256896', 'common', '4GAYP3', '20220521101412', '10.49.12.120', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-21 10:14:12');
-INSERT INTO `s_access_log` VALUES ('1537432309921411072', 'common', '10wFKq', '20220616215001', '192.168.0.104', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-16 21:50:01');
-INSERT INTO `s_access_log` VALUES ('1537432501563355136', 'common', '10wFKq', '20220616215047', '192.168.0.104', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-16 21:50:47');
-INSERT INTO `s_access_log` VALUES ('1538040047671980032', 'common', 'xiumG', '20220618140457', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-18 14:04:57');
-INSERT INTO `s_access_log` VALUES ('1538040077216657408', 'common', 'xiumG', '20220618140504', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-18 14:05:04');
-INSERT INTO `s_access_log` VALUES ('1538447510813212672', 'common', '2qgB0p', '20220619170404', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-19 17:04:04');
-INSERT INTO `s_access_log` VALUES ('1538495100816314368', 'common', '3M2nrc', '20220619201310', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-19 20:13:10');
-INSERT INTO `s_access_log` VALUES ('1538530576799014912', 'common', '3M2nrc', '20220619223408', '192.168.0.104', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-19 22:34:08');
-INSERT INTO `s_access_log` VALUES ('1538532039819182080', '1', '2qve90', '20220619223957', '192.168.16.66', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-19 22:39:57');
-INSERT INTO `s_access_log` VALUES ('1538771853564391424', '1', '27EV2p', '20220620143253', '10.49.12.120', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-20 14:32:53');
-INSERT INTO `s_access_log` VALUES ('1538771999480033280', '1', 'U3zg5', '20220620143328', '192.168.16.64', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-20 14:33:28');
-INSERT INTO `s_access_log` VALUES ('1538821074062020608', '1', '2tzPxo', '20220620174828', '192.168.16.69', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-20 17:48:28');
-INSERT INTO `s_access_log` VALUES ('1540350795741069312', 'common', '2pEKPH', '20220624230702', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-24 23:07:02');
-INSERT INTO `s_access_log` VALUES ('1540968987316887552', 'common', '2pEKPH', '20220626160331', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-26 16:03:31');
-INSERT INTO `s_access_log` VALUES ('1540969143026229248', 'common', '2pEKPH', '20220626160408', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-26 16:04:08');
-INSERT INTO `s_access_log` VALUES ('1540971103980789760', 'common', '1Y7UNq', '20220626161155', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-26 16:11:55');
-INSERT INTO `s_access_log` VALUES ('1541344409451421696', '1', 'U3zg5', '20220627165518', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-27 16:55:18');
-INSERT INTO `s_access_log` VALUES ('2', '231233522', '2EeMFq', '20220518112449', '10.49.12.120', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-18 11:24:49');
-INSERT INTO `s_access_log` VALUES ('3', '231233522', 'XFhg0', '20220518184342', '192.168.16.64', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-18 18:43:42');
-INSERT INTO `s_access_log` VALUES ('4', '231233522', 'XFhg0', '20220518185614', '192.168.16.64', '{\"operatingSystem\":\"WINDOWS_10\",\"browser\":\"CHROME10\",\"id\":35131151,\"browserVersion\":{\"version\":\"101.0.4951.64\",\"majorVersion\":\"101\",\"minorVersion\":\"0\"}}', '2022-05-18 18:56:14');
-INSERT INTO `s_access_log` VALUES ('5', '231233522', '3bcrpl', '20220518190729', '192.168.16.64', '{\"operatingSystem\":\"WINDOWS_10\",\"browser\":\"CHROME10\",\"id\":35131151,\"browserVersion\":{\"version\":\"101.0.4951.64\",\"majorVersion\":\"101\",\"minorVersion\":\"0\"}}', '2022-05-18 19:07:29');
+INSERT INTO `s_access_log` VALUES ('1', '231233522', '17mVP6', '20220518112401', '[0:0:0:0:0:0:0:1]', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-18 11:24:01');
+INSERT INTO `s_access_log` VALUES ('1527832830138134528', 'common', '1HdSE5', '20220521100507', '10.49.12.120', NULL, '{\"operatingSystem\":\"WINDOWS_10\",\"browser\":\"CHROME10\",\"id\":35131151,\"browserVersion\":{\"version\":\"101.0.4951.64\",\"majorVersion\":\"101\",\"minorVersion\":\"0\"}}', '2022-05-21 10:05:07');
+INSERT INTO `s_access_log` VALUES ('1527834752045146112', 'common', '4GAYP3', '20220521101245', '10.49.12.120', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-21 10:12:45');
+INSERT INTO `s_access_log` VALUES ('1527835119554256896', 'common', '4GAYP3', '20220521101412', '10.49.12.120', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-21 10:14:12');
+INSERT INTO `s_access_log` VALUES ('1537432309921411072', 'common', '10wFKq', '20220616215001', '192.168.0.104', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-16 21:50:01');
+INSERT INTO `s_access_log` VALUES ('1537432501563355136', 'common', '10wFKq', '20220616215047', '192.168.0.104', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-16 21:50:47');
+INSERT INTO `s_access_log` VALUES ('1538040047671980032', 'common', 'xiumG', '20220618140457', NULL, NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-18 14:04:57');
+INSERT INTO `s_access_log` VALUES ('1538040077216657408', 'common', 'xiumG', '20220618140504', NULL, NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-18 14:05:04');
+INSERT INTO `s_access_log` VALUES ('1538447510813212672', 'common', '2qgB0p', '20220619170404', NULL, NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-19 17:04:04');
+INSERT INTO `s_access_log` VALUES ('1538495100816314368', 'common', '3M2nrc', '20220619201310', NULL, NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-19 20:13:10');
+INSERT INTO `s_access_log` VALUES ('1538530576799014912', 'common', '3M2nrc', '20220619223408', '192.168.0.104', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-19 22:34:08');
+INSERT INTO `s_access_log` VALUES ('1538532039819182080', '1', '2qve90', '20220619223957', '192.168.16.66', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-19 22:39:57');
+INSERT INTO `s_access_log` VALUES ('1538771853564391424', '1', '27EV2p', '20220620143253', '10.49.12.120', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-20 14:32:53');
+INSERT INTO `s_access_log` VALUES ('1538771999480033280', '1', 'U3zg5', '20220620143328', '192.168.16.64', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-20 14:33:28');
+INSERT INTO `s_access_log` VALUES ('1538821074062020608', '1', '2tzPxo', '20220620174828', '192.168.16.69', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-20 17:48:28');
+INSERT INTO `s_access_log` VALUES ('1540350795741069312', 'common', '2pEKPH', '20220624230702', NULL, NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-24 23:07:02');
+INSERT INTO `s_access_log` VALUES ('1540968987316887552', 'common', '2pEKPH', '20220626160331', NULL, NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-26 16:03:31');
+INSERT INTO `s_access_log` VALUES ('1540969143026229248', 'common', '2pEKPH', '20220626160408', NULL, NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-26 16:04:08');
+INSERT INTO `s_access_log` VALUES ('1540971103980789760', 'common', '1Y7UNq', '20220626161155', NULL, NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-26 16:11:55');
+INSERT INTO `s_access_log` VALUES ('1541344409451421696', '1', 'U3zg5', '20220627165518', NULL, NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-27 16:55:18');
+INSERT INTO `s_access_log` VALUES ('1541652457951526912', 'common', '2lwnLd', '20220628131923', NULL, 'ip为空，无法获取位置', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-28 13:19:23');
+INSERT INTO `s_access_log` VALUES ('1541654832798208000', '1', 'U3zg5', '20220628132849', NULL, 'ip为空，无法获取位置', '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-06-28 13:28:49');
+INSERT INTO `s_access_log` VALUES ('2', '231233522', '2EeMFq', '20220518112449', '10.49.12.120', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-18 11:24:49');
+INSERT INTO `s_access_log` VALUES ('3', '231233522', 'XFhg0', '20220518184342', '192.168.16.64', NULL, '{\"operatingSystem\":\"UNKNOWN\",\"browser\":\"UNKNOWN\",\"id\":16843022,\"browserVersion\":null}', '2022-05-18 18:43:42');
+INSERT INTO `s_access_log` VALUES ('4', '231233522', 'XFhg0', '20220518185614', '192.168.16.64', NULL, '{\"operatingSystem\":\"WINDOWS_10\",\"browser\":\"CHROME10\",\"id\":35131151,\"browserVersion\":{\"version\":\"101.0.4951.64\",\"majorVersion\":\"101\",\"minorVersion\":\"0\"}}', '2022-05-18 18:56:14');
+INSERT INTO `s_access_log` VALUES ('5', '231233522', '3bcrpl', '20220518190729', '192.168.16.64', NULL, '{\"operatingSystem\":\"WINDOWS_10\",\"browser\":\"CHROME10\",\"id\":35131151,\"browserVersion\":{\"version\":\"101.0.4951.64\",\"majorVersion\":\"101\",\"minorVersion\":\"0\"}}', '2022-05-18 19:07:29');
 
 -- ----------------------------
 -- Table structure for s_admin
@@ -159,13 +162,14 @@ INSERT INTO `s_url_map` VALUES ('1538447860274233344', '1krcKX', 'https://baijia
 INSERT INTO `s_url_map` VALUES ('1538495076132835328', '3M2nrc', 'https://juejin.cn/post/7016520448204603423#comment', 2, '20220626201304', '0', '0', '2022-06-19 20:13:04', NULL, 'common');
 INSERT INTO `s_url_map` VALUES ('1538531991156867072', '2qve90', 'https://www.jianshu.com/p/7d4bc61c1a5b', 1, '20220919223945', '1', '0', '2022-06-19 22:39:46', NULL, '1');
 INSERT INTO `s_url_map` VALUES ('1538771782051508224', '27EV2p', 'https://juejin.cn/post/6844903644798664712', 1, '20220920143236', '0', '0', '2022-06-20 14:32:36', NULL, '1');
-INSERT INTO `s_url_map` VALUES ('1538771965342593024', 'U3zg5', 'https://md5jiami.bmcx.com/', 2, '20220920143320', '0', '0', '2022-06-20 14:33:20', NULL, '1');
+INSERT INTO `s_url_map` VALUES ('1538771965342593024', 'U3zg5', 'https://md5jiami.bmcx.com/', 3, '20220920143320', '0', '0', '2022-06-20 14:33:20', NULL, '1');
 INSERT INTO `s_url_map` VALUES ('1538798928825401344', 'R6R4i', 'https://blog.csdn.net/nandao158/article/details/121929764', 0, '20220627162028', '0', '0', '2022-06-20 16:20:29', NULL, 'common');
 INSERT INTO `s_url_map` VALUES ('1538821039484178432', '2tzPxo', 'https://www.163.com/dy/article/H4EHJDBA0552VYQ0.html', 1, '20220620194656', '0', '0', '2022-06-20 17:48:20', NULL, '1');
 INSERT INTO `s_url_map` VALUES ('1538884714644860928', '3rg8nz', 'https://blog.csdn.net/hesqlplus730/article/details/123105322', 0, '20220627220121', '0', '0', '2022-06-20 22:01:23', NULL, 'common');
 INSERT INTO `s_url_map` VALUES ('1540350772466876416', '2pEKPH', 'https://codingdict.com/os/software/84258', 3, '20220701230657', '0', '0', '2022-06-24 23:06:57', '门户平台生成', 'common');
 INSERT INTO `s_url_map` VALUES ('1540351174360891392', 'RSvW9', 'https://www.runoob.com/bootstrap/bootstrap-grid-system.html', 0, '20220712000000', '1', '0', '2022-06-24 23:08:33', '哈哈哈2', '1');
 INSERT INTO `s_url_map` VALUES ('1540970988704538624', '1Y7UNq', 'https://www.ixigua.com/7111323385874874887?logTag=8ed728b94d4d118e4e7f', 1, '20220703161128', '0', '0', '2022-06-26 16:11:28', '门户平台生成', 'common');
+INSERT INTO `s_url_map` VALUES ('1541652364145917952', '2lwnLd', 'http://qr.bslyun.com/statistical?time=&dlj=&type=shorten', 1, '20220705131900', '0', '0', '2022-06-28 13:19:02', '门户平台生成', 'common');
 INSERT INTO `s_url_map` VALUES ('87', '4ZkMwo', 'https://www.cnblogs.com/javayida/p/13346223232937.html', 0, '20230401215411', '0', '0', '2022-03-13 14:36:51', NULL, '1');
 INSERT INTO `s_url_map` VALUES ('89', '3MV6Nv', 'https://www.cnblogs.com/javayida/p/13346223232937.html', 0, NULL, '0', '0', '2022-03-13 14:37:56', NULL, '1');
 INSERT INTO `s_url_map` VALUES ('92', '1ZbUeG', 'https://www.cnblogs.com/javayida/p/13346223232937.html', 0, NULL, '0', '0', '2022-03-13 14:38:24', NULL, 'common');
