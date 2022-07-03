@@ -39,13 +39,16 @@ api接口文档页
 ![失效页](src/main/resources/static/images/readme/example_expire.png)
 <br/><br/>
 租户登录页
-![失效页](src/main/resources/static/images/readme/租户登录.png)
+![租户登录](src/main/resources/static/images/readme/租户登录.png)
 <br/><br/>
 租户注册页
-![失效页](src/main/resources/static/images/readme/租户注册.png)
+![租户注册](src/main/resources/static/images/readme/租户注册.png)
 <br/><br/>
 租户后台数据管理
-![失效页](src/main/resources/static/images/readme/租户后台管理.png)
+![仪表盘](src/main/resources/static/images/readme/仪表盘.png)
+![短链列表](src/main/resources/static/images/readme/短链列表.png)
+![数据统计](src/main/resources/static/images/readme/数据统计.png)
+![访问日志](src/main/resources/static/images/readme/访问日志.png)
 
 ## 主要技术选型
 | 依赖                | 说明           |
