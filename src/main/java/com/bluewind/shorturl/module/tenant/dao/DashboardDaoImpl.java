@@ -29,9 +29,9 @@ public class DashboardDaoImpl {
         sql.append(" from s_access_log sc ");
         sql.append(" join s_url_map su on su.surl = sc.surl ");
         sql.append(" where sc.tenant_id = '").append(tenantId).append("' ");
-        sql.append(" and sc.access_time like '").append(today).append("%' ");
+        sql.append(" and left(sc.access_time, 8) = '").append(today).append("' ");
         sql.append(" group by ");
-        sql.append(" sc.tenant_id, sc.surl ");
+        sql.append(" sc.tenant_id, sc.surl limit 25");
 
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql.toString());
         return result;

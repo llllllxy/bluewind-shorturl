@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>数据统计</title>
+    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/ico">
+    <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
+    <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+    <link th:href="@{/js/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet">
+    <link th:href="@{/js/bootstrap-table/extensions/page-jump/bootstrap-table-pagejump.min.css}" rel="stylesheet">
+    <link th:href="@{/js/layer/theme/layer.min.css}" rel="stylesheet">
+    <!--日期选择插件-->
+    <link rel="stylesheet" th:href="@{/js/bootstrap-datepicker/bootstrap-datepicker3.min.css}">
+</head>
+
+<body>
+
+<div class="container-fluid p-t-15">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <!-- 自定义表单开始 -->
+                    <form id="formId" role="form" class="form-inline">
+                        <div class="form-group m-r-10">
+                            <label class="control-label">短链接：</label>
+                            <input type="text" value="" name="surl" id="surl" placeholder="请输入短链接" class="form-control"/>
+                        </div>
+
+                        <div class="form-group">
+                            <!-- 查询按钮 -->
+                            <a class="btn btn-primary m-r-5" onclick="reloadTable()">
+                                <span class="mdi mdi-magnify" aria-hidden="true"></span>搜索
+                            </a>
+                            <!-- 重置表单按钮 -->
+                            <a class="btn btn-warning" onclick="$('#formId')[0].reset()">
+                                <span class="mdi mdi-loop" aria-hidden="true"></span>重置
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-body">
+                    <table id="tableId"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<!--消息提醒插件-->
+<script type="text/javascript" th:src="@{/js/coco-message/coco-message.js}"></script>
+<!--表格插件-->
+<script type="text/javascript" th:src="@{/js/bootstrap-table/bootstrap-table.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-table/bootstrap-table-zh-CN.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-table/extensions/page-jump/bootstrap-table-pagejump.min.js}"></script>
+<!--弹窗插件-->
+<script type="text/javascript" th:src="@{/js/layer/layer.min.js}"></script>
+<!--日期选择插件-->
+<script type="text/javascript" th:src="@{/js/bootstrap-datepicker/bootstrap-datepicker.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js}"></script>
+<!--公共组件-->
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/public.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    AjaxUtil.ctx = /*[[@{/}]]*/'';
+
+    $(document).ready(function () {
+
+        var options = {
+            domId: "tableId",
+            toolbar: "toolbar",
+            url: AjaxUtil.ctx + "tenant/statistic/list",
+            uniqueId: "surl",
+            // 是否启用排序
+            sortable: true,
+            // 排序方式
+            sortOrder: "asc",
+            // 默认排序列
+            sortName: "created_at",
+            queryParams: queryParams,
+            //数据列
+            columns: [{
+                title: '序号',
+                align: "center",
+                width: 40,
+                formatter: function (value, row, index) {
+                    // 获取每页显示的数量
+                    var pageSize = $('#tableId').bootstrapTable('getOptions').pageSize;
+                    // 获取当前是第几页
+                    var pageNumber = $('#tableId').bootstrapTable('getOptions').pageNumber;
+                    // 返回序号，注意index是从0开始的，所以要加上1
+                    return pageSize * (pageNumber - 1) + index + 1;
+                }
+            }, {
+                title: "短链",
+                field: "surl"
+            }, {
+                title: "生成时间",
+                field: "created_at",
+                sortable: true
+            }, {
+                title: "今日点击量",
+                field: "accessTodayNumber",
+                sortable: true
+            }, {
+                title: "今日独立IP数",
+                field: "accessTodayIpNumber",
+                sortable: true
+            },
+            {
+                title: "昨日点击量",
+                field: "accessYesterdayNumber",
+                sortable: true
+            }, {
+                title: "昨日独立IP数",
+                field: "accessYesterdayIpNumber",
+                sortable: true
+            },  {
+                title: "当月点击量",
+                field: "accessMonthNumber",
+                sortable: true
+            }, {
+                title: "当月独立IP数",
+                field: "accessMonthIpNumber",
+                sortable: true
+            },
+            {
+                title: "总点击量",
+                field: "accessTotalNumber",
+                sortable: true
+            }, {
+                title: "当月独立IP数",
+                field: "accessTotalIpNumber",
+                sortable: true
+            }]
+        }
+
+        // 初始化表格
+        initTable(options);
+    });
+
+
+    // 分页查询参数，是以键值对的形式设置的
+    function queryParams(params) {
+        return {
+            surl: $("#surl").val(), // 请求时向服务端传递的参数
+            pageSize: params.pageSize, // 每页显示数量
+            pageNumber: params.pageNumber, // SQL语句偏移量
+            sortName: params.sortName,
+            sortOrder: params.sortOrder
+        }
+    }
+
+
+    // 查询操作
+    function reloadTable() {
+        $("#tableId").bootstrapTable('refresh');
+    }
+
+</script>
+</body>
+</html>

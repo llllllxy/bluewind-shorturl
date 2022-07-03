@@ -31,6 +31,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         pathList.add("/tenant/url/**"); // 租户url短链管理
         pathList.add("/tenant/log/**"); // 租户短链日志管理
         pathList.add("/tenant/dashboard/**"); // 租户仪表盘
+        pathList.add("/tenant/statistic/**"); // 租户数据统计管理
+
 
 
         // 注册会话拦截器
