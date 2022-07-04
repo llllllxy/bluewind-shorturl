@@ -37,7 +37,7 @@ public class LogAroundAspect {
         long end = System.currentTimeMillis();
 
         if (log.isInfoEnabled()) {
-            log.info("方法结束：" + value + "----" + methodName + ",用时：" + (end - start) + "毫秒");
+            log.info("方法结束：" + value + "----" + methodName + ", 用时：" + (end - start) + "毫秒");
         }
 
         return o;
