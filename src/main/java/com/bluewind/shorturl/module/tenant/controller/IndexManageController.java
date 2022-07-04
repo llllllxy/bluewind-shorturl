@@ -78,6 +78,16 @@ public class IndexManageController {
     }
 
 
+    @LogAround("跳转到后台管理个人信息页")
+    @GetMapping("/profile")
+    public String profile(Model model) {
+        System.out.println(TenantHolder.getTenant());
+
+        model.addAttribute("tenantInfo", TenantHolder.getTenant());
+        return "tenant/profile";
+    }
+
+
     @LogAround("执行后台管理登录操作")
     @PostMapping("/doLogin")
     @ResponseBody

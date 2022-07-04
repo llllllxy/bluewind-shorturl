@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>个人信息</title>
+  <link rel="icon" th:href="@{/images/favicon.ico}" type="image/ico">
+  <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
+  <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
+
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+  <link th:href="@{/css/style.min.css}" rel="stylesheet">
+  <link th:href="@{/css/public.css}" rel="stylesheet">
+  <link th:href="@{/js/bootstrap-validator/css/bootstrapValidator.css}" rel="stylesheet">
+</head>
+
+<body>
+<div class="container-fluid p-t-15">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="edit-avatar">
+            <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" alt="头像" class="img-avatar">
+            <div class="avatar-divider"></div>
+            <div class="edit-avatar-content">
+              <button class="btn btn-default">修改头像</button>
+            </div>
+          </div>
+          <hr>
+          <form id="addForm" class="site-form">
+            <div class="form-group">
+              <label for="tenant_account">租户账号</label>
+              <input type="text" class="form-control" name="tenant_account" id="tenant_account" disabled="disabled" th:value="${tenantInfo.tenant_account}"/>
+            </div>
+            <div class="form-group">
+              <label for="tenant_name">组织名称</label>
+              <input type="text" class="form-control" name="tenant_name" id="tenant_name" placeholder="输入您的昵称" th:value="${tenantInfo.tenant_name}">
+            </div>
+            <div class="form-group">
+              <label for="tenant_email">邮箱</label>
+              <input type="email" class="form-control" name="tenant_email" id="tenant_email" aria-describedby="emailHelp" placeholder="请输入正确的邮箱地址" th:value="${tenantInfo.tenant_email}">
+              <small id="emailHelp" class="form-text text-muted">请保证您填写的邮箱地址是正确的。</small>
+            </div>
+            <button id="submitForm" class="btn btn-primary">保存</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<!--表单校验插件-->
+<script type="text/javascript" th:src="@{/js/bootstrap-validator/js/bootstrapValidator.js}"></script>
+<!--消息提醒插件-->
+<script type="text/javascript" th:src="@{/js/coco-message/coco-message.js}"></script>
+<!--弹窗插件-->
+<script type="text/javascript" th:src="@{/js/layer/layer.min.js}"></script>
+<!--公共组件-->
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/public.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+  AjaxUtil.ctx = /*[[@{/}]]*/'';
+
+  $(document).ready(function () {
+    $('#addForm').bootstrapValidator({
+      fields: {
+        lurl: {
+          validators: {
+            notEmpty: {
+              message: '原始链接不能为空'
+            },
+            callback: function(value, validator) { // 这里可以自定义value的校验规则
+              if (!isURL(value)) {
+                return false;
+              } else {
+                return true;
+              }
+            }
+          }
+        },
+        status: {validators: {notEmpty: {message: '状态不能为空'}}},
+        expireDate: {validators: {notEmpty: {message: '过期时间不能为空'}}}
+      }
+    });
+
+
+    // 提交按钮
+    $("#submitForm").click(function () {
+      var bv = $('#addForm').data('bootstrapValidator');
+      bv.validate();
+      if (bv.isValid()) {
+        console.log('通过校验')
+
+        AjaxUtil.post({
+          url: AjaxUtil.ctx + "tenant/url/add",
+          data: $('#addForm').serialize(),
+          success: function (res) {
+            if (res.code === 200) {
+              Message.success(1000, res.msg, function () {
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index);
+              });
+            } else {
+              Message.error(res.msg, 1000);
+            }
+          },
+          error: function (error) {
+            Message.error(error, 1000);
+          }
+        });
+      } else {
+        console.log('未通过校验')
+      }
+    });
+
+  });
+
+</script>
+</body>
+</html>
