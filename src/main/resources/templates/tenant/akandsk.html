@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>密钥凭证</title>
+    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/ico">
+    <meta http-equiv="description" content="bluewind-shorturl在线短链生成"/>
+    <meta http-equiv="keywords" content="蓝风软件,短链生成,在线短链生成,长链转短链"/>
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+    <link th:href="@{/css/public.css}" rel="stylesheet">
+</head>
+
+<body>
+<div class="container-fluid p-t-15">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="form1" class="form-horizontal" onsubmit="return false;">
+                        <input type="hidden" name="tenant_id" id="tenant_id" th:value="${tenantInfo.tenant_id}"/>
+                        <input type="hidden" name="tenant_account" id="tenant_account" th:value="${tenantInfo.tenant_account}"/>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">access_key：</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" id="access_key" th:text="${tenantInfo.access_key}"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">access_key_secret：</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" id="access_key_secret" th:text="${tenantInfo.access_key_secret}"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-7">
+                                <button id="submitForm" class="btn btn-primary">重新生成</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<!--消息提醒插件-->
+<script type="text/javascript" th:src="@{/js/coco-message/coco-message.js}"></script>
+<!--弹窗插件-->
+<script type="text/javascript" th:src="@{/js/layer/layer.min.js}"></script>
+<!--公共组件-->
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/public.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    AjaxUtil.ctx = /*[[@{/}]]*/'';
+
+    $(document).ready(function () {
+        $("#submitForm").click(function () {
+            AjaxUtil.post({
+                url: AjaxUtil.ctx + "tenant/resetAkandsk",
+                data: $('#form1').serialize(),
+                success: function (res) {
+                    if (res.code === 200) {
+                        Message.success(1000, res.msg);
+                        $("#access_key_secret").text(res.data.accessKeySecret);
+                        $("#access_key").text(res.data.accessKey);
+                    } else {
+                        Message.error(res.msg, 1000);
+                    }
+                },
+                error: function (error) {
+                    Message.error(error, 1000);
+                }
+            });
+
+        });
+
+    });
+
+</script>
+</body>
+</html>

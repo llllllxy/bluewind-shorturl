@@ -5,6 +5,7 @@ import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.config.security.TenantHolder;
 import com.bluewind.shorturl.common.consts.SystemConst;
+import com.bluewind.shorturl.common.util.GenerateAkAndSk;
 import com.bluewind.shorturl.common.util.SHA256Utils;
 import com.bluewind.shorturl.common.util.SmsUtils;
 import com.bluewind.shorturl.module.tenant.service.IndexManageServiceImpl;
@@ -85,6 +86,16 @@ public class IndexManageController {
 
         model.addAttribute("tenantInfo", TenantHolder.getTenant());
         return "tenant/profile";
+    }
+
+
+    @LogAround("跳转到后台管理密钥凭证页")
+    @GetMapping("/akandsk")
+    public String akandsk(Model model) {
+        System.out.println(TenantHolder.getTenant());
+
+        model.addAttribute("tenantInfo", TenantHolder.getTenant());
+        return "tenant/akandsk";
     }
 
 
@@ -268,5 +279,37 @@ public class IndexManageController {
             return Result.error("更新失败，请联系系统管理员！");
         }
     }
+
+
+    @LogAround("重置密钥凭证操作")
+    @PostMapping("/resetAkandsk")
+    @ResponseBody
+    public Result resetAkandsk(@RequestParam String tenant_id,
+                               @RequestParam String tenant_account,
+                               HttpSession session) {
+
+        // 重置accessKey和accessKeySecret
+        String accessKey = GenerateAkAndSk.generateAk();
+        String accessKeySecret = GenerateAkAndSk.generateSk();
+        // 更新租户表
+        int num = indexManageService.updateAkAndSk(tenant_id, accessKey, accessKeySecret);
+        if (num > 0) {
+            // 根据用户名查找到租户信息
+            Map<String, Object> tenantInfo = indexManageService.getTenantInfo(tenant_account);
+            tenantInfo.put("tenant_password", "");
+            // 刷新缓存的会话信息
+            session.setAttribute(SystemConst.TENANT_USER_KEY, tenantInfo);
+            return Result.ok("重置密钥凭证成功！",new HashMap<String, Object>() {
+                {
+                    put("accessKey", accessKey);
+                    put("accessKeySecret", accessKeySecret);
+                }
+            });
+        } else {
+            return Result.error("重置密钥凭证失败，请联系系统管理员！");
+        }
+    }
+
+
 
 }

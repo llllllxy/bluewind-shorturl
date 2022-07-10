@@ -65,4 +65,17 @@ public class IndexManageDaoImpl {
         String sql = "update s_tenant set tenant_name = ?, tenant_email = ? where tenant_id = ?";
         return jdbcTemplate.update(sql, tenant_name, tenant_email, tenant_id);
     }
+
+
+    /**
+     * 更新ak和sk
+     * @param tenant_id
+     * @param accessKey
+     * @param accessKeySecret
+     * @return
+     */
+    public int updateAkAndSk(String tenant_id, String accessKey, String accessKeySecret) {
+        String sql = "update s_tenant set access_key = ?, access_key_secret = ? where tenant_id = ?";
+        return jdbcTemplate.update(sql, accessKey, accessKeySecret, tenant_id);
+    }
 }

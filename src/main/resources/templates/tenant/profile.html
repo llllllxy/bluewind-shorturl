@@ -95,10 +95,7 @@
           data: $('#addForm').serialize(),
           success: function (res) {
             if (res.code === 200) {
-              Message.success(1000, res.msg, function () {
-                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                parent.layer.close(index);
-              });
+              Message.success(1000, res.msg);
             } else {
               Message.error(res.msg, 1000);
             }

@@ -30,6 +30,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         pathList.add("/tenant/logout"); // 租户退出登录
         pathList.add("/tenant/profile"); // 租户个人信息页
         pathList.add("/tenant/updateProfile"); // 租户修改个人信息
+        pathList.add("/tenant/akandsk"); // 凭证密钥信息页
+        pathList.add("/tenant/resetAkandsk"); // 租户修改凭证密钥信息页
         pathList.add("/tenant/url/**"); // 租户url短链管理
         pathList.add("/tenant/log/**"); // 租户短链日志管理
         pathList.add("/tenant/dashboard/**"); // 租户仪表盘

@@ -49,4 +49,17 @@ public class IndexManageServiceImpl {
     public int updateProfile(String tenant_id, String tenant_name, String tenant_email) {
         return indexManageDao.updateProfile(tenant_id, tenant_name, tenant_email);
     }
+
+    /**
+     * 更新ak和sk
+     * @param tenant_id
+     * @param accessKey
+     * @param accessKeySecret
+     * @return
+     */
+    public int updateAkAndSk(String tenant_id, String accessKey, String accessKeySecret) {
+        return indexManageDao.updateAkAndSk(tenant_id, accessKey, accessKeySecret);
+    }
+
+
 }
