@@ -37,4 +37,16 @@ public class IndexManageServiceImpl {
     public int addTenantInfo(String tenantAccount, String tenantName, String tenantPassword, String tenantPhone) {
         return indexManageDao.addTenantInfo(tenantAccount, tenantName, tenantPassword, tenantPhone);
     }
+
+
+    /**
+     * 更新一个租户账户
+     * @param tenant_id
+     * @param tenant_name
+     * @param tenant_email
+     * @return
+     */
+    public int updateProfile(String tenant_id, String tenant_name, String tenant_email) {
+        return indexManageDao.updateProfile(tenant_id, tenant_name, tenant_email);
+    }
 }

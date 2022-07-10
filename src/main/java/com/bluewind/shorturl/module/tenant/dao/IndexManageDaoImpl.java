@@ -53,4 +53,16 @@ public class IndexManageDaoImpl {
         return jdbcTemplate.update(sql, tenantId, tenantAccount, tenantPassword, tenantName, tenantPhone, accessKey, accessKeySecret);
     }
 
+
+    /**
+     * 更新一个租户账户
+     * @param tenant_id
+     * @param tenant_name
+     * @param tenant_email
+     * @return
+     */
+    public int updateProfile(String tenant_id, String tenant_name, String tenant_email) {
+        String sql = "update s_tenant set tenant_name = ?, tenant_email = ? where tenant_id = ?";
+        return jdbcTemplate.update(sql, tenant_name, tenant_email, tenant_id);
+    }
 }

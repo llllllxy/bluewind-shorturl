@@ -207,7 +207,7 @@ public class IndexManageController {
                              @RequestParam String tenantPhone,
                              @RequestParam String smsCode,
                              @RequestParam String verifyKey,
-                          HttpSession session) {
+                             HttpSession session) {
         logger.info("IndexManageController doRegister tenantAccount = {}", tenantAccount);
 
         String smsCodeInRedis = redisTemplate.opsForValue().get(SystemConst.SMS_CODE_KEY + ":" + verifyKey);
@@ -245,6 +245,28 @@ public class IndexManageController {
         // 退出系统时，清除session，invalidate()方法可以清除session对象中的所有信息。
         session.invalidate();
         return Result.ok("退出登陆成功！",null);
+    }
+
+    @LogAround("执行修改个人信息操作")
+    @PostMapping("/updateProfile")
+    @ResponseBody
+    public Result updateProfile(@RequestParam String tenant_id,
+                                @RequestParam String tenant_account,
+                                @RequestParam String tenant_name,
+                                @RequestParam String tenant_email,
+                                HttpSession session) {
+        // 更新租户表
+        int num = indexManageService.updateProfile(tenant_id, tenant_name, tenant_email);
+        if (num > 0) {
+            // 根据用户名查找到租户信息
+            Map<String, Object> tenantInfo = indexManageService.getTenantInfo(tenant_account);
+            tenantInfo.put("tenant_password", "");
+            // 刷新缓存的会话信息
+            session.setAttribute(SystemConst.TENANT_USER_KEY, tenantInfo);
+            return Result.ok("更新个人信息成功！",null);
+        } else {
+            return Result.error("更新失败，请联系系统管理员！");
+        }
     }
 
 }

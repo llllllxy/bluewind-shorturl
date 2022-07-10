@@ -99,7 +99,7 @@ public class ApiFilter implements Filter {
                 }
             }
             if (configMap != null && !configMap.isEmpty()) {
-                // 检验signature是否正确，规则是 access_key_secret + access_key_secret + reqtime 然后进行MD5加密(16进制的)
+                // 检验signature是否正确，规则是 access_key + access_key_secret + reqtime 然后进行MD5加密(16进制的)
                 String access_key_secret = (String) configMap.get("access_key_secret");
                 String mysignature = getMD5String(access_key + access_key_secret + reqtime);
                 if (!signature.equalsIgnoreCase(mysignature)) {

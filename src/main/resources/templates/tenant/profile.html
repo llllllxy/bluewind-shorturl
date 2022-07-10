@@ -25,27 +25,24 @@
 
           <div class="edit-avatar">
             <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" alt="头像" class="img-avatar">
-            <div class="avatar-divider"></div>
-            <div class="edit-avatar-content">
-              <button class="btn btn-default">修改头像</button>
-            </div>
           </div>
           <hr>
           <form id="addForm" class="site-form">
             <div class="form-group">
-              <label for="tenant_account">租户账号</label>
-              <input type="text" class="form-control" name="tenant_account" id="tenant_account" disabled="disabled" th:value="${tenantInfo.tenant_account}"/>
+              <label for="tenant_account">组织账号</label>
+              <input type="hidden" class="form-control" name="tenant_id" id="tenant_id" th:value="${tenantInfo.tenant_id}"/>
+              <input type="text" class="form-control" name="tenant_account" id="tenant_account" readonly="readonly" th:value="${tenantInfo.tenant_account}"/>
             </div>
             <div class="form-group">
               <label for="tenant_name">组织名称</label>
-              <input type="text" class="form-control" name="tenant_name" id="tenant_name" placeholder="输入您的昵称" th:value="${tenantInfo.tenant_name}">
+              <input type="text" class="form-control" name="tenant_name" id="tenant_name" placeholder="输入您的组织名称" th:value="${tenantInfo.tenant_name}">
             </div>
             <div class="form-group">
               <label for="tenant_email">邮箱</label>
               <input type="email" class="form-control" name="tenant_email" id="tenant_email" aria-describedby="emailHelp" placeholder="请输入正确的邮箱地址" th:value="${tenantInfo.tenant_email}">
               <small id="emailHelp" class="form-text text-muted">请保证您填写的邮箱地址是正确的。</small>
             </div>
-            <button id="submitForm" class="btn btn-primary">保存</button>
+            <button id="submitForm" class="btn btn-primary">提交</button>
           </form>
 
         </div>
@@ -74,22 +71,14 @@
   $(document).ready(function () {
     $('#addForm').bootstrapValidator({
       fields: {
-        lurl: {
+        tenant_name: {
           validators: {
             notEmpty: {
-              message: '原始链接不能为空'
-            },
-            callback: function(value, validator) { // 这里可以自定义value的校验规则
-              if (!isURL(value)) {
-                return false;
-              } else {
-                return true;
-              }
+              message: '组织名称不能为空'
             }
           }
         },
-        status: {validators: {notEmpty: {message: '状态不能为空'}}},
-        expireDate: {validators: {notEmpty: {message: '过期时间不能为空'}}}
+        tenant_email: {validators: {notEmpty: {message: '邮箱不能为空'}}}
       }
     });
 
@@ -102,7 +91,7 @@
         console.log('通过校验')
 
         AjaxUtil.post({
-          url: AjaxUtil.ctx + "tenant/url/add",
+          url: AjaxUtil.ctx + "tenant/updateProfile",
           data: $('#addForm').serialize(),
           success: function (res) {
             if (res.code === 200) {

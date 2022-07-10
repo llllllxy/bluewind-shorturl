@@ -28,9 +28,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://rm.mysql.rds.aliyuncs.com:3306/bluewind-shorturl?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
+    url: jdbc:mysql://rm-bp1l6sit4p21x78608o.mysql.rds.aliyuncs.com:3306/bluewind-shorturl?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
     username: root
-    password: xxxxxx
+    password: dR3!tC0$mH5!b
     druid:
       initialSize: 5
       minIdle: 10
@@ -58,7 +58,7 @@ spring:
   redis:
     host: 127.0.0.1 # Redis服务器地址
     port: 6379 # Redis服务器连接端口
-    password: xxxxx # Redis服务器连接密码（默认为空）
+    password: Xingxing9725 # Redis服务器连接密码（默认为空）
     database: 0 #Redis数据库索引（默认为0）
     timeout: 500 # 连接超时时间（毫秒）
     lettuce:
@@ -91,5 +91,5 @@ hash:
 
 # 阿里云短信的配置
 sms:
-  accessKeyId: xxxxx
-  accessKeySecret: xxxxx
+  accessKeyId: LTAI4FiNcQseapHSKnALVvJ1
+  accessKeySecret: fLXxzNYZ4VZRl2QJPm1aee9z610FsU
