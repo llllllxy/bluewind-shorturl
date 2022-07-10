@@ -30,7 +30,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://rm-bp1l6sit4p21x78608o.mysql.rds.aliyuncs.com:3306/bluewind-shorturl?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
     username: root
-    password: dR3!tC0$mH5!b
+    password: XXXXXXXX
     druid:
       initialSize: 5
       minIdle: 10
@@ -91,5 +91,5 @@ hash:
 
 # 阿里云短信的配置
 sms:
-  accessKeyId: LTAI4FiNcQseapHSKnALVvJ1
-  accessKeySecret: fLXxzNYZ4VZRl2QJPm1aee9z610FsU
+  accessKeyId: XXXXXXXXXXX
+  accessKeySecret: XXXXXXXXXXXXXX
