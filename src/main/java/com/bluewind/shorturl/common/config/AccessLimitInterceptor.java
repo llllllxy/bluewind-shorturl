@@ -43,6 +43,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
             if (accessLimit == null) {
                 return true;
             }
+
             int seconds = accessLimit.seconds();
             int maxCount = accessLimit.maxCount();
             String ip = IpAddressUtils.getIpAddress(request);
