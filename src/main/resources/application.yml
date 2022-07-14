@@ -28,9 +28,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://rm-bp1l6sit4p21x78608o.mysql.rds.aliyuncs.com:3306/bluewind-shorturl?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
+    url: jdbc:mysql://rm-.mysql.rds.aliyuncs.com:3306/bluewind-shorturl?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
     username: root
-    password: XXXXXXXX
+    password: Zid&P#X0
     druid:
       initialSize: 5
       minIdle: 10
@@ -43,7 +43,30 @@ spring:
       testWhileIdle: true
       testOnBorrow: false
       testOnReturn: false
-      filters: stat,wall,slf4j
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单, 不填则允许所有访问
+        allow:
+        url-pattern: /druid/*
+        # 控制台管理用户名和密码
+        login-username: admin
+        login-password: 123456
+      filter:
+        #配置StatFilter (SQL监控配置)
+        stat:
+          enabled: true #开启SQL监控
+          log-slow-sql: true #慢SQL记录
+          slow-sql-millis: 5000 #慢查询
+          merge-sql: true #同样的sql合并起来
+        #配置WallFilter (防火墙配置)
+        wall:
+          enabled: true #开启防火墙
+          config:
+            # 允许同一个SqlSession里面加入多个语句
+            multi-statement-allow: true
+
   #静态资源配置
   resources:
     static-locations: classpath:/static/
@@ -91,5 +114,5 @@ hash:
 
 # 阿里云短信的配置
 sms:
-  accessKeyId: XXXXXXXXXXX
-  accessKeySecret: XXXXXXXXXXXXXX
+  accessKeyId: ALVvJ1
+  accessKeySecret: fLXxe9z610FsU
