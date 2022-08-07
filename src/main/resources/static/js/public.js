@@ -133,6 +133,19 @@ function initTable(options) {
         // 使用POST请求到服务器获取数据
         method: options.method || "POST",
         contentType: options.contentType || "application/x-www-form-urlencoded;charset=UTF-8",
+        ajaxOptions: {
+            async : true, //此处为异步加载
+            timeout: 5000,
+            cache: false,
+            complete: function(XMLHttpRequest, textStatus) { // 解决bootstrapTable会话超时问题
+                // alert(JSON.stringify(XMLHttpRequest))
+                if (XMLHttpRequest.responseJSON.code === 401) {
+                    if (confirm("会话已过期，请重新登录")) {
+                        window.location.href = AjaxUtil.ctx + "tenant/login";
+                    }
+                }
+            }
+        },
         // 获取数据的后端地址
         url: options.url,
         // 每一行的唯一标识，一般为主键列
@@ -230,8 +243,7 @@ const AjaxUtil = {
         options.async = options.async || true; // 布尔值，表示请求是否异步处理。默认是 true
         options.cache = options.cache || false; // 布尔值，表示浏览器是否缓存被请求页面，默认是true
         options.dataType = options.dataType || 'json';
-        $.ajax({
-            url: options.url,
+        $.ajax(options.url, {
             type: options.type,
             timeout: options.timeout,
             async: options.async,
@@ -264,8 +276,7 @@ const AjaxUtil = {
         options.dataType = options.dataType || 'json';
         options.contentType = options.contentType || 'application/x-www-form-urlencoded';
         options.data = options.data || '';
-        $.ajax({
-            url: options.url,
+        $.ajax(options.url, {
             type: options.type,
             timeout: options.timeout,
             async: options.async,
@@ -301,8 +312,7 @@ const AjaxUtil = {
         options.contentType = options.contentType || false;
         options.processData = options.processData || false;
         options.data = options.data || new FormData();
-        $.ajax({
-            url: options.url,
+        $.ajax(options.url, {
             type: options.type,
             timeout: options.timeout,
             async: options.async,
