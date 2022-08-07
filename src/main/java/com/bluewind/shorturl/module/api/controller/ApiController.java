@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -21,7 +22,7 @@ import java.net.UnknownHostException;
 @RestController
 @RequestMapping("/api")
 public class ApiController {
-    final static Logger log = LoggerFactory.getLogger(ApiController.class);
+    final static Logger logger = LoggerFactory.getLogger(ApiController.class);
 
     @Autowired
     private ApiServiceImpl apiService;
@@ -29,9 +30,11 @@ public class ApiController {
     @Autowired
     private ShortUrlServiceImpl shortUrlServiceImpl;
 
-
     @Autowired
     private Environment env;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @LogAround("执行后台管理登录操作")
     @GetMapping("/test")
@@ -100,6 +103,13 @@ public class ApiController {
         String tenantId = ApiFilterHolder.getTenantId();
         int num = apiService.expire(shortUrl, expireDate, tenantId);
         if (num > 0) {
+
+            // 删除redis里的缓存
+            try {
+                redisTemplate.delete(shortUrl);
+            } catch (Exception e) {
+                logger.error("UrlManageController -- edit -- Exception= {e}", e);
+            }
             return Result.ok("更改短链失效时间" + shortUrl + "成功，更新后为：" + expireDate + "");
         }
         return Result.error("更改短链失效时间" + shortUrl + "失败，不存在此短链！");

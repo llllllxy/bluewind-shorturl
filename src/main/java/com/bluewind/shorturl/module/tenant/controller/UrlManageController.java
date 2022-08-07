@@ -5,11 +5,13 @@ import com.bluewind.shorturl.common.base.BaseController;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.config.security.TenantHolder;
 import com.bluewind.shorturl.common.util.DateTool;
-import com.bluewind.shorturl.common.util.Snowflake;
 import com.bluewind.shorturl.common.util.page.Page;
 import com.bluewind.shorturl.module.portal.service.ShortUrlServiceImpl;
 import com.bluewind.shorturl.module.tenant.service.UrlManageServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +27,17 @@ import java.util.Map;
 @Controller
 @RequestMapping("/tenant/url")
 public class UrlManageController extends BaseController {
+    final static Logger logger = LoggerFactory.getLogger(UrlManageController.class);
+
+
     @Autowired
     private UrlManageServiceImpl urlManageService;
 
     @Autowired
     private ShortUrlServiceImpl shortUrlServiceImpl;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
 
     @LogAround("跳转到短链列表查询页")
@@ -74,7 +82,7 @@ public class UrlManageController extends BaseController {
         String tenantId = TenantHolder.getTenantId();
         // 日期格式转换
         expireDate = DateTool.dateFormat(expireDate, "yyyy-MM-dd", "yyyyMMdd");
-        expireDate = expireDate + "000000";
+        expireDate = expireDate + "235959";
         // 生成短链
         String shortURL = shortUrlServiceImpl.generateUrlMap(lurl, expireDate, tenantId, status, note);
         return Result.ok("新增短链成功！");
@@ -97,15 +105,22 @@ public class UrlManageController extends BaseController {
     @ResponseBody
     @PostMapping(value="/edit")
     public Result edit(@RequestParam(required = false, defaultValue = "", value = "note") String note,
-                      @RequestParam("id") String id,
-                      @RequestParam("expireDate") String expireDate,
-                      @RequestParam("status") String status) {
+                       @RequestParam("id") String id,
+                       @RequestParam("surl") String surl,
+                       @RequestParam("expireDate") String expireDate,
+                       @RequestParam("status") String status) {
         // 日期格式转换
         expireDate = DateTool.dateFormat(expireDate, "yyyy-MM-dd", "yyyyMMdd");
-        expireDate = expireDate + "000000";
+        expireDate = expireDate + "235959";
         // 修改短链
         int num = urlManageService.edit(id, status, expireDate, note);
         if (num > 0) {
+            // 删除redis里的缓存
+            try {
+                redisTemplate.delete(surl);
+            } catch (Exception e) {
+                logger.error("UrlManageController -- edit -- Exception= {e}", e);
+            }
             return Result.ok("修改短链【" + id + "】成功");
         }
         return Result.error("修改短链【" + id + "】失败");

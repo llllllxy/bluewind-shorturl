@@ -119,9 +119,10 @@
             if (bv.isValid()) {
                 console.log('通过校验')
 
+                var param = $('#addForm').serialize() + '&surl=' + [[${urlInfo.surl}]];
                 AjaxUtil.post({
                     url: AjaxUtil.ctx + "tenant/url/edit",
-                    data: $('#addForm').serialize(),
+                    data: param,
                     success: function (res) {
                         if (res.code === 200) {
                             Message.success(1000, res.msg, function () {
