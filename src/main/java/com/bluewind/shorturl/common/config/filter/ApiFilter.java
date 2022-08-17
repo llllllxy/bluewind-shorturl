@@ -25,11 +25,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author liuxingyu01
  * @date 2022-06-19 21:05
- * @description
+ * @description 第三方开放接口安全过滤器
  **/
 @WebFilter(filterName = "ApiFilter",
-        urlPatterns = {"/api/*"},
-        dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
+           urlPatterns = {"/api/*"},
+           dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
 public class ApiFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(ApiFilter.class);
 
@@ -46,7 +46,7 @@ public class ApiFilter implements Filter {
 
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException {
         try {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             String access_key = httpRequest.getHeader("access_key");
@@ -162,8 +162,8 @@ public class ApiFilter implements Filter {
             md.update(temp);
             temp = md.digest();
             int i = 0;
-            for (int offset = 0; offset < temp.length; offset++) {
-                i = temp[offset];
+            for (byte b : temp) {
+                i = b;
                 if (i < 0)
                     i += 256;
                 if (i < 16)
