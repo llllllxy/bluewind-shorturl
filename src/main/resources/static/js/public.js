@@ -136,15 +136,7 @@ function initTable(options) {
         ajaxOptions: {
             async : true, //此处为异步加载
             timeout: 5000,
-            cache: false,
-            complete: function(XMLHttpRequest, textStatus) { // 解决bootstrapTable会话超时问题
-                // alert(JSON.stringify(XMLHttpRequest))
-                if (XMLHttpRequest.responseJSON.code === 401) {
-                    if (confirm("会话已过期，请重新登录")) {
-                        window.location.href = AjaxUtil.ctx + "tenant/login";
-                    }
-                }
-            }
+            cache: false
         },
         // 获取数据的后端地址
         url: options.url,
@@ -213,10 +205,16 @@ function initTable(options) {
         queryParams: options.queryParams,
         // json数据解析，后端固定格式
         responseHandler: function(res) {
-            return {
-                "rows": res.data.rows,
-                "total": res.data.total
-            };
+            if (res.code === 401) {
+                if (confirm("会话已过期，请重新登录")) {
+                    window.location.href = AjaxUtil.ctx + "tenant/login";
+                }
+            } else {
+                return {
+                    "rows": res.data.rows,
+                    "total": res.data.total
+                };
+            }
         },
         //数据列
         columns: options.columns
