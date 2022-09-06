@@ -1,6 +1,7 @@
 package com.bluewind.shorturl.module.portal.service;
 
 import com.bluewind.shorturl.common.util.*;
+import com.bluewind.shorturl.common.util.web.UserAgentUtils;
 import com.bluewind.shorturl.module.portal.dao.ShortUrlDaoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

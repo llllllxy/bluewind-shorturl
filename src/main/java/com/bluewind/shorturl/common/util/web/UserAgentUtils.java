@@ -1,4 +1,4 @@
-package com.bluewind.shorturl.common.util;
+package com.bluewind.shorturl.common.util.web;
 
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.DeviceType;
