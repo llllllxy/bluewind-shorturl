@@ -27,7 +27,7 @@ public class BluewindShortUrlApplication {
         String path = env.getProperty("server.servlet.context-path");
 
         logger.info("\n----------------------------------------------------------\n\t" +
-                "bluewind-shorturl 启动成功！\n" +
+                "bluewind-shorturl 启动成功！\n\t" +
                 "┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐   ┬\n\t" +
                 "└─┐│ ││  │  ├┤ └─┐└─┐  └─┐ │ ├─┤├┬┘ │ ├┤  ││   │\n\t" +
                 "└─┘└─┘└─┘└─┘└─┘└─┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘   o\n\t" +

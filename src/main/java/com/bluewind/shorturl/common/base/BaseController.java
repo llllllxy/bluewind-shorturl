@@ -5,7 +5,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public class BaseController {
     public static final String RESULT_ROWS = "rows";
@@ -42,12 +41,4 @@ public class BaseController {
         }
     }
 
-
-    /**
-     * 获取session
-     *
-     */
-    public static HttpSession getSession() {
-        return getRequest().getSession();
-    }
 }

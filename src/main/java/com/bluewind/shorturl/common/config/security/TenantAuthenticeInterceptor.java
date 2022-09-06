@@ -4,6 +4,10 @@ import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.consts.HttpStatus;
 import com.bluewind.shorturl.common.consts.SystemConst;
 import com.bluewind.shorturl.common.util.JsonUtils;
+import com.bluewind.shorturl.common.util.web.ServletUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,6 +30,9 @@ import java.util.Map;
 public class TenantAuthenticeInterceptor implements HandlerInterceptor {
     final static Logger logger = LoggerFactory.getLogger(TenantAuthenticeInterceptor.class);
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
     /*
      * 进入controller层之前拦截请求
      * 返回值：表示是否将当前的请求拦截下来  false：拦截请求，请求别终止。true：请求不被拦截，继续执行
@@ -34,23 +41,37 @@ public class TenantAuthenticeInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        Map<String, Object> tenantInfo = (Map<String, Object>) request.getSession().getAttribute(SystemConst.TENANT_USER_KEY);
-        logger.info("TenantAuthenticeInterceptor -- preHandle -- tenantInfo = {}", tenantInfo);
+        // 判断请求类型，如果是OPTIONS，直接返回
+        String options = HttpMethod.OPTIONS.toString();
+        if (options.equals(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return true;
+        }
 
+        // 先判断token是否为空
+        String token = TenantAuthenticeUtil.getToken(request);
+        if (logger.isInfoEnabled()) {
+            logger.info("TenantAuthenticeInterceptor -- preHandle -- token = {}", token);
+        }
+        if (StringUtils.isBlank(token)) {
+            responseError(request, response);
+            return false;
+        }
+
+        // 再判断token是否存在
+        String tenantInfoString = redisTemplate.opsForValue().get(SystemConst.SYSTEM_TENANT_KEY + ":" + token);
+        if (StringUtils.isBlank(tenantInfoString)) {
+            responseError(request, response);
+            return false;
+        }
+
+        // 再判断token是否合法
+        Map<String, Object> tenantInfo = (Map<String,Object>) JsonUtils.readValue(tenantInfoString, Map.class);
+        if (logger.isInfoEnabled()) {
+            logger.info("TenantAuthenticeInterceptor -- preHandle -- tenantInfo = {}", tenantInfo);
+        }
         if (tenantInfo == null || tenantInfo.isEmpty()) {
-            logger.error("TenantAuthenticeInterceptor -- preHandle -- 请求已拦截");
-            // 如果是ajax请求，直接返回302状态码
-            if (isAjaxRequest(request)) {
-                Result result = Result.create(HttpStatus.UNAUTHORIZED, "会话已失效，请重新登录");
-
-                response.setContentType("application/json");
-                PrintWriter out = response.getWriter();
-                out.write(JsonUtils.writeValueAsString(result));
-                out.close();
-            } else {
-                // 拦截后跳转至登录页
-                response.sendRedirect("/tenant/login");
-            }
+            responseError(request, response);
             return false;
         }
         TenantHolder.setTenant(tenantInfo);
@@ -79,51 +100,24 @@ public class TenantAuthenticeInterceptor implements HandlerInterceptor {
 
 
     /**
-     * 是否是Ajax异步请求
+     * 无权限时的返回
      *
      * @param request
+     * @param response
+     * @throws IOException
      */
-    public static boolean isAjaxRequest(HttpServletRequest request) {
-        String accept = request.getHeader("accept");
-        if (accept != null && accept.indexOf("application/json") != -1) {
-            return true;
+    private void responseError(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 如果是ajax请求，直接返回401状态码
+        if (ServletUtils.isAjaxRequest(request)) {
+            Result result = Result.create(HttpStatus.UNAUTHORIZED, "会话已失效，请重新登录");
+            response.setContentType("application/json");
+            PrintWriter out = response.getWriter();
+            out.write(JsonUtils.writeValueAsString(result));
+            out.close();
+        } else {
+            // 拦截后跳转至登录页
+            response.sendRedirect("/tenant/login");
         }
-
-        String xRequestedWith = request.getHeader("X-Requested-With");
-        if (xRequestedWith != null && xRequestedWith.indexOf("XMLHttpRequest") != -1) {
-            return true;
-        }
-
-        String uri = request.getRequestURI();
-        if (inStringIgnoreCase(uri, ".json", ".xml")) {
-            return true;
-        }
-
-        String ajax = request.getParameter("__ajax");
-        if (inStringIgnoreCase(ajax, "json", "xml")) {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
-     * 是否包含字符串
-     *
-     * @param str  验证字符串
-     * @param strs 字符串组
-     * @return 包含返回true
-     */
-    public static boolean inStringIgnoreCase(String str, String... strs) {
-        if (str != null && strs != null) {
-            for (String s : strs) {
-                if (str.equalsIgnoreCase(StringUtils.trim(s))) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
 }

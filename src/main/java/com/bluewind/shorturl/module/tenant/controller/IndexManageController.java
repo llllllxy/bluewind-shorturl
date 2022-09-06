@@ -3,11 +3,14 @@ package com.bluewind.shorturl.module.tenant.controller;
 import com.bluewind.shorturl.common.annotation.AccessLimit;
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
+import com.bluewind.shorturl.common.config.security.TenantAuthenticeUtil;
 import com.bluewind.shorturl.common.config.security.TenantHolder;
 import com.bluewind.shorturl.common.consts.SystemConst;
 import com.bluewind.shorturl.common.util.GenerateAkAndSk;
+import com.bluewind.shorturl.common.util.JsonUtils;
 import com.bluewind.shorturl.common.util.SHA256Utils;
 import com.bluewind.shorturl.common.util.SmsUtils;
+import com.bluewind.shorturl.common.util.web.CookieUtils;
 import com.bluewind.shorturl.module.tenant.service.IndexManageServiceImpl;
 import com.wf.captcha.ArithmeticCaptcha;
 import com.wf.captcha.GifCaptcha;
@@ -22,7 +25,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -106,14 +111,14 @@ public class IndexManageController {
                           @RequestParam String password,
                           @RequestParam String captcha,
                           @RequestParam String verifyKey,
-                          HttpSession session) {
+                          HttpServletResponse response) {
         logger.info("LoginController doLogin username = {}, password = {}", username, password);
 
-        String captchaInRedis = redisTemplate.opsForValue().get(SystemConst.CAPTCHA_CODE_KEY + ":" +verifyKey);
+        String captchaInRedis = redisTemplate.opsForValue().get(SystemConst.CAPTCHA_CODE_KEY + ":" + verifyKey);
         boolean result = captcha.equalsIgnoreCase(captchaInRedis);
         if (result) {
             // 删除掉这个redis缓存值
-            redisTemplate.delete(SystemConst.CAPTCHA_CODE_KEY + ":" +verifyKey);
+            redisTemplate.delete(SystemConst.CAPTCHA_CODE_KEY + ":" + verifyKey);
         } else {
             return Result.error("验证码错误，请重新输入！");
         }
@@ -136,10 +141,17 @@ public class IndexManageController {
 
         if (localPassword.equals(password)) {
             logger.info("IndexManageController - doLogin - {}登陆成功！", username);
-            // 数据写入session，登陆成功
             tenantInfo.put("tenant_password", "");
-            session.setAttribute(SystemConst.TENANT_USER_KEY, tenantInfo);
-            return Result.ok("登录成功，欢迎回来！",null);
+            // 数据写入redis，登陆成功
+            String token = UUID.randomUUID().toString().replaceAll("-", "");
+            redisTemplate.opsForValue().set(SystemConst.SYSTEM_TENANT_KEY + ":" + token, JsonUtils.writeValueAsString(tenantInfo), 1800, TimeUnit.SECONDS);
+
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put(SystemConst.SYSTEM_TENANT_TOKEN, token);
+            // 将token放在cookie中
+            CookieUtils.setCookie(response, SystemConst.SYSTEM_TENANT_TOKEN, token);
+
+            return Result.ok("登录成功，欢迎回来！", resultMap);
         } else {
             return Result.error("密码错误，请重新输入！");
         }
@@ -150,7 +162,7 @@ public class IndexManageController {
     @GetMapping("/getCaptcha")
     @ResponseBody
     public Result getCode(@RequestParam(required = false, defaultValue = "", value = "type") String captchaType) {
-        Map<String,String> result = new HashMap<>();
+        Map<String, String> result = new HashMap<>();
 
         // 保存验证码信息
         String uuid = UUID.randomUUID().toString().trim().replaceAll("-", "");
@@ -199,7 +211,7 @@ public class IndexManageController {
         if (StringUtils.isNotEmpty(randomCode)) {
             // 存入redis中，有效期10分钟
             redisTemplate.opsForValue().set(SystemConst.SMS_CODE_KEY + ":" + verifyKey, randomCode, 10, TimeUnit.MINUTES);
-            Map<String,String> result = new HashMap<>();
+            Map<String, String> result = new HashMap<>();
             result.put("verifyKey", verifyKey);
             return Result.ok("获取验证码成功", result);
         } else {
@@ -218,7 +230,7 @@ public class IndexManageController {
                              @RequestParam String tenantPhone,
                              @RequestParam String smsCode,
                              @RequestParam String verifyKey,
-                             HttpSession session) {
+                             HttpServletResponse response) {
         logger.info("IndexManageController doRegister tenantAccount = {}", tenantAccount);
 
         String smsCodeInRedis = redisTemplate.opsForValue().get(SystemConst.SMS_CODE_KEY + ":" + verifyKey);
@@ -240,9 +252,17 @@ public class IndexManageController {
             // 根据用户名查找到租户信息
             Map<String, Object> tenantInfo = indexManageService.getTenantInfo(tenantAccount);
             tenantInfo.put("tenant_password", "");
-            // 保存会话信息
-            session.setAttribute(SystemConst.TENANT_USER_KEY, tenantInfo);
-            return Result.ok("注册成功，欢迎您！",null);
+
+            // 会话信息数据写入redis，登陆成功
+            String token = UUID.randomUUID().toString().replaceAll("-", "");
+            redisTemplate.opsForValue().set(SystemConst.SYSTEM_TENANT_KEY + ":" + token, JsonUtils.writeValueAsString(tenantInfo), 1800, TimeUnit.SECONDS);
+
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put(SystemConst.SYSTEM_TENANT_TOKEN, token);
+            // 将token放在cookie中
+            CookieUtils.setCookie(response, SystemConst.SYSTEM_TENANT_TOKEN, token);
+
+            return Result.ok("注册成功，欢迎您！", resultMap);
         } else {
             return Result.error("注册失败，请联系系统管理员！");
         }
@@ -252,11 +272,13 @@ public class IndexManageController {
     @LogAround("执行后台管理退出登录操作")
     @GetMapping("/logout")
     @ResponseBody
-    public Result logout(HttpSession session) {
-        // 退出系统时，清除session，invalidate()方法可以清除session对象中的所有信息。
-        session.invalidate();
-        return Result.ok("退出登陆成功！",null);
+    public Result logout(HttpServletRequest request) {
+        String token = TenantAuthenticeUtil.getToken(request);
+        // 直接删除redis缓存中的会话信息
+        redisTemplate.delete(SystemConst.SYSTEM_TENANT_KEY + ":" + token);
+        return Result.ok("退出登陆成功！", null);
     }
+
 
     @LogAround("执行修改个人信息操作")
     @PostMapping("/updateProfile")
@@ -265,7 +287,7 @@ public class IndexManageController {
                                 @RequestParam String tenant_account,
                                 @RequestParam String tenant_name,
                                 @RequestParam String tenant_email,
-                                HttpSession session) {
+                                HttpServletRequest request) {
         // 更新租户表
         int num = indexManageService.updateProfile(tenant_id, tenant_name, tenant_email);
         if (num > 0) {
@@ -273,8 +295,9 @@ public class IndexManageController {
             Map<String, Object> tenantInfo = indexManageService.getTenantInfo(tenant_account);
             tenantInfo.put("tenant_password", "");
             // 刷新缓存的会话信息
-            session.setAttribute(SystemConst.TENANT_USER_KEY, tenantInfo);
-            return Result.ok("更新个人信息成功！",null);
+            String token = TenantAuthenticeUtil.getToken(request);
+            redisTemplate.opsForValue().set(SystemConst.SYSTEM_TENANT_KEY + ":" + token, JsonUtils.writeValueAsString(tenantInfo), 1800, TimeUnit.SECONDS);
+            return Result.ok("更新个人信息成功！", null);
         } else {
             return Result.error("更新失败，请联系系统管理员！");
         }
@@ -286,8 +309,7 @@ public class IndexManageController {
     @ResponseBody
     public Result resetAkandsk(@RequestParam String tenant_id,
                                @RequestParam String tenant_account,
-                               HttpSession session) {
-
+                               HttpServletRequest request) {
         // 重置accessKey和accessKeySecret
         String accessKey = GenerateAkAndSk.generateAk();
         String accessKeySecret = GenerateAkAndSk.generateSk();
@@ -298,8 +320,10 @@ public class IndexManageController {
             Map<String, Object> tenantInfo = indexManageService.getTenantInfo(tenant_account);
             tenantInfo.put("tenant_password", "");
             // 刷新缓存的会话信息
-            session.setAttribute(SystemConst.TENANT_USER_KEY, tenantInfo);
-            return Result.ok("重置密钥凭证成功！",new HashMap<String, Object>() {
+            String token = TenantAuthenticeUtil.getToken(request);
+            redisTemplate.opsForValue().set(SystemConst.SYSTEM_TENANT_KEY + ":" + token, JsonUtils.writeValueAsString(tenantInfo), 1800, TimeUnit.SECONDS);
+
+            return Result.ok("重置密钥凭证成功！", new HashMap<String, Object>() {
                 {
                     put("accessKey", accessKey);
                     put("accessKeySecret", accessKeySecret);
@@ -309,7 +333,5 @@ public class IndexManageController {
             return Result.error("重置密钥凭证失败，请联系系统管理员！");
         }
     }
-
-
 
 }
