@@ -154,11 +154,12 @@ public class ShortUrlController {
     @GetMapping("/activeRecordTest")
     @ResponseBody
     public Object activeRecordTest() {
+        // 测试直接查sql
         List<Record> applyList = Db.find("select * from s_url_map");
         if (log.isInfoEnabled()) {
             log.info("ShortUrlController -- generateShortURL -- applyList = {}", applyList);
         }
-
+        // 测试通过SqlPara查sql
         SqlPara sqlPara = Db.getSqlPara("access_log.getLogList", new HashMap());
         List<Record> accessLogList = Db.find(sqlPara);
         if (log.isInfoEnabled()) {
