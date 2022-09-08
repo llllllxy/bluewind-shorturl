@@ -12,16 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Json工具类（基于jackson）
+ *
  * @author liuxingyu01
  * @date 2022-03-11-16:47
  **/
 public class JsonUtils {
     final static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 
+
     /**
      * 对象转JSON字符串
-     * @param value
-     * @return
+     * @param value 待转换对象
+     * @return JSON字符串
      */
     public static String writeValueAsString(Object value) {
         if (value != null) {
@@ -37,12 +40,13 @@ public class JsonUtils {
         return "";
     }
 
+
     /**
      * JSON字符串转对象
-     * @param content
-     * @param valueType
-     * @param <T>
-     * @return
+     * @param content JSON字符串
+     * @param valueType 类型
+     * @param <T> 对象
+     * @return  对象
      */
     public static <T> T readValue(String content, Class<T> valueType) {
         if (content != null && !content.trim().isEmpty()) {
@@ -61,10 +65,10 @@ public class JsonUtils {
 
     /**
      * JSON字符串转对象
-     * @param content
-     * @param valueTypeRef
-     * @param <T>
-     * @return
+     * @param content JSON字符串
+     * @param valueTypeRef TypeReference
+     * @param <T> 对象
+     * @return 对象
      */
     public static <T> T readValue(String content, TypeReference<T> valueTypeRef) {
         if (content != null && !content.trim().isEmpty()) {
@@ -83,10 +87,10 @@ public class JsonUtils {
 
     /**
      * InputStream文件流转对象
-     * @param src
-     * @param valueType
-     * @param <T>
-     * @return
+     * @param src 输入流
+     * @param valueType  类型
+     * @param <T> 对象
+     * @return 对象
      */
     public static <T> T readValue(InputStream src, Class<T> valueType) {
         if (src != null) {
@@ -104,10 +108,10 @@ public class JsonUtils {
 
     /**
      * JSON字符串转List
-     * @param content
-     * @param clazz
-     * @param <T>
-     * @return
+     * @param content JSON字符串
+     * @param clazz  类型
+     * @param <T> 对象
+     * @return 对象
      */
     public static <T> List<T> readArrayValue(String content, Class<T> clazz) {
         if (content != null && !content.trim().isEmpty()) {
