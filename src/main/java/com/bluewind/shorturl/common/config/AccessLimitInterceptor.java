@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author liuxingyu01
  * @date 2022-03-13-13:48
- * @description 限流拦截器
+ * @description 限流拦截器，只限制加注解的，如：@AccessLimit(seconds = 10, maxCount = 2, msg = "10秒内只能生成两次短链接")
  **/
 @Component
 public class AccessLimitInterceptor implements HandlerInterceptor {
