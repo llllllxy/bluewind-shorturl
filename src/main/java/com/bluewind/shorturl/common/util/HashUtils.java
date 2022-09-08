@@ -23,8 +23,8 @@ public class HashUtils {
     /**
      * 10进制数字转Base62编码
      *
-     * @param num
-     * @return
+     * @param num 10进制数字
+     * @return String
      */
     private static String toBase62(long num) {
         StringBuilder sb = new StringBuilder();
@@ -38,8 +38,8 @@ public class HashUtils {
 
     /**
      * Base62编码转十进制数字
-     * @param str
-     * @return
+     * @param str Base62编码
+     * @return long
      */
     public static long toBase10(String str) {
         long result = 0;
