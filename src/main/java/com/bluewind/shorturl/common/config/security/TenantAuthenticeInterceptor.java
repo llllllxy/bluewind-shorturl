@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * @author liuxingyu01
  * @date 2022-03-26 20:48
- * @description 会话拦截器
+ * @description 租户会话拦截器
  **/
 @Component
 public class TenantAuthenticeInterceptor implements HandlerInterceptor {

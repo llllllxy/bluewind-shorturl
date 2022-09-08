@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * @author liuxingyu01
  * @date 2022-06-14 13:58
- * @description 本地线程变量缓存租户会话信息
+ * @description 本地线程变量-缓存租户会话信息
  **/
 public class TenantHolder {
     private final static ThreadLocal<Map<String, Object>> tenant = new ThreadLocal<>();

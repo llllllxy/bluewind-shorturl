@@ -10,15 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author liuxingyu01
  * @date 2022-09-06 10:27
- * @description
+ * @description 租户会话工具类
  **/
 public class TenantAuthenticeUtil {
 
 
     /**
-     * 获取租户token
      *
-     * @return
+     * 获取租户会话token
+     *
+     * @param request HttpServletRequest
+     * @return String
      */
     public static String getToken(HttpServletRequest request) {
         String token = "";
@@ -33,9 +35,9 @@ public class TenantAuthenticeUtil {
     }
 
     /**
-     * 获取租户token
+     * 获取租户会话token
      *
-     * @return
+     * @return String
      */
     public static String getToken() {
         HttpServletRequest request = ServletUtils.getRequest();
