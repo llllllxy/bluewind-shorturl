@@ -19,8 +19,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -124,7 +124,7 @@ public class WxController {
             // 根据用户名查找到租户信息
             Map<String, Object> tenantInfo = wxService.getTenantInfo(tenantAccount);
             if (MapUtils.isNotEmpty(tenantInfo)) {
-                log.info("IndexManageController - getUser - 获取绑定用户成功：{}！", tenantInfo);
+                log.info("WxController - getUser - 获取绑定用户成功：{}！", tenantInfo);
 
                 tenantInfo.put("tenant_password", "");
                 // 数据写入redis，登陆成功
@@ -153,7 +153,7 @@ public class WxController {
     public Result login(@RequestParam String username,
                         @RequestParam String password,
                         HttpServletResponse response) {
-        log.info("LoginController doLogin username = {}, password = {}", username, password);
+        log.info("WxController login username = {}, password = {}", username, password);
 
         // 根据用户名查找到租户信息
         Map<String, Object> tenantInfo = wxService.getTenantInfo(username);
@@ -172,7 +172,7 @@ public class WxController {
         password = SHA256Utils.SHA256Encode(salt + password);
 
         if (localPassword.equals(password)) {
-            log.info("IndexManageController - doLogin - {}登陆成功！", username);
+            log.info("WxController - doLogin - {}登陆成功！", username);
             tenantInfo.put("tenant_password", "");
             // 数据写入redis，登陆成功
             String token = UUID.randomUUID().toString().replaceAll("-", "");
@@ -200,37 +200,36 @@ public class WxController {
         if (log.isDebugEnabled()) {
             log.debug("WxController -- jsConfig -- appType=" + appType + ",appId=" + appId + ",agentId=" + agentId + ",url=" + url);
         }
-
-
-        return Result.ok("");
-    }
-
-
-    /**
-     * 字符串加密
-     *
-     * @param decript
-     * @return
-     */
-    private String SHA1(String decript) {
+        WxConfig wxConfig = wxUtils.getWxConfig(appId, agentId);
+        String jsapiTicket = wxConfig.getJsapiTicket();
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            digest.update(decript.getBytes());
-            byte messageDigest[] = digest.digest();
-            // Create Hex String
-            StringBuffer hexString = new StringBuffer();
-            // 字节数组转换为 十六进制 数
-            for (int i = 0; i < messageDigest.length; i++) {
-                String shaHex = Integer.toHexString(messageDigest[i] & 0xFF);
-                if (shaHex.length() < 2) {
-                    hexString.append(0);
-                }
-                hexString.append(shaHex);
+            url = URLDecoder.decode(url, "UTF-8");     //解码
+        } catch (UnsupportedEncodingException e) {
+            if (log.isErrorEnabled()) {
+                log.error("WxController -- jsConfig -- URLDecoder ERROR=" + e);
             }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
-        return "";
+        Map<String, String> resultMap = new HashMap<>();
+        // 获取随机码 时间戳
+        String noncestr = UUID.randomUUID().toString().replace("-", "").substring(0, 16);// 随机字符串16位
+        String timestamp = String.valueOf(System.currentTimeMillis() / 1000);//时间戳
+        resultMap.put("appid", appId);
+        resultMap.put("ticket", jsapiTicket);
+        resultMap.put("noncestr", noncestr);
+        resultMap.put("timestamp", timestamp);
+        // 将参数排序并拼接字符串appid
+        String str = "jsapi_ticket=" + jsapiTicket + "&noncestr=" + noncestr + "&timestamp=" + timestamp + "&url=" + url;
+        if (log.isDebugEnabled()) {
+            log.debug("WxController -- jsConfig -- sha1加密前= {}", str);
+        }
+        // 将字符串进行sha1加密
+        String signature = wxUtils.SHA1(str);
+        if (log.isDebugEnabled()) {
+            log.debug("WxController -- jsConfig -- sha1加密后= {}", signature);
+        }
+        resultMap.put("signature", signature);
+
+        return Result.ok("获取微信jsConfig信息成功", resultMap);
     }
+
 }

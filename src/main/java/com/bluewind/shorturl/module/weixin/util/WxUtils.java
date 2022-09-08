@@ -20,6 +20,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -75,6 +77,10 @@ public class WxUtils {
                 config.setSecret(result.get("secret").toString());
                 config.setStatus(result.get("status").toString());
             }
+        }
+        // 再判断一次空，
+        if (Objects.isNull(config) || Objects.isNull(config.getConfigId())) {
+            return null;
         }
 
         // 校验AccessToken和JsapiTicket是否失效，失效就重新设置AccessToken和JsapiTicket
@@ -284,10 +290,39 @@ public class WxUtils {
      * @param secondsCount 数字，单位秒
      * @return 固定格式 yyyyMMddHHmmss
      */
-    public static String getLaterTime(int secondsCount) {
+    public String getLaterTime(int secondsCount) {
         LocalDateTime time = LocalDateTime.now();
         LocalDateTime newTime = time.plusSeconds(secondsCount); // 增加几秒
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         return dateTimeFormatter.format(newTime);
+    }
+
+
+    /**
+     * 字符串加密
+     *
+     * @param decript
+     * @return
+     */
+    public String SHA1(String decript) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.update(decript.getBytes());
+            byte messageDigest[] = digest.digest();
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            // 字节数组转换为 十六进制 数
+            for (int i = 0; i < messageDigest.length; i++) {
+                String shaHex = Integer.toHexString(messageDigest[i] & 0xFF);
+                if (shaHex.length() < 2) {
+                    hexString.append(0);
+                }
+                hexString.append(shaHex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
