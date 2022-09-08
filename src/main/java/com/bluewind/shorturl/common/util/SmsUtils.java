@@ -13,7 +13,7 @@ import java.util.Random;
 /**
  * @author liuxingyu01
  * @date 2022-05-29 18:12
- * @description
+ * @description 阿里云短信服务工具类
  **/
 @Component
 public class SmsUtils {
