@@ -44,6 +44,6 @@ public class AddressUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(getAddressByIP("116.62.157.224"));
+        System.out.println(getAddressByIP("42.192.52.63"));
     }
 }
