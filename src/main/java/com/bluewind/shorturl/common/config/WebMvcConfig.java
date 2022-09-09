@@ -42,7 +42,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         tenantIncludePaths.add("/tenant/statistic/**"); // 租户数据统计管理
 
         // 企业微信端开始
-        tenantIncludePaths.add("/tenant/weixin/navigation"); // 企业微信导航
+        tenantIncludePaths.add("/tenant/weixin/navigation"); // 企业微信-获取导航
+        tenantIncludePaths.add("/tenant/weixin/unbind"); // 企业微信-用户解绑
+        tenantIncludePaths.add("/tenant/weixin/jsConfig"); // 企业微信-jsConfig
+
 
 
         // 注册租户会话拦截器

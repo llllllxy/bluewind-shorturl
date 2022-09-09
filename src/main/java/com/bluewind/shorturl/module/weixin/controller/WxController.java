@@ -2,6 +2,7 @@ package com.bluewind.shorturl.module.weixin.controller;
 
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
+import com.bluewind.shorturl.common.config.security.TenantAuthenticeUtil;
 import com.bluewind.shorturl.common.consts.SystemConst;
 import com.bluewind.shorturl.common.util.JsonUtils;
 import com.bluewind.shorturl.common.util.SHA256Utils;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -56,15 +58,44 @@ public class WxController {
     @ResponseBody
     public Result bind(@RequestParam(value = "appType") String appType,
                        @RequestParam(value = "appId") String appId,
-                       @RequestParam(value = "openId") String openId,
                        @RequestParam(value = "wxUserId") String wxUserId,
                        @RequestParam(value = "agentId") String agentId,
                        @RequestParam(value = "username") String username,
                        @RequestParam(value = "password") String password,
                        @RequestParam(required = false, defaultValue = "", value = "deviceId") String deviceId) {
+        if (log.isInfoEnabled()) {
+            log.info("WxController -- bind -- appType=" + appType + ",appId=" + appId + ",agentId=" + agentId + ",wxUserId=" + wxUserId +  ",deviceId=" + deviceId);
+            log.info("WxController -- bind -- username = {}, password = {}", username, password);
+        }
+        // 第一步：先判断用户密码对不对，不对不行
+        // 根据用户名查找到租户信息
+        Map<String, Object> tenantInfo = wxService.getTenantInfo(username);
 
+        // 没找到帐号(租户不存在)
+        if (tenantInfo == null || tenantInfo.isEmpty()) {
+            return Result.error("租户不存在！");
+        }
 
-        return Result.ok("");
+        // 校验租户状态(用户已失效)
+        if ("1".equals(tenantInfo.get("status").toString())) {
+            return Result.error("该租户已被冻结！");
+        }
+
+        String localPassword = tenantInfo.get("tenant_password").toString();
+        password = SHA256Utils.SHA256Encode(salt + password);
+
+        if (!localPassword.equals(password)) {
+            return Result.error("用户名或密码错误！");
+        }
+        // 第二步：如果对的话，就插入s_wx_usermap表里一条绑定信息
+        log.info("WxController - bind - 获取用户成功：{}！", tenantInfo);
+
+        int num = wxService.bind(appId, wxUserId, agentId, deviceId, username);
+        if (!(num > 0)) {
+            return Result.error("绑定出错！请联系系统管理员");
+        }
+
+        return Result.ok("绑定成功，欢迎您！");
     }
 
 
@@ -73,13 +104,23 @@ public class WxController {
     @ResponseBody
     public Result unbind(@RequestParam(value = "appType") String appType,
                          @RequestParam(value = "appId") String appId,
-                         @RequestParam(value = "openId") String openId,
                          @RequestParam(value = "wxUserId") String wxUserId,
                          @RequestParam(value = "agentId") String agentId,
-                         @RequestParam(value = "deviceId") String deviceId) {
+                         @RequestParam(value = "deviceId") String deviceId,
+                         HttpServletRequest request) {
+        if (log.isInfoEnabled()) {
+            log.info("WxController -- unbind -- appType=" + appType + ",appId=" + appId + ",agentId=" + agentId + ",wxUserId=" + wxUserId +  ",deviceId=" + deviceId);
+        }
 
-
-        return Result.ok("");
+        // 解绑即为使s_wx_usermap表里记录失效
+        int num = wxService.unbind(appId, wxUserId, agentId , deviceId);
+        if (num > 0) {
+            // 删除redis中缓存的会话信息
+            redisTemplate.delete(SystemConst.SYSTEM_TENANT_KEY + ":" + TenantAuthenticeUtil.getToken(request));
+            return Result.ok("解绑成功！");
+        } else {
+            return Result.error("解绑成功，请联系系统管理员");
+        }
     }
 
 
@@ -197,8 +238,8 @@ public class WxController {
                            @RequestParam(value = "appId") String appId,
                            @RequestParam(value = "agentId") String agentId,
                            @RequestParam(required = true, defaultValue = "", value = "url") String url) {
-        if (log.isDebugEnabled()) {
-            log.debug("WxController -- jsConfig -- appType=" + appType + ",appId=" + appId + ",agentId=" + agentId + ",url=" + url);
+        if (log.isInfoEnabled()) {
+            log.info("WxController -- jsConfig -- appType=" + appType + ",appId=" + appId + ",agentId=" + agentId + ",url=" + url);
         }
         WxConfig wxConfig = wxUtils.getWxConfig(appId, agentId);
         String jsapiTicket = wxConfig.getJsapiTicket();
@@ -219,13 +260,13 @@ public class WxController {
         resultMap.put("timestamp", timestamp);
         // 将参数排序并拼接字符串appid
         String str = "jsapi_ticket=" + jsapiTicket + "&noncestr=" + noncestr + "&timestamp=" + timestamp + "&url=" + url;
-        if (log.isDebugEnabled()) {
-            log.debug("WxController -- jsConfig -- sha1加密前= {}", str);
+        if (log.isInfoEnabled()) {
+            log.info("WxController -- jsConfig -- sha1加密前= {}", str);
         }
         // 将字符串进行sha1加密
         String signature = wxUtils.SHA1(str);
-        if (log.isDebugEnabled()) {
-            log.debug("WxController -- jsConfig -- sha1加密后= {}", signature);
+        if (log.isInfoEnabled()) {
+            log.info("WxController -- jsConfig -- sha1加密后= {}", signature);
         }
         resultMap.put("signature", signature);
 

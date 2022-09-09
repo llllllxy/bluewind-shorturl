@@ -27,9 +27,40 @@ public class WxServiceImpl {
         return wxDao.getTenantInfo(tenantAccount);
     }
 
-
+    /**
+     * 获取微信用户绑定信息
+     * @param appId
+     * @param agentId
+     * @param wxUserId
+     * @param deviceId
+     * @return
+     */
     public List<Map<String, Object>> getWxUserMapInfo(String appId, String agentId, String wxUserId, String deviceId) {
         return wxDao.getWxUserMapInfo(appId, agentId, wxUserId, deviceId);
     }
 
+
+    /**
+     * 解绑（使status=02）
+     * @param appId
+     * @param wxUserId
+     * @param agentId
+     * @param deviceId
+     */
+    public int unbind(String appId, String wxUserId, String agentId ,String deviceId) {
+        return wxDao.unbind(appId, agentId, wxUserId, deviceId);
+    }
+
+    /**
+     * 绑定
+     * @param appId
+     * @param wxUserId
+     * @param agentId
+     * @param deviceId
+     * @param username
+     * @return
+     */
+    public int bind(String appId, String wxUserId, String agentId, String deviceId, String username) {
+        return wxDao.bind(appId, wxUserId, agentId, deviceId, username);
+    }
 }
