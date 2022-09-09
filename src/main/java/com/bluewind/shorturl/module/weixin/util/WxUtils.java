@@ -251,10 +251,10 @@ public class WxUtils {
 
 
     /**
-     * 发送企业微信消息
-     * @param config
-     * @param jsonString
-     * @return
+     * 发送企业微信消息（注意：本公共方法只负责推送，消息体需要自己进行组织）
+     * @param config WxConfig
+     * @param jsonString 消息体，具体参考https://developer.work.weixin.qq.com/document/path/90236
+     * @return boolean
      */
     public boolean sendMsg(WxConfig config, String jsonString) {
         String url = WxUrlConst.QY_SEND_MSG_URL + "?access_token=" + config.getAccessToken();

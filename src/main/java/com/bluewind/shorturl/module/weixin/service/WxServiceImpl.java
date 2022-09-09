@@ -48,7 +48,7 @@ public class WxServiceImpl {
      * @param deviceId
      */
     public int unbind(String appId, String wxUserId, String agentId ,String deviceId) {
-        return wxDao.unbind(appId, agentId, wxUserId, deviceId);
+        return wxDao.unbind(appId, wxUserId, agentId, deviceId);
     }
 
     /**

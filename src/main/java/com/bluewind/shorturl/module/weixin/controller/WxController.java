@@ -4,6 +4,7 @@ import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.config.security.TenantAuthenticeUtil;
 import com.bluewind.shorturl.common.consts.SystemConst;
+import com.bluewind.shorturl.common.util.DateTool;
 import com.bluewind.shorturl.common.util.JsonUtils;
 import com.bluewind.shorturl.common.util.SHA256Utils;
 import com.bluewind.shorturl.common.util.web.CookieUtils;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +53,9 @@ public class WxController {
 
     @Autowired
     private WxUtils wxUtils;
+
+    @Autowired
+    private TaskExecutor asyncServiceExecutor;
 
 
     @LogAround("微信用户绑定")
@@ -117,9 +122,27 @@ public class WxController {
         if (num > 0) {
             // 删除redis中缓存的会话信息
             redisTemplate.delete(SystemConst.SYSTEM_TENANT_KEY + ":" + TenantAuthenticeUtil.getToken(request));
+
+            // 给当前用户推送一条解绑成功的消息
+            // 组织消息体，并进行推送
+            WxConfig wxConfig = wxUtils.getWxConfig(appId, agentId);
+            asyncServiceExecutor.execute(() -> {
+                Map<String, Object> msg = new HashMap<>();
+                msg.put("touser", wxUserId);
+                msg.put("agentid", agentId);
+                msg.put("msgtype", "markdown");
+
+                Map<String, Object> markdown = new HashMap<>();
+                markdown.put("content", "##### 解绑成功提醒 "
+                        + (char)10 + "> " + "解绑账号：" + wxUserId
+                        + (char)10 + "> " + "解绑时间：" + DateTool.getNowTime("yyyy-MM-dd HH:mm:ss"));
+                msg.put("markdown", markdown);
+
+                wxUtils.sendMsg(wxConfig, JsonUtils.writeValueAsString(msg));
+            });
             return Result.ok("解绑成功！");
         } else {
-            return Result.error("解绑成功，请联系系统管理员");
+            return Result.error("解绑失败，请联系系统管理员");
         }
     }
 
