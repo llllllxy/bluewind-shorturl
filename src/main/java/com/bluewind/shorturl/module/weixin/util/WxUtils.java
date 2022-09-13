@@ -131,6 +131,12 @@ public class WxUtils {
     }
 
 
+    /**
+     * 获取JsapiTicket并且翻到WxConfig中去
+     *
+     * @param config WxConfig
+     * @return WxConfig
+     */
     public WxConfig setJsapiTicket(WxConfig config) {
         String currentTime = DateTool.getCurrentTime("yyyyMMddHHmmss");
         if (StringUtils.isBlank(config.getAccessToken())) {
