@@ -12,7 +12,7 @@ public class WxConfig implements Serializable {
 
     private String configId;
 
-    private String cropId;
+    private String corpId;
 
     private String agentId;
 
@@ -56,12 +56,12 @@ public class WxConfig implements Serializable {
         this.configId = configId;
     }
 
-    public String getCropId() {
-        return cropId;
+    public String getCorpId() {
+        return corpId;
     }
 
-    public void setCropId(String cropId) {
-        this.cropId = cropId;
+    public void setCorpId(String corpId) {
+        this.corpId = corpId;
     }
 
     public String getAgentId() {
@@ -156,7 +156,7 @@ public class WxConfig implements Serializable {
     public String toString() {
         return "WxConfig{" +
                 "configId='" + configId + '\'' +
-                ", cropId='" + cropId + '\'' +
+                ", cropId='" + corpId + '\'' +
                 ", agentId='" + agentId + '\'' +
                 ", secret='" + secret + '\'' +
                 ", name='" + name + '\'' +

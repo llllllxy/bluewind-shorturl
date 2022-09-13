@@ -16,6 +16,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -54,31 +55,21 @@ public class WxUtils {
         // 再判断token是否存在，先从缓存中获取，缓存中取不到，再去数据库里拿
         String configInfoStr = redisTemplate.opsForValue().get(redisKey);
         config = JsonUtils.readValue(configInfoStr, WxConfig.class);
-
         if (log.isInfoEnabled()) {
-            log.info("WxUtils -- getWxConfig -- config = {}", config);
+            log.info("WxUtils -- getWxConfig -- redisCache -- config: {}", config);
         }
-
+        // redisCache取不到的话，则从数据库中查一遍试试
         if (Objects.isNull(config) || Objects.isNull(config.getConfigId())) {
             String sql = "select * from s_wx_config where corp_id = ? and agent_id = ? and status = '01'";
-            List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, corpId, agentId);
-
-            if (log.isInfoEnabled()) {
-                log.info("WxUtils -- getWxConfig -- list = {}", list);
-            }
-
+            List<WxConfig> list = jdbcTemplate.query(sql, new Object[]{corpId, agentId}, new BeanPropertyRowMapper<WxConfig>(WxConfig.class));
             if (CollectionUtils.isNotEmpty(list)) {
-                Map<String, Object> result = list.get(0);
-                config = new WxConfig();
-                config.setConfigId(result.get("config_id").toString());
-                config.setCropId(result.get("corp_id").toString());
-                config.setAgentId(result.get("agent_id").toString());
-                config.setName(result.get("name").toString());
-                config.setSecret(result.get("secret").toString());
-                config.setStatus(result.get("status").toString());
+                config = list.get(0);
+            }
+            if (log.isInfoEnabled()) {
+                log.info("WxUtils -- getWxConfig -- database -- config = {}", config);
             }
         }
-        // 再判断一次空，
+        // 再判一次空，还为空说明corpId或者agentId不合法
         if (Objects.isNull(config) || Objects.isNull(config.getConfigId())) {
             return null;
         }
@@ -87,7 +78,7 @@ public class WxUtils {
         config = setAccessToken(config);
         config = setJsapiTicket(config);
         // 放入缓存
-        redisTemplate.opsForValue().set(redisKey, JsonUtils.writeValueAsString(config), 30 , TimeUnit.DAYS);
+        redisTemplate.opsForValue().set(redisKey, JsonUtils.writeValueAsString(config), 30, TimeUnit.DAYS);
 
         if (log.isInfoEnabled()) {
             log.info("WxUtils -- getWxConfig -- end -- config = {}", config);
@@ -110,10 +101,10 @@ public class WxUtils {
         if (Objects.isNull(config.getAccessTokenExpires())
                 || currentTime.compareTo(config.getAccessTokenExpires()) > 0
                 || Objects.isNull(config.getAccessToken())) {
-            String url = WxUrlConst.QY_TOKEN_URL +  "?corpid=" + config.getCropId() + "&corpsecret=" + config.getSecret();
+            String url = WxUrlConst.QY_TOKEN_URL + "?corpid=" + config.getCorpId() + "&corpsecret=" + config.getSecret();
             String responseStr = restTemplate.getForObject(url, String.class);
 
-            Map<String, Object> response = (Map<String,Object>) JsonUtils.readValue(responseStr, Map.class);
+            Map<String, Object> response = (Map<String, Object>) JsonUtils.readValue(responseStr, Map.class);
 
             String errcode = response.get("errcode") == null ? "" : response.get("errcode").toString();
             String errmsg = response.get("errmsg") == null ? "" : response.get("errmsg").toString();
@@ -140,7 +131,6 @@ public class WxUtils {
     }
 
 
-
     public WxConfig setJsapiTicket(WxConfig config) {
         String currentTime = DateTool.getCurrentTime("yyyyMMddHHmmss");
         if (StringUtils.isBlank(config.getAccessToken())) {
@@ -154,13 +144,13 @@ public class WxUtils {
         if (Objects.isNull(config.getJsapiTicketExpires())
                 || currentTime.compareTo(config.getJsapiTicketExpires()) > 0
                 || Objects.isNull(config.getJsapiTicket())) {
-            String url = WxUrlConst.QY_TICKET_URL +  "?access_token=" + config.getAccessToken();
+            String url = WxUrlConst.QY_TICKET_URL + "?access_token=" + config.getAccessToken();
             if (log.isInfoEnabled()) {
                 log.info("WxUtils -- setJsapiTicket -- url = {}", url);
             }
             String responseStr = restTemplate.getForObject(url, String.class);
 
-            Map<String, Object> response = (Map<String,Object>) JsonUtils.readValue(responseStr, Map.class);
+            Map<String, Object> response = (Map<String, Object>) JsonUtils.readValue(responseStr, Map.class);
 
             String errcode = response.get("errcode") == null ? "" : response.get("errcode").toString();
             String errmsg = response.get("errmsg") == null ? "" : response.get("errmsg").toString();
@@ -184,13 +174,11 @@ public class WxUtils {
     }
 
 
-
-
     /**
      * 获取微信用户信息
-     *
+     * <p>
      * 返回结果格式如下：
-     *      <pre>
+     * <pre>
      *        {
      *           "wxUserId": "",
      *           "wxDeviceId": "",
@@ -200,7 +188,7 @@ public class WxUtils {
      *      </pre>
      *
      * @param config WxConfig
-     * @param code 身份码
+     * @param code   身份码
      * @return
      */
     public Map<String, Object> getWxUserInfo(WxConfig config, String code) {
@@ -213,7 +201,7 @@ public class WxUtils {
             log.info("WxUtils -- getWxUserInfo -- responseStr = {}", responseStr);
         }
 
-        Map<String, Object> response = (Map<String,Object>) JsonUtils.readValue(responseStr, Map.class);
+        Map<String, Object> response = (Map<String, Object>) JsonUtils.readValue(responseStr, Map.class);
         if (MapUtils.isNotEmpty(response)) {
             String errcode = response.get("errcode") == null ? "" : response.get("errcode").toString();
             String errmsg = response.get("errmsg") == null ? "" : response.get("errmsg").toString();
@@ -233,7 +221,7 @@ public class WxUtils {
                     if (log.isInfoEnabled()) {
                         log.info("WxUtils -- getWxUserInfo -- responseStr2 = {}", responseStr);
                     }
-                    response = (Map<String,Object>) JsonUtils.readValue(responseStr, Map.class);
+                    response = (Map<String, Object>) JsonUtils.readValue(responseStr, Map.class);
                     if (MapUtils.isNotEmpty(response)) {
                         errcode = response.get("errcode") == null ? "" : response.get("errcode").toString();
                         if ("0".equals(errcode)) {
@@ -249,10 +237,10 @@ public class WxUtils {
     }
 
 
-
     /**
      * 发送企业微信消息（注意：本公共方法只负责推送，消息体需要自己进行组织）
-     * @param config WxConfig
+     *
+     * @param config     WxConfig
      * @param jsonString 消息体，具体参考https://developer.work.weixin.qq.com/document/path/90236
      * @return boolean
      */
@@ -265,7 +253,7 @@ public class WxUtils {
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
         String responseStr = responseEntity.getBody();
 
-        Map<String, Object> response = (Map<String,Object>) JsonUtils.readValue(responseStr, Map.class);
+        Map<String, Object> response = (Map<String, Object>) JsonUtils.readValue(responseStr, Map.class);
 
         if (MapUtils.isNotEmpty(response)) {
             String errcode = response.get("errcode") == null ? "" : response.get("errcode").toString();
