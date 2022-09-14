@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liuxingyu01
@@ -74,6 +75,9 @@ public class TenantAuthenticeInterceptor implements HandlerInterceptor {
             responseError(request, response);
             return false;
         }
+        // 刷新会话缓存时长
+        redisTemplate.expire(SystemConst.SYSTEM_TENANT_KEY + ":" + token, 1800, TimeUnit.SECONDS);
+
         TenantHolder.setTenant(tenantInfo);
 
         // 合格不需要拦截，放行
