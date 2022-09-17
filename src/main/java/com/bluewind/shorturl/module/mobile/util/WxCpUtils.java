@@ -60,7 +60,7 @@ public class WxCpUtils {
         }
         // redisCache取不到的话，则从数据库中查一遍试试
         if (Objects.isNull(config) || Objects.isNull(config.getConfigId())) {
-            String sql = "select * from s_wx_config where corp_id = ? and agent_id = ? and status = '01'";
+            String sql = "select * from s_wx_cp_config where corp_id = ? and agent_id = ? and status = '01'";
             List<WxCpConfig> list = jdbcTemplate.query(sql, new Object[]{corpId, agentId}, new BeanPropertyRowMapper<WxCpConfig>(WxCpConfig.class));
             if (CollectionUtils.isNotEmpty(list)) {
                 config = list.get(0);

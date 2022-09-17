@@ -41,4 +41,10 @@ public class SystemConst {
      * 企业微信缓存配置信息 redis key
      */
     public static final String WX_CONFIG_KEY = "bluewind-shorturl:wx_config";
+
+
+    /**
+     * 钉钉缓存配置信息 redis key
+     */
+    public static final String DD_CONFIG_KEY = "bluewind-shorturl:dd_config";
 }

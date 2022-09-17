@@ -33,8 +33,8 @@ public class NavigationDaoImpl {
         sql.append("fun.function_name, ");
         sql.append("fun.function_url, ");
         sql.append("fun.function_icon ");
-        sql.append("from s_wx_function fun ");
-        sql.append("join s_wx_module md on md.module_id = fun.module_id ");
+        sql.append("from s_mobile_function fun ");
+        sql.append("join s_mobile_module md on md.module_id = fun.module_id ");
         sql.append("where fun.status = '0' ");
         sql.append("and md.status = '0' ");
         sql.append("order by md.seq, fun.seq ");
