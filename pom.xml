@@ -51,7 +51,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <version>8.0.22</version>
         </dependency>
         <!-- jfnal-activerecord数据库Orm-->
         <dependency>
@@ -104,7 +104,14 @@
             <artifactId>dysmsapi20170525</artifactId>
             <version>2.0.4</version>
         </dependency>
-
+        <!-- 钉钉能力支持依赖 -->
+        <dependency>
+            <groupId>taobao-sdk-java-auto</groupId>
+            <artifactId>taobao-sdk-java-auto</artifactId>
+            <version>20220906</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/taobao-sdk-java-auto-20220906.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
@@ -112,8 +119,21 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>aliyun</id>
+            <name>aliyun Repository</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>
