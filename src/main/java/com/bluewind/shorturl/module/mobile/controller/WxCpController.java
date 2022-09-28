@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author liuxingyu01
  * @date 2022-09-06 19:15
- * @description
+ * @description 企业微信公共请求Controller
  **/
 @RestController
 @RequestMapping("/mobile/wxcp")
@@ -254,46 +254,7 @@ public class WxCpController {
     }
 
 
-    @LogAround("获取微信js-api配置参数")
-    @PostMapping("/jsConfig")
-    @ResponseBody
-    public Result jsConfig(@RequestParam(value = "appType") String appType,
-                           @RequestParam(value = "appId") String appId,
-                           @RequestParam(value = "agentId") String agentId,
-                           @RequestParam(required = true, defaultValue = "", value = "url") String url) {
-        if (log.isInfoEnabled()) {
-            log.info("WxController -- jsConfig -- appType=" + appType + ",appId=" + appId + ",agentId=" + agentId + ",url=" + url);
-        }
-        WxCpConfig wxCpConfig = wxCpUtils.getWxConfig(appId, agentId);
-        String jsapiTicket = wxCpConfig.getJsapiTicket();
-        try {
-            url = URLDecoder.decode(url, "UTF-8");     //解码
-        } catch (UnsupportedEncodingException e) {
-            if (log.isErrorEnabled()) {
-                log.error("WxController -- jsConfig -- URLDecoder ERROR=" + e);
-            }
-        }
-        Map<String, String> resultMap = new HashMap<>();
-        // 获取随机码 时间戳
-        String noncestr = UUID.randomUUID().toString().replace("-", "").substring(0, 16);// 随机字符串16位
-        String timestamp = String.valueOf(System.currentTimeMillis() / 1000);//时间戳
-        resultMap.put("appid", appId);
-        resultMap.put("ticket", jsapiTicket);
-        resultMap.put("noncestr", noncestr);
-        resultMap.put("timestamp", timestamp);
-        // 将参数排序并拼接字符串appid
-        String str = "jsapi_ticket=" + jsapiTicket + "&noncestr=" + noncestr + "&timestamp=" + timestamp + "&url=" + url;
-        if (log.isInfoEnabled()) {
-            log.info("WxController -- jsConfig -- sha1加密前= {}", str);
-        }
-        // 将字符串进行sha1加密
-        String signature = wxCpUtils.SHA1(str);
-        if (log.isInfoEnabled()) {
-            log.info("WxController -- jsConfig -- sha1加密后= {}", signature);
-        }
-        resultMap.put("signature", signature);
 
-        return Result.ok("获取微信jsConfig信息成功", resultMap);
-    }
+
 
 }
