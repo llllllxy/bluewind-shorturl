@@ -1,6 +1,8 @@
 package com.bluewind.shorturl.common.base;
 
 import com.bluewind.shorturl.common.consts.HttpStatus;
+import org.slf4j.MDC;
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +15,8 @@ public class Result implements Serializable {
     private Integer code;
     private String msg;
     private Object data;
+
+    private String traceId;
 
     public Integer getCode() {
         return code;
@@ -38,15 +42,25 @@ public class Result implements Serializable {
         this.data = data;
     }
 
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
+
     public Result(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
+        this.traceId = MDC.get("traceId");
     }
 
     public Result(Integer code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
+        this.traceId = MDC.get("traceId");
     }
 
     public static Result ok(String msg, Object data) {
