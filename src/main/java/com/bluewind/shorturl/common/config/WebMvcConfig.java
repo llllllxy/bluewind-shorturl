@@ -1,5 +1,6 @@
 package com.bluewind.shorturl.common.config;
 
+import com.bluewind.shorturl.common.config.logtracking.TraceIdInterceptor;
 import com.bluewind.shorturl.common.config.security.TenantAuthenticeInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private AccessLimitInterceptor accessLimitInterceptor;
+
+    @Autowired
+    private TraceIdInterceptor traceIdInterceptor;
 
     @Autowired
     private TenantAuthenticeInterceptor tenantAuthenticeInterceptor;
@@ -53,6 +57,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         // 注册限流拦截器
         registry.addInterceptor(accessLimitInterceptor)
+                .addPathPatterns("/**");
+
+        // 注册traceId拦截器
+        registry.addInterceptor(traceIdInterceptor)
                 .addPathPatterns("/**");
     }
 
