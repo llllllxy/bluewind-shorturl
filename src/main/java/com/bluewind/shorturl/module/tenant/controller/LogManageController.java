@@ -38,7 +38,7 @@ public class LogManageController extends BaseController {
 
     @LogAround("访问日志列表分页查询")
     @ResponseBody
-    @PostMapping(value="/list")
+    @PostMapping(value = "/list")
     public Result list(@RequestParam("pageSize") Integer pageSize,
                        @RequestParam("pageNumber") Integer pageNumber,
                        @RequestParam(required = false, defaultValue = "", value = "surl") String surl,
@@ -47,7 +47,7 @@ public class LogManageController extends BaseController {
                        @RequestParam(required = false, defaultValue = "", value = "accessIp") String accessIp,
                        @RequestParam("sortName") String sortName,
                        @RequestParam("sortOrder") String sortOrder) {
-        Page page = logManageService.getPage(pageSize, pageNumber, surl, startTime, endTime, accessIp ,sortName, sortOrder);
+        Page page = logManageService.getPage(pageSize, pageNumber, surl, startTime, endTime, accessIp, sortName, sortOrder);
 
         Map<String, Object> result = new HashMap<>();
         result.put(RESULT_ROWS, page.getRecords());
@@ -68,7 +68,7 @@ public class LogManageController extends BaseController {
 
     @LogAround("访问日志导出本页Excel")
     @ResponseBody
-    @PostMapping(value="/exportPage")
+    @PostMapping(value = "/exportPage")
     public void exportPage(@RequestBody String data, HttpServletResponse response) {
         List<Map> logInfoList = JsonUtils.readArrayValue(data, Map.class);
 
@@ -76,19 +76,17 @@ public class LogManageController extends BaseController {
 
         for (Map logInfo : logInfoList) {
             Map<String, String> map = new HashMap<>();
-            map.put("日志ID", logInfo.get("log_id").toString());
-            map.put("短链", logInfo.get("surl").toString());
-            map.put("访问时间", logInfo.get("access_time").toString());
-            map.put("访问IP", logInfo.get("access_ip").toString());
-            map.put("userAgent", logInfo.get("access_user_agent").toString());
-            map.put("创建时间", logInfo.get("created_at").toString());
+            map.put("日志ID", Optional.ofNullable(logInfo.get("log_id")).orElse("").toString());
+            map.put("短链", Optional.ofNullable(logInfo.get("surl")).orElse("").toString());
+            map.put("访问时间", Optional.ofNullable(logInfo.get("access_time")).orElse("").toString());
+            map.put("访问IP", Optional.ofNullable(logInfo.get("access_ip")).orElse("").toString());
+            map.put("userAgent", Optional.ofNullable(logInfo.get("access_user_agent")).orElse("").toString());
+            map.put("创建时间", Optional.ofNullable(logInfo.get("created_at")).orElse("").toString());
             list.add(map);
         }
         List<String> listName = Arrays.asList("日志ID", "短链", "访问时间", "访问IP", "userAgent", "创建时间");
 
         ExcelPoiUtil.excelPort("访问日志", listName, list, null, response);
-
     }
-
 
 }
