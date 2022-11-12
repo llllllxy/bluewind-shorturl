@@ -1,6 +1,5 @@
 package com.bluewind.shorturl.module.api.controller;
 
-
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.config.filter.ApiFilterHolder;
@@ -15,9 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.net.URLDecoder;
-import java.net.UnknownHostException;
 
 @RestController
 @RequestMapping("/api")
@@ -48,7 +45,7 @@ public class ApiController {
     @ResponseBody
     public Result generate(@RequestParam String originalUrl,
                            @RequestParam(required = false, defaultValue = "0", value = "status") String status,
-                           @RequestParam(required = false, defaultValue = "20991231235959", value = "expireDate") String expireDate) throws UnknownHostException, UnsupportedEncodingException {
+                           @RequestParam(required = false, defaultValue = "20991231235959", value = "expireDate") String expireDate) throws UnsupportedEncodingException {
         if (!DateTool.checkFormat(expireDate, "yyyyMMddHHmmss")) {
             return Result.error("参数expireDate请传入正确的时间格式");
         }
@@ -63,9 +60,7 @@ public class ApiController {
 
         String tenantId = ApiFilterHolder.getTenantId();
         String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId, status, "租户API调用生成");
-        String host = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"
-                + env.getProperty("server.port")
-                + "/";
+        String host = env.getProperty("bluewind.inet-address");
         return Result.ok("请求成功", host + shortURL);
     }
 

@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +81,7 @@ public class ShortUrlController {
     @ResponseBody
     public Result generate(@RequestParam(value = "originalUrl") String originalUrl,
                            @RequestParam(value = "tenantId") String tenantId,
-                           @RequestParam(required = false, defaultValue = "sevenday", value = "validityPeriod") String validityPeriod) throws UnknownHostException {
+                           @RequestParam(required = false, defaultValue = "sevenday", value = "validityPeriod") String validityPeriod) {
         if (StringUtils.isEmpty(tenantId)) {
             return Result.error("租户ID不能为空，请检查请求参数");
         }
@@ -108,9 +106,8 @@ public class ShortUrlController {
             }
 
             String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId, "0", "门户平台生成");
-            String host = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"
-                    + env.getProperty("server.port")
-                    + "/";
+            String host =  env.getProperty("bluewind.inet-address");
+
             return Result.ok("请求成功", host + shortURL);
         }
         return Result.error("请输入正确的网址链接，注意以http://或https://开头");
