@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author liuxingyu01
  * @date 2022-09-07 12:48
- * @description
+ * @description 企业微信组件首页导航菜单获取Controller
  **/
 @RestController
 @RequestMapping("/mobile")
