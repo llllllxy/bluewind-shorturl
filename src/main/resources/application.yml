@@ -1,11 +1,13 @@
 # 项目相关配置
 bluewind:
   # 名称
-  name: bluewind-boot
+  name: bluewind-shorturl
   # 版本
   version: 1.0.0
   # 数据库类型
   db-type: mysql
+  # 短链域名/外网ip
+  inet-address: http://127.0.0.1:${server.port}/
 
 server:
   port: 8076
@@ -30,7 +32,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://rm-.mysql.rds.aliyuncs.com:3306/bluewind-shorturl?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
     username: root
-    password: Zid&P#X0
+    password: e#Zid&P#X0
     druid:
       initialSize: 5
       minIdle: 10
@@ -81,7 +83,7 @@ spring:
   redis:
     host: 127.0.0.1 # Redis服务器地址
     port: 6379 # Redis服务器连接端口
-    password: Xingxing9725 # Redis服务器连接密码（默认为空）
+    password: 222222 # Redis服务器连接密码（默认为空）
     database: 0 #Redis数据库索引（默认为0）
     timeout: 500 # 连接超时时间（毫秒）
     lettuce:
@@ -90,8 +92,6 @@ spring:
         max-idle: 20 # 连接池中的最大空闲连接
         max-wait: 5000 # 连接池最大阻塞等待时间（使用负值表示没有限制）
         min-idle: 5 # 连接池中的最小空闲连接
-  session:
-    store-type: redis
 
 logging:
   level:
@@ -114,5 +114,5 @@ hash:
 
 # 阿里云短信的配置
 sms:
-  accessKeyId: ALVvJ1
-  accessKeySecret: fLXxe9z610FsU
+  accessKeyId: xxxxxxxxxxxxxxxxxxxxx
+  accessKeySecret: xxxxxxxxxxxxxxxxxxxxx
