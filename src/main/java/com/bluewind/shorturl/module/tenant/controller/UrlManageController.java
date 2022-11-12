@@ -11,6 +11,7 @@ import com.bluewind.shorturl.module.tenant.service.UrlManageServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,10 +40,15 @@ public class UrlManageController extends BaseController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private Environment env;
+
 
     @LogAround("跳转到短链列表查询页")
     @GetMapping("/index")
     public String index(Model model) {
+        String inetAddress = env.getProperty("bluewind.inet-address");
+        model.addAttribute("inetAddress", inetAddress);
         return "tenant/url/index";
     }
 
