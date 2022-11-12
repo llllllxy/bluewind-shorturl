@@ -216,6 +216,10 @@ function initTable(options) {
                 };
             }
         },
+        onLoadSuccess: function(data) {
+            // onLoadSuccess后，生效所有tooltip
+            $("[data-toggle='tooltip']").tooltip();
+        },
         //数据列
         columns: options.columns
     });
