@@ -31,7 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        // 配置需要拦截上下文列表
+        // 配置需要拦截上下文列表（除了配置的这些，剩下的都不拦）
         // PC端租户管理开始
         List<String> tenantIncludePaths = new ArrayList<>();
         tenantIncludePaths.add("/tenant/index"); // 租户首页
