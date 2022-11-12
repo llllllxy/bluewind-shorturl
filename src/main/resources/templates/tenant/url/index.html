@@ -16,6 +16,14 @@
     <link th:href="@{/js/layer/theme/layer.min.css}" rel="stylesheet">
     <!--日期选择插件-->
     <link rel="stylesheet" th:href="@{/js/bootstrap-datepicker/bootstrap-datepicker3.min.css}">
+
+    <style>
+        .copy-btn {
+            text-decoration: underline;
+            color: #3ACCBE;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -86,6 +94,8 @@
 <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
 <!--消息提醒插件-->
 <script type="text/javascript" th:src="@{/js/coco-message/coco-message.js}"></script>
+<!--复制到粘贴板插件-->
+<script type="text/javascript" th:src="@{/js/clipboard.min.js}"></script>
 <!--表格插件-->
 <script type="text/javascript" th:src="@{/js/bootstrap-table/bootstrap-table.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap-table/bootstrap-table-zh-CN.min.js}"></script>
@@ -126,7 +136,15 @@
                 sortable: true
             }, {
                 title: "短链",
-                field: "surl"
+                field: "surl",
+                formatter: function(value, row, index) {
+                    return '<span title="点击复制" data-toggle="tooltip" class="copy-btn">' + value + '</span>';
+                },
+                events: {
+                    'click .copy-btn': function (event, value, row, index) {
+                        copy(event, value);
+                    }
+                }
             }, {
                 title: "原始链接",
                 field: "lurl",
@@ -165,6 +183,7 @@
                 field: "empty",
                 align: "center",
                 halign: "center",
+                width: 180,
                 formatter: function (value, row, index) {
                     var operateHtml = '<a class="btn btn-primary btn-xs m-r-5" type="button" onclick="edit(\'' + row.id + '\')"> <i class="mdi mdi-pencil"></i>修改</a>'
                      + '<a class="btn btn-danger btn-xs" type="button" onclick="del(\'' + row.id + '\')"><i class="mdi mdi-window-close"></i>删除</a>';
@@ -348,6 +367,26 @@
         });
     }
 
+    function copy(event, value) {
+        console.log(value);
+        let inetAddress = [[${inetAddress}]];
+        handleClipboard(inetAddress + value, event)
+    }
+
+    function handleClipboard(text, event) {
+        const clipboard = new ClipboardJS(event.target, {
+            text: () => text
+        });
+        clipboard.on('success', () => {
+            Message.success(1000, '已复制到粘贴板');
+            clipboard.destroy();
+        });
+        clipboard.on('error', () => {
+            Message.error("Copy error！", 1000);
+            clipboard.destroy();
+        });
+        clipboard.onClick(event);
+    }
 </script>
 </body>
 </html>
