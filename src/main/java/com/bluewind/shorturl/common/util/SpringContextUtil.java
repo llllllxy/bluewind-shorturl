@@ -37,7 +37,7 @@ public class SpringContextUtil implements ApplicationContextAware {
     /**
      * 根据bean名称获取指定类型bean
      * @param beanName bean名称
-     * @param clazz 返回的bean类型,若类型不匹配,将抛出异常
+     * @param clazz 返回的bean类型,若类型不匹配,将抛出异常(可传接口类)
      */
     public static <T> T getBean(String beanName, Class<T> clazz) {
         return context.getBean(beanName, clazz);
