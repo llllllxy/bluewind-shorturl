@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * @author liuxingyu01
+ * @date 2022-05-18 11:27
+ * @description 数据统计控制器
+ **/
 @Controller
 @RequestMapping("/tenant/statistic")
 public class StatisticController extends BaseController {
