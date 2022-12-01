@@ -98,12 +98,11 @@ public class ApiController {
         String tenantId = ApiFilterHolder.getTenantId();
         int num = apiService.expire(shortUrl, expireDate, tenantId);
         if (num > 0) {
-
             // 删除redis里的缓存
             try {
                 redisTemplate.delete(shortUrl);
             } catch (Exception e) {
-                logger.error("UrlManageController -- edit -- Exception= {e}", e);
+                logger.error("ApiController -- expire -- Exception= {e}", e);
             }
             return Result.ok("更改短链失效时间" + shortUrl + "成功，更新后为：" + expireDate + "");
         }
