@@ -42,7 +42,7 @@ public class HashUtils {
      * @param str Base62编码
      * @return long
      */
-    public static long toBase10(String str) {
+    public static long toInt10(String str) {
         long result = 0;
         for (int i = 0; i < str.length(); i++) {
             result = result * SIZE + new String(CHARS).indexOf(str.charAt(i));
