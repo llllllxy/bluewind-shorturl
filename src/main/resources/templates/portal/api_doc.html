@@ -167,10 +167,10 @@
                 <div class="wrap">
                     <div class="block">
                         <div class="hd">
-                            <el-link type="primary" @click="toggle('generate')">1、生成接口</el-link>
-                            <el-link type="primary" @click="toggle('enable')">2、启用接口</el-link>
-                            <el-link type="primary" @click="toggle('disable')">3、禁用接口</el-link>
-                            <el-link type="primary" @click="toggle('update')">4、更新失效时间接口</el-link>
+                            <el-link type="primary" @click="toggle('generate')" icon="el-icon-circle-plus-outline">生成短链&nbsp;&nbsp;</el-link>
+                            <el-link type="primary" @click="toggle('enable')" icon="el-icon-check">启用短链&nbsp;&nbsp;</el-link>
+                            <el-link type="primary" @click="toggle('disable')" icon="el-icon-close">禁用短链&nbsp;&nbsp;</el-link>
+                            <el-link type="primary" @click="toggle('update')" icon="el-icon-time">更新短链失效时间&nbsp;&nbsp;</el-link>
                         </div>
                     </div>
                     <!-- 生成接口div此处开始结束 -->
@@ -716,7 +716,6 @@
         el: '#app',
         data: function () {
             return {
-                message: 'Hello Vue.js!',
                 activeIndex: 'apidoc',
 
                 showGenerate: true,
