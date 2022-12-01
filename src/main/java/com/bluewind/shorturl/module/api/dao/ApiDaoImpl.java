@@ -16,7 +16,7 @@ public class ApiDaoImpl {
 
     public Map<String, Object> getConfigData(String accessKey) {
         try {
-            String sql = "select tenant_id, tenant_account, access_key, access_key_secret from s_tenant where access_key = ?";
+            String sql = "select tenant_id, tenant_account, access_key, access_key_secret, expire_date, check_ip, allow_ip from s_tenant where access_key = ?";
             Map<String, Object> result = jdbcTemplate.queryForMap(sql, accessKey);
             return result;
         } catch (EmptyResultDataAccessException e) {

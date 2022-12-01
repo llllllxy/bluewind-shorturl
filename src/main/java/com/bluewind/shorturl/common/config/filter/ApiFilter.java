@@ -4,6 +4,7 @@ import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.consts.HttpStatus;
 import com.bluewind.shorturl.common.util.DateTool;
 import com.bluewind.shorturl.common.util.JsonUtils;
+import com.bluewind.shorturl.common.util.web.RequestUtil;
 import com.bluewind.shorturl.module.api.service.ApiServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -18,9 +19,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author liuxingyu01
@@ -28,8 +29,8 @@ import java.util.concurrent.TimeUnit;
  * @description 第三方开放接口安全过滤器
  **/
 @WebFilter(filterName = "ApiFilter",
-           urlPatterns = {"/api/*"},
-           dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
+        urlPatterns = {"/api/*"},
+        dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
 public class ApiFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(ApiFilter.class);
 
@@ -95,7 +96,7 @@ public class ApiFilter implements Filter {
                 configMap = apiServiceImpl.getConfigData(access_key);
                 if (configMap != null && !configMap.isEmpty()) {
                     // 缓存到redis中，减小数据库压力
-                    redisTemplate.opsForValue().set(TENANT_API_CONFIG + ":" + access_key, JsonUtils.writeValueAsString(configMap) , 300, TimeUnit.SECONDS );
+                    redisTemplate.opsForValue().set(TENANT_API_CONFIG + ":" + access_key, JsonUtils.writeValueAsString(configMap), 300, TimeUnit.SECONDS);
                 }
             }
             if (configMap != null && !configMap.isEmpty()) {
@@ -106,7 +107,32 @@ public class ApiFilter implements Filter {
                     outWrite(response, "signature不正确，认证未通过!");
                     return;
                 }
-                // 全部验证通过，放入ThreadLocal
+
+                // 判断是否在`ip`白名单
+                String check_ip = Optional.ofNullable(configMap.get("check_ip")).orElse("").toString();
+                if ("1".equals(check_ip)) {
+                    String allow_ip = Optional.ofNullable(configMap.get("allow_ip")).orElse("").toString();
+                    List<String> ipList = Arrays.stream(allow_ip.split(",")).collect(Collectors.toList());
+
+                    String ipAddr = RequestUtil.getIpAddr(httpRequest);
+                    if (StringUtils.isBlank(ipAddr) || !ipList.contains(ipAddr)) {
+                        outWrite(response, "IP地址不允许，认证未通过!");
+                        return;
+                    }
+                }
+
+                // 判断密钥是否过期
+                String expireDate = Optional.ofNullable(configMap.get("expire_date")).orElse("").toString();
+                if (StringUtils.isNotBlank(expireDate)) {
+                    // 获取今天日期
+                    String today = DateTool.getToday("yyyyMMdd");
+                    if (expireDate.compareTo(today) < 0) { // 有效期小于今天，那就过期了呀，不允许调用
+                        outWrite(response, "您的密钥已过有效期，认证未通过!");
+                        return;
+                    }
+                }
+
+                // 全部验证通过，放入ThreadLocal缓存
                 ApiFilterHolder.set(configMap);
                 chain.doFilter(request, response);
             } else {
@@ -138,7 +164,7 @@ public class ApiFilter implements Filter {
 
 
     public void outWrite(ServletResponse response, String message) throws IOException {
-        Result result = Result.create(HttpStatus.ERROR, message);
+        Result result = Result.create(HttpStatus.UNAUTHORIZED, message);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
