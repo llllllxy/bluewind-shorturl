@@ -38,6 +38,7 @@ public class HashUtils {
 
     /**
      * Base62编码转十进制数字
+     *
      * @param str Base62编码
      * @return long
      */
@@ -51,12 +52,13 @@ public class HashUtils {
 
     /**
      * 使用MurmurHash对url进行hash
+     *
      * @param str 需要hash的字符串
+     * @return hash值的Base62编码
      * @description 这里使用 Google 出品的 MurmurHash 算法。
      *              MurmurHash 是一种非加密型哈希函数，适用于一般的哈希检索操作。
      *              与其它流行的哈希函数相比，对于规律性较强的 key，MurmurHash 的随机分布特征表现更良好。
      *              非加密意味着着相比 MD5，SHA 这些函数它的性能肯定更高（实际上性能是 MD5 等加密算法的十倍以上）
-     * @return hash值的Base62编码
      */
     public static String hashToBase62(String str) {
         int i = Hashing.murmur3_32_fixed().hashString(str, StandardCharsets.UTF_8).asInt();
@@ -67,6 +69,7 @@ public class HashUtils {
 
     /**
      * 测试类
+     *
      * @param args
      */
     public static void main(String[] args) {
