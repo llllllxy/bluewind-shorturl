@@ -2,7 +2,6 @@ package com.bluewind.shorturl.module.tenant.controller;
 
 import com.bluewind.shorturl.common.annotation.LogAround;
 import com.bluewind.shorturl.common.base.BaseController;
-import com.bluewind.shorturl.common.config.security.TenantHolder;
 import com.bluewind.shorturl.module.tenant.service.DashboardServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
