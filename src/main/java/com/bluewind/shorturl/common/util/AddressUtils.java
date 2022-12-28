@@ -38,8 +38,6 @@ public class AddressUtils {
      * @return 地理位置信息
      */
     public static String getAddressByIP(String ip) {
-        ip = "42.192.52.63";
-
         if (StringUtils.isBlank(ip)) {
             return "ip为空，无法获取位置";
         }

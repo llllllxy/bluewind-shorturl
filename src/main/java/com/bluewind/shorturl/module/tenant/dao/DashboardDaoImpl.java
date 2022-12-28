@@ -45,7 +45,7 @@ public class DashboardDaoImpl {
     }
 
     public int getUrlTotalNumber(String tenantId) {
-        String sql = "select count(id) from s_url_map where tenant_id = ?";
+        String sql = "select count(id) from s_url_map where tenant_id = ? and del_flag = '0'";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, tenantId);
         return count;
     }
