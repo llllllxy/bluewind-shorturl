@@ -33,8 +33,4 @@ public class DashboardController extends BaseController {
         return "tenant/dashboard/index";
     }
 
-
-
-
-
 }
