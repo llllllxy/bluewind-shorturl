@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liuxingyu01
@@ -106,7 +104,7 @@ public class ShortUrlController {
             }
 
             String shortURL = shortUrlServiceImpl.generateUrlMap(originalUrl, expireDate, tenantId, "0", "门户平台生成");
-            String host =  env.getProperty("bluewind.inet-address");
+            String host = env.getProperty("bluewind.inet-address");
 
             return Result.ok("请求成功", host + shortURL);
         }
@@ -119,31 +117,30 @@ public class ShortUrlController {
     public String redirect(@PathVariable String shortURL, HttpServletRequest request) {
         // 根据断链，获取原始url
         Map<String, String> urlDataMap = shortUrlServiceImpl.getOriginalUrlByShortUrl(shortURL);
-        if (urlDataMap != null && !urlDataMap.isEmpty()) {
-            String originalURL = urlDataMap.get("originalURL") == null ? "" : urlDataMap.get("originalURL");
-            String expireDate = urlDataMap.get("expireDate") == null ? "" : urlDataMap.get("expireDate");
-            String tenantId = urlDataMap.get("tenantId") == null ? "" : urlDataMap.get("tenantId");
 
-            String nowTime = DateTool.getCurrentTime("yyyyMMddHHmmss");
-
-            if (StringUtils.isNotBlank(expireDate)) {
-                // 有效期小于今天，说明过期了，拉倒了，不让访问
-                if (expireDate.compareTo(nowTime) < 0) {
-                    // 短链过期了，则直接返回过期页面
-                    return "redirect:/expirePage";
-                } else {
-                    shortUrlServiceImpl.updateUrlViews(request, shortURL, tenantId);
-                    // 查询到对应的原始链接，302重定向
-                    return "redirect:" + originalURL;
-                }
-            } else {
-                // 取不到时间，也算短链过期了，则直接返回过期页面
-                return "redirect:/expirePage";
-            }
-        } else {
-            // 没有对应的原始链接，则直接返回404页
+        // 没有对应的原始链接，则直接返回404页
+        if (Objects.isNull(urlDataMap) || urlDataMap.isEmpty()) {
             return "redirect:/notFound";
         }
+
+        String originalURL = Optional.ofNullable(urlDataMap.get("originalURL")).orElse("");
+        String expireDate = Optional.ofNullable(urlDataMap.get("expireDate")).orElse("");
+        String tenantId = Optional.ofNullable(urlDataMap.get("tenantId")).orElse("");
+        String nowTime = DateTool.getCurrentTime("yyyyMMddHHmmss");
+
+        // 取不到expireDate，也算短链过期了，则直接返回过期页面
+        if (StringUtils.isBlank(expireDate)) {
+            return "redirect:/expirePage";
+        }
+
+        // 有效期小于今天，说明过期了，拉倒了，不让访问，则直接返回过期页面
+        if (expireDate.compareTo(nowTime) < 0) {
+            return "redirect:/expirePage";
+        }
+
+        // 查询到对应的原始链接，先记录访问日志，然后302重定向到原地址
+        shortUrlServiceImpl.updateUrlViews(request, shortURL, tenantId);
+        return "redirect:" + originalURL;
     }
 
 

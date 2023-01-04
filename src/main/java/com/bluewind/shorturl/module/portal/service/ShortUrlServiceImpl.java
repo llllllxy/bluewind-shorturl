@@ -42,7 +42,6 @@ public class ShortUrlServiceImpl {
     // 最近使用的短链接缓存过期时间(分钟)
     private static final long TIMEOUT = 10;
 
-
     // 布隆过滤器预计要插入多少数据
     private static final int SIZE = 1000000;
 
