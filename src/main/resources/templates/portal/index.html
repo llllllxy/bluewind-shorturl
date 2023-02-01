@@ -41,10 +41,10 @@
                     <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect"
                              background-color="#00162A" text-color="#fff" active-text-color="#ffd04b">
                         <el-menu-item index="index">
-                            <span style="font-weight: bold">主页</span>
+                            <span style="font-weight: bold">首页</span>
                         </el-menu-item>
                         <el-menu-item index="apidoc">
-                            <span style="font-weight: bold">API接口</span>
+                            <span style="font-weight: bold">API文档</span>
                         </el-menu-item>
                         <el-menu-item index="about">
                             <span style="font-weight: bold">关于我们</span>
@@ -53,7 +53,7 @@
                 </el-col>
 
                 <el-col :span="2" style="padding-top: 12px">
-                    <el-button size="medium" round @click="login()">注册/登陆</el-button>
+                    <el-button size="medium" round @click="login()">注册/登录</el-button>
                 </el-col>
             </el-row>
         </el-header>
@@ -83,7 +83,7 @@
                         </el-col>
 
                         <el-col :span="3">
-                            <el-button size="medium" type="primary" @click="generateShortURL()">生成短链接</el-button>
+                            <el-button size="medium" type="primary" @click="generateShortURL()" :loading="generating">{{generateButtonText}}</el-button>
                         </el-col>
                     </el-row>
 
@@ -148,7 +148,9 @@
                 shortUrl: '',
                 qrcode: '',
                 ifShowResult: false,
-                activeIndex: 'index'
+                activeIndex: 'index',
+                generateButtonText: '生成短链接',
+                generating: false
             }
         },
         methods: {
@@ -178,7 +180,9 @@
                         this.$message.error('请输入正确的网址链接，注意以http://或https://开头');
                         return;
                     }
-
+                    // 改变按钮为loading状态
+                    this.generateButtonText = '正在生成';
+                    this.generating = true;
                     axios({
                         method: 'post',
                         url: ctx + "generate",
@@ -198,8 +202,14 @@
                         } else {
                             this.$message.error(res.data.msg);
                         }
+                        // 恢复按钮为正常状态
+                        this.generateButtonText = '生成短链接';
+                        this.generating = false;
                     }).catch((res) => {
                         console.log(res);
+                        // 恢复按钮为正常状态
+                        this.generateButtonText = '生成短链接';
+                        this.generating = false;
                     })
                 } else {
                     this.$message.error('请输入要转换的链接');

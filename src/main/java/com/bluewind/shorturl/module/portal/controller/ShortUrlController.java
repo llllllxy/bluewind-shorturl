@@ -74,7 +74,7 @@ public class ShortUrlController {
 
 
     @LogAround("门户短链生成，10秒内只能生成两次短链接，门户免费的，肯定不允许一直免费生成")
-    @AccessLimit(seconds = 10, maxCount = 2, msg = "10秒内只能生成两次短链接")
+    @AccessLimit(seconds = 10, maxCount = 2, msg = "免费用户10秒内只能生成两次短链接")
     @PostMapping("/generate")
     @ResponseBody
     public Result generate(@RequestParam(value = "originalUrl") String originalUrl,

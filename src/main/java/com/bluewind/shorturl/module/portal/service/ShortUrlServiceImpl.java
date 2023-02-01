@@ -56,7 +56,7 @@ public class ShortUrlServiceImpl {
      * 根据短链获取原始链接
      *
      * @param shortURL 短链
-     * @return
+     * @return 原始链接
      */
     public Map<String, String> getOriginalUrlByShortUrl(String shortURL) {
         // 查找Redis中是否有缓存
@@ -94,7 +94,7 @@ public class ShortUrlServiceImpl {
      * 生成并保存短链（一开始是递归，后来改成while循环了）
      *
      * @param originalURL 原始链接
-     * @param expireDate 过期时间
+     * @param expireDate  过期时间
      * @return 生成的短链
      */
     public String generateUrlMap(String originalURL, String expireDate, String tenantId, String status, String note) {
@@ -149,12 +149,13 @@ public class ShortUrlServiceImpl {
         return shortURL;
     }
 
+
     /**
-     * 存入redis
+     * 将生成的短链数据存入redis
      *
-     * @param shortURL 短链
+     * @param shortURL    短链
      * @param originalURL 原始链接
-     * @param expireDate 过期时间
+     * @param expireDate  过期时间
      */
     public void redisSave(String shortURL, String originalURL, String expireDate, String tenantId) {
         Map<String, String> map = new HashMap<>();
@@ -167,18 +168,20 @@ public class ShortUrlServiceImpl {
 
 
     /**
-     * 取出缓存的数据
+     * 取出缓存的短链数据
+     *
      * @param shortURL 短链
-     * @return
+     * @return Map<String, String>
      */
     public Map<String, String> redisGet(String shortURL) {
         String mapString = redisTemplate.opsForValue().get(shortURL);
         if (mapString != null) {
-            return (Map<String,String>) JsonUtils.readValue(mapString, Map.class);
+            return (Map<String, String>) JsonUtils.readValue(mapString, Map.class);
         } else {
             return null;
         }
     }
+
 
     /**
      * 更新访问次数，插入访问日志
