@@ -133,28 +133,28 @@ public class IndexManageController {
 
         // 校验租户状态(用户已失效)
         if ("1".equals(tenantInfo.get("status").toString())) {
-            return Result.error("该租户已被冻结！");
+            return Result.error("该租户账号已被冻结！");
         }
 
         String localPassword = tenantInfo.get("tenant_password").toString();
         password = SHA256Utils.SHA256Encode(salt + password);
 
-        if (localPassword.equals(password)) {
-            logger.info("IndexManageController - doLogin - {}登陆成功！", username);
-            tenantInfo.put("tenant_password", "");
-            // 数据写入redis，登陆成功
-            String token = UUID.randomUUID().toString().replaceAll("-", "");
-            redisTemplate.opsForValue().set(SystemConst.SYSTEM_TENANT_KEY + ":" + token, JsonUtils.writeValueAsString(tenantInfo), 1800, TimeUnit.SECONDS);
-
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put(SystemConst.SYSTEM_TENANT_TOKEN, token);
-            // 将token放在cookie中
-            CookieUtils.setCookie(response, SystemConst.SYSTEM_TENANT_TOKEN, token);
-
-            return Result.ok("登录成功，欢迎回来！", resultMap);
-        } else {
-            return Result.error("密码错误，请重新输入！");
+        if (StringUtils.isEmpty(localPassword) || !localPassword.equals(password)) {
+            return Result.error("用户名或密码错误，请重新输入！");
         }
+
+        logger.info("IndexManageController - doLogin - {}登录成功！", username);
+        tenantInfo.put("tenant_password", "");
+        // 数据写入redis，登录成功
+        String token = UUID.randomUUID().toString().replaceAll("-", "");
+        redisTemplate.opsForValue().set(SystemConst.SYSTEM_TENANT_KEY + ":" + token, JsonUtils.writeValueAsString(tenantInfo), 1800, TimeUnit.SECONDS);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(SystemConst.SYSTEM_TENANT_TOKEN, token);
+        // 将token放在cookie中
+        CookieUtils.setCookie(response, SystemConst.SYSTEM_TENANT_TOKEN, token);
+
+        return Result.ok("登录成功，欢迎回来！", resultMap);
     }
 
 
@@ -276,7 +276,7 @@ public class IndexManageController {
         String token = TenantAuthenticeUtil.getToken(request);
         // 直接删除redis缓存中的会话信息
         redisTemplate.delete(SystemConst.SYSTEM_TENANT_KEY + ":" + token);
-        return Result.ok("退出登陆成功！", null);
+        return Result.ok("退出登录成功！", null);
     }
 
 
