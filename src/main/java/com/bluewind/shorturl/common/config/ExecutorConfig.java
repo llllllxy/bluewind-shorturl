@@ -50,6 +50,7 @@ public class ExecutorConfig {
         executor.setThreadNamePrefix(namePrefix);
         // 等待所有任务结果候再关闭线程池
         executor.setWaitForTasksToCompleteOnShutdown(true);
+        // 任务的等待时间 如果超过这个时间还没有销毁就 强制销毁，以确保应用最后能够被关闭，而不是阻塞住
         executor.setAwaitTerminationSeconds(60);
 
         // 设置拒绝策略
@@ -57,7 +58,7 @@ public class ExecutorConfig {
         // CALLER_RUNS：不在新线程中执行任务，而是有调用者所在的线程来执行
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 
-        // 设置线程装饰器
+        // 设置线程装饰器，这里是为了适配 MDC-traceId
         executor.setTaskDecorator(runnable -> ThreadMdcUtils.wrapAsync(runnable, MDC.getCopyOfContextMap()));
 
         // 执行初始化，初始化 core 线程
