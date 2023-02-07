@@ -32,9 +32,9 @@ public class SystemConst {
     public static final String CAPTCHA_CODE_KEY = "bluewind-shorturl:captcha_codes";
 
     /**
-     * 手机验证码 redis key
+     * 邮箱验证码 redis key
      */
-    public static final String SMS_CODE_KEY = "bluewind-shorturl:sms_codes";
+    public static final String EMAIL_CODE_KEY = "bluewind-shorturl:email_codes";
 
 
     /**

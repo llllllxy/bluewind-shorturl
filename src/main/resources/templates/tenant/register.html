@@ -84,19 +84,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-4 control-label is-required">手机号：</label>
+                    <label class="col-md-4 control-label is-required">邮箱：</label>
                     <div class="col-md-5">
-                        <input type="text" placeholder="请输入手机号" class="form-control" id="tenant_phone" name="tenant_phone" />
+                        <input type="text" placeholder="请输入邮箱账号" class="form-control" id="tenant_email" name="tenant_email" />
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary" type="button" id="sendSms">发送</button>
+                        <button class="btn btn-primary" type="button" id="sendEmail">发送</button>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-md-4 control-label is-required">验证码：</label>
                     <div class="col-md-7">
-                        <input type="text" name="sms_code" class="form-control" placeholder="请输入验证码">
+                        <input type="text" name="email_code" class="form-control" placeholder="请输入验证码">
                     </div>
                 </div>
 
@@ -132,30 +132,30 @@
                 tenant_name: {validators: {notEmpty: {message: '组织团队名称不能为空'}}},
                 tenant_password: {validators: {notEmpty: {message: '密码不能为空'}}},
                 tenant_password2: {validators: {notEmpty: {message: '确认密码不能为空'}}},
-                tenant_phone: {validators: {notEmpty: {message: '手机号不能为空'}}},
-                sms_code: {validators: {notEmpty: {message: '验证码不能为空'}}}
+                tenant_email: {validators: {notEmpty: {message: '邮箱不能为空'}}},
+                email_code: {validators: {notEmpty: {message: '邮箱验证码不能为空'}}}
             }
         });
 
 
-        // 发送短信按钮
-        $("#sendSms").click(function () {
+        // 发送邮箱验证码按钮
+        $("#sendEmail").click(function () {
             var self = $(this);
             // 按钮不可点击态，直接返回
             if (self.hasClass('disabled')) {
                 return false;
             }
 
-            var tenant_phone = $("input[name='tenant_phone']").val();
-            if (!checkTelphone(tenant_phone)) {
-                Message.error("请输入正确的手机号码", 1000);
+            var tenant_email = $("input[name='tenant_email']").val();
+            if (!checkEMail(tenant_email)) {
+                Message.error("请输入正确的邮箱账号", 1000);
                 return false;
             } else {
                 let formdata = {
-                    "tenant_phone": tenant_phone,
+                    "tenant_email": tenant_email,
                 }
                 AjaxUtil.post({
-                    url: AjaxUtil.ctx + "tenant/sendSms",
+                    url: AjaxUtil.ctx + "tenant/sendEmail",
                     data: formdata,
                     success: function (res) {
                         if (res.code === 200) {
@@ -190,13 +190,13 @@
             var bv = $('#loginForm').data('bootstrapValidator');
             bv.validate();
             if (bv.isValid()) {
-                // 不直接走form.submit()，登陆走ajax比较合
+                // 不直接走form.submit()，登录走ajax比较合
                 let tenantAccount = $("input[name='tenant_account']").val();
                 let tenantName = $("input[name='tenant_name']").val();
                 let tenantPassword = $("input[name='tenant_password']").val();
                 let tenantPassword2 = $("input[name='tenant_password2']").val();
-                let tenantPhone = $("input[name='tenant_phone']").val();
-                let smsCode = $("input[name='sms_code']").val();
+                let tenantEmail = $("input[name='tenant_email']").val();
+                let emailCode = $("input[name='email_code']").val();
 
                 // 判断两次密码一样不
                 if (tenantPassword !== tenantPassword2) {
@@ -210,8 +210,8 @@
                     "tenantAccount": tenantAccount,
                     "tenantName": tenantName,
                     "tenantPassword": md5(secret + tenantPassword),
-                    "tenantPhone": tenantPhone,
-                    "smsCode": smsCode,
+                    "tenantEmail": tenantEmail,
+                    "emailCode": emailCode,
                     "verifyKey": verifyKey
                 }
                 // 按钮加载
@@ -245,18 +245,14 @@
 
 
     /**
-     * 校验电话号码是否正确
+     * 校验邮箱号码是否正确
      * @param val
      * @returns {boolean}
      */
-    function checkTelphone(val) {
-        var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
-        var isMob = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/;
-        if (isMob.test(val) || isPhone.test(val)) {
-            return true;
-        } else {
-            return false;
-        }
+    function checkEMail(val) {
+        // 正则表达式
+        var reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$");
+        return reg.test(val);
     }
 
 </script>

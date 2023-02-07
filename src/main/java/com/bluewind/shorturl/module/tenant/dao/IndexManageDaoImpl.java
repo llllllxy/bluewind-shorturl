@@ -40,17 +40,17 @@ public class IndexManageDaoImpl {
      * @param tenantAccount
      * @param tenantName
      * @param tenantPassword
-     * @param tenantPhone
+     * @param tenantEmail
      * @return
      */
-    public int addTenantInfo(String tenantAccount, String tenantName, String tenantPassword, String tenantPhone) {
+    public int addTenantInfo(String tenantAccount, String tenantName, String tenantPassword, String tenantEmail) {
         String tenantId = Snowflake.nextId();
         // 注册成功时，自动生成accessKey和accessKeySecret
         String accessKey = GenerateAkAndSk.generateAk();
         String accessKeySecret = GenerateAkAndSk.generateSk();
 
-        String sql = "insert into s_tenant (tenant_id, tenant_account, tenant_password, tenant_name, tenant_phone, access_key, access_key_secret) values (?,?,?,?,?,?,?)";
-        return jdbcTemplate.update(sql, tenantId, tenantAccount, tenantPassword, tenantName, tenantPhone, accessKey, accessKeySecret);
+        String sql = "insert into s_tenant (tenant_id, tenant_account, tenant_password, tenant_name, tenant_email, access_key, access_key_secret) values (?,?,?,?,?,?,?)";
+        return jdbcTemplate.update(sql, tenantId, tenantAccount, tenantPassword, tenantName, tenantEmail, accessKey, accessKeySecret);
     }
 
 

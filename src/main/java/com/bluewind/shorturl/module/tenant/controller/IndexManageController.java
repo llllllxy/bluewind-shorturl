@@ -6,15 +6,13 @@ import com.bluewind.shorturl.common.base.Result;
 import com.bluewind.shorturl.common.config.security.TenantAuthenticeUtil;
 import com.bluewind.shorturl.common.config.security.TenantHolder;
 import com.bluewind.shorturl.common.consts.SystemConst;
-import com.bluewind.shorturl.common.util.GenerateAkAndSk;
-import com.bluewind.shorturl.common.util.JsonUtils;
-import com.bluewind.shorturl.common.util.SHA256Utils;
-import com.bluewind.shorturl.common.util.SmsUtils;
+import com.bluewind.shorturl.common.util.*;
 import com.bluewind.shorturl.common.util.web.CookieUtils;
 import com.bluewind.shorturl.module.tenant.service.IndexManageServiceImpl;
 import com.wf.captcha.ArithmeticCaptcha;
 import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.base.Captcha;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -50,7 +47,7 @@ public class IndexManageController {
     private StringRedisTemplate redisTemplate;
 
     @Autowired
-    private SmsUtils smsUtils;
+    private EmailUtils emailUtils;
 
 
     /**
@@ -198,26 +195,34 @@ public class IndexManageController {
     }
 
 
-    @LogAround("获取手机验证码")
-    @AccessLimit(seconds = 60, maxCount = 1, msg = "60秒内只能获取一次手机验证码")
-    @PostMapping("/sendSms")
+    @LogAround("获取邮箱验证码")
+    @AccessLimit(seconds = 60, maxCount = 1, msg = "60秒内只能获取一次邮箱验证码")
+    @PostMapping("/sendEmail")
     @ResponseBody
-    public Result sendSms(@RequestParam(value = "tenant_phone") String tenant_phone) throws Exception {
+    public Result sendEmail(@RequestParam(value = "tenant_email") String tenant_email) throws Exception {
         // 保存验证码信息
         String verifyKey = UUID.randomUUID().toString().trim().replaceAll("-", "");
+        // 生成6位随机邮箱验证码
+        String randomCode = RandomStringUtils.randomNumeric(6);
 
-        String randomCode = smsUtils.sendMessage(tenant_phone);
-
-        if (StringUtils.isNotEmpty(randomCode)) {
+        String emailTitle = "蓝风短链租户账户激活邮箱验证";
+        String emailMsg = "<h2>您好，感谢您在蓝风短链注册账户！</h2>"
+                + "您的账户激活邮箱验证码为: " + randomCode + "，有效期十分钟"
+                + "<br/><br/>"
+                + "如果不是本人操作，请忽略。"
+                + "<br/><br/>"
+                + "蓝风短链 - 专业的短链服务商";
+        // 发送邮件
+        boolean sendSuccess = emailUtils.sendHtmlMail(tenant_email, emailTitle, emailMsg);
+        if (sendSuccess) {
             // 存入redis中，有效期10分钟
-            redisTemplate.opsForValue().set(SystemConst.SMS_CODE_KEY + ":" + verifyKey, randomCode, 10, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(SystemConst.EMAIL_CODE_KEY + ":" + verifyKey, randomCode, 10, TimeUnit.MINUTES);
             Map<String, String> result = new HashMap<>();
             result.put("verifyKey", verifyKey);
-            return Result.ok("获取验证码成功", result);
+            return Result.ok("发送验证码成功", result);
         } else {
-            return Result.error("获取手机验证码失败，请联系系统管理页！");
+            return Result.error("获取邮箱验证码失败，请联系系统管理页！");
         }
-
     }
 
 
@@ -227,28 +232,28 @@ public class IndexManageController {
     public Result doRegister(@RequestParam String tenantAccount,
                              @RequestParam String tenantName,
                              @RequestParam String tenantPassword,
-                             @RequestParam String tenantPhone,
-                             @RequestParam String smsCode,
+                             @RequestParam String tenantEmail,
+                             @RequestParam String emailCode,
                              @RequestParam String verifyKey,
                              HttpServletResponse response) {
         logger.info("IndexManageController doRegister tenantAccount = {}", tenantAccount);
 
-        String smsCodeInRedis = redisTemplate.opsForValue().get(SystemConst.SMS_CODE_KEY + ":" + verifyKey);
-        boolean result = smsCode.equalsIgnoreCase(smsCodeInRedis);
+        String emailCodeInRedis = redisTemplate.opsForValue().get(SystemConst.EMAIL_CODE_KEY + ":" + verifyKey);
+        boolean result = emailCode.equalsIgnoreCase(emailCodeInRedis);
         if (result) {
             // 删除掉这个redis缓存值
-            redisTemplate.delete(SystemConst.SMS_CODE_KEY + ":" + verifyKey);
+            redisTemplate.delete(SystemConst.EMAIL_CODE_KEY + ":" + verifyKey);
         } else {
-            return Result.error("手机验证码错误，请重试！");
+            return Result.error("邮箱验证码错误，请重试！");
         }
 
         // 再次hash密码
         tenantPassword = SHA256Utils.SHA256Encode(salt + tenantPassword);
 
         // 插入到租户表中
-        int num = indexManageService.addTenantInfo(tenantAccount, tenantName, tenantPassword, tenantPhone);
+        int num = indexManageService.addTenantInfo(tenantAccount, tenantName, tenantPassword, tenantEmail);
         if (num > 0) {
-            logger.info("IndexManageController - doRegister - {}登陆成功！", tenantAccount);
+            logger.info("IndexManageController - doRegister - {}登录成功！", tenantAccount);
             // 根据用户名查找到租户信息
             Map<String, Object> tenantInfo = indexManageService.getTenantInfo(tenantAccount);
             tenantInfo.put("tenant_password", "");

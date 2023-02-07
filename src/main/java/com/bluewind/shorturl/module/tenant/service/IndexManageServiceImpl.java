@@ -31,11 +31,11 @@ public class IndexManageServiceImpl {
      * @param tenantAccount
      * @param tenantName
      * @param tenantPassword
-     * @param tenantPhone
+     * @param tenantEmail
      * @return
      */
-    public int addTenantInfo(String tenantAccount, String tenantName, String tenantPassword, String tenantPhone) {
-        return indexManageDao.addTenantInfo(tenantAccount, tenantName, tenantPassword, tenantPhone);
+    public int addTenantInfo(String tenantAccount, String tenantName, String tenantPassword, String tenantEmail) {
+        return indexManageDao.addTenantInfo(tenantAccount, tenantName, tenantPassword, tenantEmail);
     }
 
 
