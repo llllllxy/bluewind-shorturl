@@ -31,7 +31,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://rm-.mysql.rds.aliyuncs.com:3306/bluewind-shorturl?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
     username: root
-    password: Zid&P#X0
+    password: 123456
     druid:
       initialSize: 5
       minIdle: 10
@@ -91,6 +91,18 @@ spring:
         max-idle: 20 # 连接池中的最大空闲连接
         max-wait: 5000 # 连接池最大阻塞等待时间（使用负值表示没有限制）
         min-idle: 5 # 连接池中的最小空闲连接
+  # 邮箱配置信息
+  mail:
+    host: smtp.111.com
+    port: 25
+    username: 123456@111.com
+    password: 123456
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        debug: true
 
 logging:
   level:
@@ -110,8 +122,3 @@ async:
 # 用户密码加密的盐
 hash:
   salt: ymp8R3Vg7Kv5$y5fM3*xl&ins7SZcTEY
-
-# 阿里云短信的配置
-sms:
-  accessKeyId:
-  accessKeySecret:
