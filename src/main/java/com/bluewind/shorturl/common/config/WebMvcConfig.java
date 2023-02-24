@@ -30,7 +30,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
         // 配置需要拦截上下文列表（除了配置的这些，剩下的都不拦）
         // PC端租户管理开始
         List<String> tenantIncludePaths = new ArrayList<>();
@@ -44,7 +43,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         tenantIncludePaths.add("/tenant/log/**"); // 租户短链日志管理
         tenantIncludePaths.add("/tenant/dashboard/**"); // 租户仪表盘
         tenantIncludePaths.add("/tenant/statistic/**"); // 租户数据统计管理
-
         // 移动端(租户)开始
         tenantIncludePaths.add("/mobile/navigation"); // 移动端-获取导航
         tenantIncludePaths.add("/mobile/wxcp/unbind"); // 企业微信-用户解绑
@@ -53,7 +51,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         // 注册租户会话拦截器
         registry.addInterceptor(tenantAuthenticeInterceptor)
-                .addPathPatterns(tenantIncludePaths); // 只拦截这几个，其余的不拦截
+                .addPathPatterns(tenantIncludePaths); // 只拦截这里面的，其他的都不拦截
 
         // 注册限流拦截器
         registry.addInterceptor(accessLimitInterceptor)
