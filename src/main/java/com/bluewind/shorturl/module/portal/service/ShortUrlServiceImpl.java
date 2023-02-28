@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
@@ -35,6 +36,9 @@ public class ShortUrlServiceImpl {
 
     @Autowired
     private ShortUrlDaoImpl shortUrlDao;
+
+    @Autowired
+    private ThreadPoolTaskExecutor asyncServiceExecutor;
 
     // 自定义长链接防重复字符串
     private static final String DUPLICATE = "*";
@@ -188,16 +192,18 @@ public class ShortUrlServiceImpl {
      *
      * @param shortURL 短链
      */
-    @Async("asyncServiceExecutor") // 耗时操作放进线程池去操作,注意：异步方法使用注解@Async的返回值只能为void或者Future
     public void updateUrlViews(HttpServletRequest request, String shortURL, String tenantId) {
-        // 首先更新s_url_map表里的views字段
-        shortUrlDao.updateUrlViews(shortURL);
-        // 然后插入访问日志表
-        String accessIp = IpAddressUtils.getIpAddress(request);
-        String accessAddress = AddressUtils.getAddressByIP(accessIp);
-        String accessTime = DateTool.getCurrentTime();
-        String accessUserAgent = JsonUtils.writeValueAsString(UserAgentUtils.getUserAgent(request));
+        // 获取ip这一行不能放在异步执行
+        final String accessIp = IpAddressUtils.getIpAddress(request);
+        asyncServiceExecutor.execute(() -> {
+            // 首先更新s_url_map表里的views字段
+            shortUrlDao.updateUrlViews(shortURL);
+            // 然后插入访问日志表
+            String accessAddress = AddressUtils.getAddressByIP(accessIp);
+            String accessTime = DateTool.getCurrentTime();
+            String accessUserAgent = JsonUtils.writeValueAsString(UserAgentUtils.getUserAgent(request));
+            shortUrlDao.insertAccessLogs(shortURL, accessIp, accessAddress, accessTime, accessUserAgent, tenantId);
+        });
 
-        shortUrlDao.insertAccessLogs(shortURL, accessIp, accessAddress, accessTime, accessUserAgent, tenantId);
     }
 }
