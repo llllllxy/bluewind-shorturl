@@ -2,7 +2,7 @@
 <configuration>
     <!--输出格式-->
     <!-- 日志存放路径 -->
-    <property name="log.path" value="./log" />
+    <property name="log.path" value="/opt/shorturl/logs" />
     <!-- 日志输出格式 -->
     <property name="log.pattern" value="%d{yyyy-MM-dd} %d{HH:mm:ss.SSS} [%thread] %-5level [%X{traceId}]  %logger{20} - [%method,%line] - %msg%n" />
 
