@@ -94,13 +94,13 @@
 
   <div class="row">
 
-    <div class="col-lg-12">
+    <div class="col-md-12">
       <div class="card">
         <div class="card-header">
           <h4>今日访问量Top25</h4>
         </div>
         <div class="card-body">
-          <div class="table-responsive">
+          <div class="table-responsive" style="max-height: none;">
             <table class="table table-hover">
               <thead>
                 <tr>
@@ -113,14 +113,14 @@
                 </tr>
               </thead>
               <tbody>
-              <tr th:each="item, itemStat: ${dashboardInfo.topList}">
-                <td th:text="${itemStat.count}"></td>
-                <td th:text="${item.surl}"></td>
-                <td th:text="${item.created_at}"></td>
-                <td th:text="${item.lurl}"></td>
-                <td><span class="label label-info" th:text="${item.accessCount}"></span></td>
-                <td><span class="label label-warning" th:text="${item.ipCount}"></span></td>
-              </tr>
+                <tr th:each="item, itemStat: ${dashboardInfo.topList}">
+                  <td th:text="${itemStat.count}"></td>
+                  <td th:text="${item.surl}"></td>
+                  <td th:text="${item.created_at}"></td>
+                  <td th:text="${item.lurl}"></td>
+                  <td><span class="label label-info" th:text="${item.accessCount}"></span></td>
+                  <td><span class="label label-warning" th:text="${item.ipCount}"></span></td>
+                </tr>
               </tbody>
             </table>
           </div>
