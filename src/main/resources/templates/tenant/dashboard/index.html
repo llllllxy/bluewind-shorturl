@@ -113,6 +113,9 @@
                 </tr>
               </thead>
               <tbody>
+                <tr th:if=${dashboardInfo.topList.size()==0}>
+                </tr>
+
                 <tr th:each="item, itemStat: ${dashboardInfo.topList}">
                   <td th:text="${itemStat.count}"></td>
                   <td th:text="${item.surl}"></td>
