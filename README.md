@@ -1,8 +1,15 @@
 # bluewind-shorturl
 # 在线短链接生成平台
 
+![SpringBoot](https://img.shields.io/badge/springboot-2.3.12.RELEASE-green.svg?style=flat-square)
+<a href="https://github.com/llllllxy/bluewind-shorturl/stargazers"><img src="https://img.shields.io/github/stars/llllllxy/bluewind-shorturl?style=flat-square&logo=GitHub"></a>
+<a href="https://github.com/llllllxy/bluewind-shorturl/network/members"><img src="https://img.shields.io/github/forks/llllllxy/bluewind-shorturl?style=flat-square&logo=GitHub"></a>
+<a href="https://github.com/llllllxy/bluewind-shorturl/watchers"><img src="https://img.shields.io/github/watchers/llllllxy/bluewind-shorturl?style=flat-square&logo=GitHub"></a>
+<a href="https://github.com/llllllxy/bluewind-shorturl/issues"><img src="https://img.shields.io/github/issues/llllllxy/bluewind-shorturl.svg?style=flat-square&logo=GitHub"></a>
+<a href="https://github.com/llllllxy/bluewind-shorturl/blob/master/LICENSE"><img src="https://img.shields.io/github/license/llllllxy/bluewind-shorturl.svg?style=flat-square"></a>
 <a href='https://gitee.com/leisureLXY/bluewind-shorturl/stargazers'><img src='https://gitee.com/leisureLXY/bluewind-shorturl/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/leisureLXY/bluewind-shorturl/members'><img src='https://gitee.com/leisureLXY/bluewind-shorturl/badge/fork.svg?theme=dark' alt='fork'></img></a>
+
 
 ## 已实现功能
 1、将长链接转换成短链接，访问短链接时， 302重定向至原始长链接
